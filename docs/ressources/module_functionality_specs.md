@@ -47,7 +47,7 @@
 | **Shipment Tracking** | • Manual entry of tracking numbers<br>• Delivery date prediction                                                        | • SMS integration with Ghana Post<br>• Auto-update from vendor APIs                                                     | Manual entry only when offline                        |
 | **Ghana Adaptation**  | • Curriculum tags: `BASIC-MATH-GRADE-6`<br>• Budget codes: `CHILDREN-2024-Q1`<br>• Vendor Ghana Card validation tooltip | • MoE curriculum alignment dashboard<br>• Automatic tag suggestions based on ISBN                                       | Curriculum tag database cached for offline use        |
 
-**Acceptance Criteria**
+#### Acquisitions Acceptance Criteria
 
 _Given_ I am an Acquisitions Librarian at St. Peter's School Library
 
@@ -74,7 +74,7 @@ _And_ saves order locally when offline
 | **Barcode Generation**  | • PDF417 barcode generation<br>• Print preview with book details                                                            | • RFID tag programming<br>• Batch barcode printing                                                                         | Works offline; uses local printer drivers                    |
 | **Ghana Adaptation**    | • Spine condition critical for tropical climate<br>• "Mold risk" flag for humid season<br>• Twi language tag option         | • Climate-adjusted degradation thresholds<br>• Seasonal maintenance alerts                                                 | Mold risk assessment uses local humidity data when available |
 
-**Acceptance Criteria**
+#### Processing Acceptance Criteria
 
 _Given_ I receive 50 copies of "Basic Science Grade 6"
 
@@ -103,7 +103,7 @@ _And_ all data saves when offline
 | **Delivery Confirmation** | • Checkbox "Delivered"<br>• Manual timestamp entry                                                                                             | • Mobile app scan of packing slip QR<br>• Auto-timestamp + GPS coordinates<br>• Condition photo on delivery                    | Manual confirmation when offline; syncs later |
 | **Ghana Adaptation**      | • School-specific routing (`ACCRA-GREATER-001`)<br>• Batch-aware delivery (`GRADE-4A` ≠ `GRADE-4B`)<br>• Rural delivery mode (no GPS required) | • Extension Services mobile routes<br>• Tamale-Bolgatanga corridor optimization<br>• Community leader contact integration      | Rural mode disables GPS requirements          |
 
-**Acceptance Criteria**
+#### Distribution Acceptance Criteria
 
 _Given_ 50 books processed for St. Peter's School
 
@@ -132,7 +132,7 @@ _And_ saves delivery record locally when offline
 | **Reading Programs** | • Summer Reading Challenge setup<br>• Attendance tracking via QR scan<br>• Appraisal notes field                                       | • GES Literacy Boost alignment<br>• Folktales focus during cultural months<br>• Parent involvement tracking             | Attendance logs saved locally; syncs later       |
 | **Badge Display**    | • Patron dashboard shows earned badges<br>• SVG icons with Adinkra symbols<br>• Cultural notes on hover                                | • Sankofa symbol for Cultural Custodian<br>• Fawohodie for Gentle Guardian<br>• Twi descriptions available              | Badge assets cached for offline display          |
 
-**Acceptance Criteria**
+#### Children's Section Acceptance Criteria
 
 _Given_ Kwame (GRADE-4A) requests "Basic Science Grade 4"
 
@@ -176,7 +176,7 @@ _And_ blocks issuance if rate >0.30 without override
 
 ### Unified Patron Dashboard (All Sections)
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  KWAME ASANTE • GRADE-4A • Batch Expiry: Aug 31, 2025│
 ├──────────────────────────────────────────────────────┤
@@ -219,17 +219,17 @@ _And_ blocks issuance if rate >0.30 without override
 flowchart TD
     A[Patron Requests Book] --> B{Check Degradation Rate}
     B -->|≤0.15 Green| C[Issue Normally]
-    B -->|0.16-0.29 Yellow| D[Show Warning:<br>"Please handle carefully"]
+    B -->|0.16-0.29 Yellow| D["Show Warning:<br>Please handle carefully"]
     B -->|0.30-0.44 Red| E[Require Staff Override]
-    B -->|≥0.45 Critical| F[Block Issue:<br>"Book care review required"]
+    B -->|≥0.45 Critical| F["Block Issue:<br>Book care review required"]
     E --> G[Staff Reviews History]
     G --> H{Approve?}
-    H -->|Yes| I[Issue with Note:<br>"Handle with extra care"]
+    H -->|Yes| I["Issue with Note:<br>Handle with extra care"]
     H -->|No| J[Deny + Schedule Coaching]
-    F --> K[Auto-schedule<br>Book Handling Workshop]
+    F --> K["Auto-schedule<br>Book Handling Workshop"]
 ```
 
-**Acceptance Criteria**
+#### Degradation Enforcement Acceptance Criteria
 
 _Given_ Patron has degradation rate 0.35
 
@@ -249,7 +249,7 @@ _And_ allows System Admin override with reason required
 
 ### Department Structure
 
-```
+```text
 System Admin (1 per installation)
 │
 ├── Acquisitions Department Head
@@ -287,7 +287,7 @@ System Admin (1 per installation)
 | **Appointment Date**  | Yes                 | Service computation         | Must be ≤ today                                     |
 | **Emergency Contact** | Yes                 | Safety requirement          | Name + relationship + phone required                |
 
-**Acceptance Criteria**
+#### Staff Profile Acceptance Criteria
 
 _Given_ I am System Admin creating new staff account
 

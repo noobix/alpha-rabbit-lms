@@ -1,192 +1,154 @@
-\# Library Management System: Manager vs Enterprise – Setup Comparison  
+# Library Management System: Manager vs Enterprise – Setup Comparison
 
-\*Clear differentiation of requirements, packages, and environments for both versions\*
-
-
+_Clear differentiation of requirements, packages, and environments for both versions_
 
 ---
 
+## 📊 QUICK COMPARISON TABLE
 
-
-\## 📊 QUICK COMPARISON TABLE
-
-
-
-| Feature | \*\*Manager Version\*\* (Standalone) | \*\*Enterprise Version\*\* (Multi-Department) |
+| Feature | **Manager Version** (Standalone) | **Enterprise Version** (Multi-Department) |
 
 |---------|----------------------------------|-------------------------------------------|
 
-| \*\*Target Users\*\* | Single library (school/community) | University/district with multiple departments |
+| **Target Users** | Single library (school/community) | University/district with multiple departments |
 
-| \*\*Architecture\*\* | Single Electron app with embedded database | Client-server: Electron clients + CouchDB server |
+| **Architecture** | Single Electron app with embedded database | Client-server: Electron clients + CouchDB server |
 
-| \*\*Database\*\* | PouchDB (SQLite file embedded in app) | CouchDB server + PouchDB clients (sync-enabled) |
+| **Database** | PouchDB (SQLite file embedded in app) | CouchDB server + PouchDB clients (sync-enabled) |
 
-| \*\*Hardware Required\*\* | Any Windows/macOS/Linux PC | Server (Raspberry Pi 4+) + client devices |
+| **Hardware Required** | Any Windows/macOS/Linux PC | Server (Raspberry Pi 4+) + client devices |
 
-| \*\*Internet Required\*\* | No (100% offline) | Optional (syncs when available) |
+| **Internet Required** | No (100% offline) | Optional (syncs when available) |
 
-| \*\*Installation Complexity\*\* | Simple (single installer) | Moderate (server setup + client installs) |
+| **Installation Complexity** | Simple (single installer) | Moderate (server setup + client installs) |
 
-| \*\*Cost\*\* | $0 (free software) | ~$50 (Raspberry Pi server) |
+| **Cost** | $0 (free software) | ~$50 (Raspberry Pi server) |
 
-| \*\*Best For\*\* | Rural schools, community libraries, mobile libraries | Universities, district offices, national archives |
-
-
+| **Best For** | Rural schools, community libraries, mobile libraries | Universities, district offices, national archives |
 
 ---
 
+## 📦 MANAGER VERSION: Standalone Desktop Setup
 
+### System Requirements
 
-\## 📦 MANAGER VERSION: Standalone Desktop Setup
-
-
-
-\### System Requirements
-
-
-
-\#### Hardware
+#### Hardware
 
 | Component | Minimum | Recommended |
 
 |-----------|---------|-------------|
 
-| \*\*OS\*\* | Windows 7 / macOS 10.13 / Linux | Windows 10 / macOS 12 / Ubuntu 20.04 |
+| **OS** | Windows 7 / macOS 10.13 / Linux | Windows 10 / macOS 12 / Ubuntu 20.04 |
 
-| \*\*CPU\*\* | Intel Celeron / AMD A4 | Intel i3 / AMD Ryzen 3 |
+| **CPU** | Intel Celeron / AMD A4 | Intel i3 / AMD Ryzen 3 |
 
-| \*\*RAM\*\* | 2 GB | 4 GB |
+| **RAM** | 2 GB | 4 GB |
 
-| \*\*Storage\*\* | 100 MB free space | 500 MB free space |
+| **Storage** | 100 MB free space | 500 MB free space |
 
-| \*\*Display\*\* | 1024×768 | 1366×768 or higher |
+| **Display** | 1024×768 | 1366×768 or higher |
 
-
-
-\#### Software Dependencies
+#### Software Dependencies
 
 | Component | Version | Purpose |
 
 |-----------|---------|---------|
 
-| \*\*Node.js\*\* | 18.x or higher | JavaScript runtime |
+| **Node.js** | 18.x or higher | JavaScript runtime |
 
-| \*\*pnpm\*\* | 8.x or higher | Package manager |
+| **pnpm** | 8.x or higher | Package manager |
 
-| \*\*Electron\*\* | 28.x or higher | Desktop runtime |
+| **Electron** | 28.x or higher | Desktop runtime |
 
-| \*\*SQLite\*\* | Built-in via PouchDB | Embedded database engine |
-
-
+| **SQLite** | Built-in via PouchDB | Embedded database engine |
 
 ---
 
-
-
-\### Required Packages (`package.json`)
-
-
+### Required Packages (`package.json`)
 
 ```json
-
 {
+  "name": "library-manager",
 
-&nbsp; "name": "library-manager",
+  "version": "1.0.0",
 
-&nbsp; "version": "1.0.0",
+  "main": "src/main/index.js",
 
-&nbsp; "main": "src/main/index.js",
+  "scripts": {
+    "dev": "vite",
 
-&nbsp; "scripts": {
+    "build": "tsc && vite build",
 
-&nbsp;   "dev": "vite",
+    "build:win": "electron-builder --win",
 
-&nbsp;   "build": "tsc \&\& vite build",
+    "build:mac": "electron-builder --mac",
 
-&nbsp;   "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux"
+  },
 
-&nbsp;   "build:mac": "electron-builder --mac",
+  "dependencies": {
+    "react": "^18.2.0",
 
-&nbsp;   "build:linux": "electron-builder --linux"
+    "react-dom": "^18.2.0",
 
-&nbsp; },
+    "react-router-dom": "^6.21.0",
 
-&nbsp; "dependencies": {
+    "pouchdb": "^8.0.1",
 
-&nbsp;   "react": "^18.2.0",
+    "pouchdb-adapter-node-websql": "^7.3.1",
 
-&nbsp;   "react-dom": "^18.2.0",
+    "zustand": "^4.4.7",
 
-&nbsp;   "react-router-dom": "^6.21.0",
+    "react-hook-form": "^7.49.3",
 
-&nbsp;   "pouchdb": "^8.0.1",
+    "zod": "^3.22.4",
 
-&nbsp;   "pouchdb-adapter-node-websql": "^7.3.1",
+    "date-fns": "^3.0.6",
 
-&nbsp;   "zustand": "^4.4.7",
+    "phosphor-react": "^1.4.1",
 
-&nbsp;   "react-hook-form": "^7.49.3",
+    "@headlessui/react": "^1.7.17",
 
-&nbsp;   "zod": "^3.22.4",
+    "file-saver": "^2.0.5",
 
-&nbsp;   "date-fns": "^3.0.6",
+    "jszip": "^3.10.1"
+  },
 
-&nbsp;   "phosphor-react": "^1.4.1",
+  "devDependencies": {
+    "@types/react": "^18.2.47",
 
-&nbsp;   "@headlessui/react": "^1.7.17",
+    "@types/react-dom": "^18.2.18",
 
-&nbsp;   "file-saver": "^2.0.5",
+    "@vitejs/plugin-react": "^4.2.1",
 
-&nbsp;   "jszip": "^3.10.1"
+    "vite": "^5.0.11",
 
-&nbsp; },
+    "typescript": "^5.3.3",
 
-&nbsp; "devDependencies": {
+    "tailwindcss": "^3.4.1",
 
-&nbsp;   "@types/react": "^18.2.47",
+    "postcss": "^8.4.33",
 
-&nbsp;   "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.16",
 
-&nbsp;   "@vitejs/plugin-react": "^4.2.1",
+    "electron": "^28.1.0",
 
-&nbsp;   "vite": "^5.0.11",
+    "electron-builder": "^24.9.1",
 
-&nbsp;   "typescript": "^5.3.3",
-
-&nbsp;   "tailwindcss": "^3.4.1",
-
-&nbsp;   "postcss": "^8.4.33",
-
-&nbsp;   "autoprefixer": "^10.4.16",
-
-&nbsp;   "electron": "^28.1.0",
-
-&nbsp;   "electron-builder": "^24.9.1",
-
-&nbsp;   "electron-rebuild": "^3.2.13"
-
-&nbsp; }
-
+    "electron-rebuild": "^3.2.13"
+  }
 }
-
 ```
-
-
 
 ---
 
+### Installation Steps
 
-
-\### Installation Steps
-
-
-
-\#### 1. Clone \& Install Dependencies
+#### 1. Clone & Install Dependencies
 
 ```bash
 
-\# Clone repository
+# Clone repository
 
 git clone https://github.com/your-org/library-manager.git
 
@@ -194,149 +156,121 @@ cd library-manager
 
 
 
-\# Install dependencies
+# Install dependencies
 
 pnpm install
 
 
 
-\# Install Tailwind CSS
+# Install Tailwind CSS
 
 npx tailwindcss init -p
 
 ```
 
-
-
-\#### 2. Configure Tailwind (`tailwind.config.js`)
+#### 2. Configure Tailwind (`tailwind.config.js`)
 
 ```javascript
-
-/\*\* @type {import('tailwindcss').Config} \*/
+/** @type {import('tailwindcss').Config} */
 
 export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 
-&nbsp; content: \[
+  theme: {
+    extend: {
+      colors: {
+        ghanaGreen: "#006B3F",
 
-&nbsp;   "./index.html",
+        ghanaGold: "#FCD116",
 
-&nbsp;   "./src/\*\*/\*.{js,ts,jsx,tsx}",
+        ghanaRed: "#CE1126",
+      },
+    },
+  },
 
-&nbsp; ],
-
-&nbsp; theme: {
-
-&nbsp;   extend: {
-
-&nbsp;     colors: {
-
-&nbsp;       ghanaGreen: '#006B3F',
-
-&nbsp;       ghanaGold: '#FCD116',
-
-&nbsp;       ghanaRed: '#CE1126'
-
-&nbsp;     }
-
-&nbsp;   },
-
-&nbsp; },
-
-&nbsp; plugins: \[],
-
-}
-
+  plugins: [],
+};
 ```
 
-
-
-\#### 3. Build \& Package
+#### 3. Build & Package
 
 ```bash
 
-\# Development mode
+# Development mode
 
 pnpm dev
 
 
 
-\# Build for production
+# Build for production
 
 pnpm build
 
 
 
-\# Package for Windows
+# Package for Windows
 
 pnpm build:win
 
 
 
-\# Package for macOS
+# Package for macOS
 
 pnpm build:mac
 
 
 
-\# Package for Linux
+# Package for Linux
 
 pnpm build:linux
 
 ```
 
+#### 4. Install on Target Machine
 
+- **Windows**: Run `library-manager-setup.exe`
 
-\#### 4. Install on Target Machine
+- **macOS**: Drag `Library Manager.app` to Applications folder
 
-\- \*\*Windows\*\*: Run `library-manager-setup.exe`
-
-\- \*\*macOS\*\*: Drag `Library Manager.app` to Applications folder
-
-\- \*\*Linux\*\*: Install `.AppImage` or `.deb` package
-
-
+- **Linux**: Install `.AppImage` or `.deb` package
 
 ---
 
-
-
-\### Environment Configuration (`.env`)
-
-
+### Environment Configuration (`.env`)
 
 ```env
 
-\# Application Settings
+# Application Settings
 
-APP\_NAME="Library Manager"
+APP_NAME="Library Manager"
 
-APP\_VERSION="1.0.0"
+APP_VERSION="1.0.0"
 
 ENVIRONMENT="production"
 
 
 
-\# Database Settings (PouchDB)
+# Database Settings (PouchDB)
 
-DB\_NAME="library\_data"
+DB_NAME="library_data"
 
-DB\_ADAPTER="websql"
+DB_ADAPTER="websql"
 
-DB\_LOCATION="./data/library\_data.db"
-
-
-
-\# Backup Settings
-
-BACKUP\_PATH="./backups"
-
-BACKUP\_INTERVAL="daily"  # daily, weekly
-
-BACKUP\_RETENTION\_DAYS=30
+DB_LOCATION="./data/library_data.db"
 
 
 
-\# UI Settings
+# Backup Settings
+
+BACKUP_PATH="./backups"
+
+BACKUP_INTERVAL="daily"  # daily, weekly
+
+BACKUP_RETENTION_DAYS=30
+
+
+
+# UI Settings
 
 THEME="light"  # light, dark, auto
 
@@ -344,17 +278,11 @@ LANGUAGE="en"  # en, tw, ga
 
 ```
 
-
-
 ---
 
+### Data Storage Structure
 
-
-\### Data Storage Structure
-
-
-
-```
+```text
 
 Library Manager Installation/
 
@@ -362,15 +290,15 @@ Library Manager Installation/
 
 ├── data/
 
-│   └── library\_data.db  ← SQLite database file (PouchDB)
+│   └── library_data.db  ← SQLite database file (PouchDB)
 
 ├── backups/
 
-│   ├── library\_20240212\_1430.incremental
+│   ├── library_20240212_1430.incremental
 
-│   ├── library\_20240213\_1430.incremental
+│   ├── library_20240213_1430.incremental
 
-│   └── library\_20240214\_1430.full
+│   └── library_20240214_1430.full
 
 ├── config/
 
@@ -378,281 +306,218 @@ Library Manager Installation/
 
 └── logs/
 
-&nbsp;   └── app.log
+    └── app.log
 
 ```
 
-
-
 ---
 
+## 🌍 ENTERPRISE VERSION: Multi-Department Setup
 
+### Enterprise System Requirements
 
-\## 🌍 ENTERPRISE VERSION: Multi-Department Setup
-
-
-
-\### System Requirements
-
-
-
-\#### Server Hardware (Central Database)
+#### Server Hardware (Central Database)
 
 | Component | Minimum | Recommended |
 
 |-----------|---------|-------------|
 
-| \*\*OS\*\* | Ubuntu Server 20.04 | Ubuntu Server 22.04 |
+| **OS** | Ubuntu Server 20.04 | Ubuntu Server 22.04 |
 
-| \*\*CPU\*\* | ARM Cortex-A72 (Raspberry Pi 4) | Intel i3 / AMD Ryzen 3 |
+| **CPU** | ARM Cortex-A72 (Raspberry Pi 4) | Intel i3 / AMD Ryzen 3 |
 
-| \*\*RAM\*\* | 2 GB | 4 GB |
+| **RAM** | 2 GB | 4 GB |
 
-| \*\*Storage\*\* | 32 GB SD card | 128 GB SSD |
+| **Storage** | 32 GB SD card | 128 GB SSD |
 
-| \*\*Network\*\* | Ethernet/WiFi | Gigabit Ethernet |
+| **Network** | Ethernet/WiFi | Gigabit Ethernet |
 
-| \*\*Power\*\* | Standard USB-C | UPS backup recommended |
+| **Power** | Standard USB-C | UPS backup recommended |
 
-
-
-\#### Client Hardware (Library Workstations)
+#### Client Hardware (Library Workstations)
 
 | Component | Minimum | Recommended |
 
 |-----------|---------|-------------|
 
-| \*\*OS\*\* | Windows 7 / macOS 10.13 / Linux | Windows 10 / macOS 12 / Ubuntu 20.04 |
+| **OS** | Windows 7 / macOS 10.13 / Linux | Windows 10 / macOS 12 / Ubuntu 20.04 |
 
-| \*\*CPU\*\* | Intel Celeron / AMD A4 | Intel i3 / AMD Ryzen 3 |
+| **CPU** | Intel Celeron / AMD A4 | Intel i3 / AMD Ryzen 3 |
 
-| \*\*RAM\*\* | 2 GB | 4 GB |
+| **RAM** | 2 GB | 4 GB |
 
-| \*\*Storage\*\* | 100 MB free space | 500 MB free space |
+| **Storage** | 100 MB free space | 500 MB free space |
 
-| \*\*Network\*\* | WiFi or Ethernet | Gigabit Ethernet |
-
-
+| **Network** | WiFi or Ethernet | Gigabit Ethernet |
 
 ---
 
-
-
-\### Server-Side Packages (`docker-compose.yml`)
-
-
+### Server-Side Packages (`docker-compose.yml`)
 
 ```yaml
-
-version: '3.8'
-
-
+version: "3.8"
 
 services:
+  couchdb:
+    image: apache/couchdb:3.3
 
-&nbsp; couchdb:
+    container_name: library-couchdb
 
-&nbsp;   image: apache/couchdb:3.3
+    ports:
+      - "5984:5984"
 
-&nbsp;   container\_name: library-couchdb
+    volumes:
+      - couchdb_data:/opt/couchdb/data
 
-&nbsp;   ports:
+      - ./config/couchdb:/opt/couchdb/etc/local.d
 
-&nbsp;     - "5984:5984"
+      - ./backups:/backups
 
-&nbsp;   volumes:
+    environment:
+      - COUCHDB_USER=admin
 
-&nbsp;     - couchdb\_data:/opt/couchdb/data
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
 
-&nbsp;     - ./config/couchdb:/opt/couchdb/etc/local.d
+      - NODENAME=couchdb@library-server
 
-&nbsp;     - ./backups:/backups
+    restart: unless-stopped
 
-&nbsp;   environment:
+    networks:
+      - library-network
 
-&nbsp;     - COUCHDB\_USER=admin
+  backup-service:
+    image: library-backup:latest
 
-&nbsp;     - COUCHDB\_PASSWORD=${COUCHDB\_PASSWORD}
+    container_name: library-backup
 
-&nbsp;     - NODENAME=couchdb@library-server
+    volumes:
+      - ./backups:/backups
 
-&nbsp;   restart: unless-stopped
+      - /var/run/docker.sock:/var/run/docker.sock
 
-&nbsp;   networks:
+    environment:
+      - COUCHDB_URL=http://couchdb:5984
 
-&nbsp;     - library-network
+      - BACKUP_INTERVAL=86400 # 24 hours in seconds
 
+      - RETENTION_DAYS=30
 
+    restart: unless-stopped
 
-&nbsp; backup-service:
-
-&nbsp;   image: library-backup:latest
-
-&nbsp;   container\_name: library-backup
-
-&nbsp;   volumes:
-
-&nbsp;     - ./backups:/backups
-
-&nbsp;     - /var/run/docker.sock:/var/run/docker.sock
-
-&nbsp;   environment:
-
-&nbsp;     - COUCHDB\_URL=http://couchdb:5984
-
-&nbsp;     - BACKUP\_INTERVAL=86400  # 24 hours in seconds
-
-&nbsp;     - RETENTION\_DAYS=30
-
-&nbsp;   restart: unless-stopped
-
-&nbsp;   networks:
-
-&nbsp;     - library-network
-
-
+    networks:
+      - library-network
 
 volumes:
-
-&nbsp; couchdb\_data:
-
-
+  couchdb_data:
 
 networks:
-
-&nbsp; library-network:
-
-&nbsp;   driver: bridge
-
+  library-network:
+    driver: bridge
 ```
-
-
 
 ---
 
-
-
-\### Client-Side Packages (`package.json`)
-
-
+### Client-Side Packages (`package.json`)
 
 ```json
-
 {
+  "name": "library-enterprise-client",
 
-&nbsp; "name": "library-enterprise-client",
+  "version": "1.0.0",
 
-&nbsp; "version": "1.0.0",
+  "main": "src/main/index.js",
 
-&nbsp; "main": "src/main/index.js",
+  "scripts": {
+    "dev": "vite",
 
-&nbsp; "scripts": {
+    "build": "tsc && vite build",
 
-&nbsp;   "dev": "vite",
+    "build:win": "electron-builder --win",
 
-&nbsp;   "build": "tsc \&\& vite build",
+    "build:mac": "electron-builder --mac",
 
-&nbsp;   "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux"
+  },
 
-&nbsp;   "build:mac": "electron-builder --mac",
+  "dependencies": {
+    "react": "^18.2.0",
 
-&nbsp;   "build:linux": "electron-builder --linux"
+    "react-dom": "^18.2.0",
 
-&nbsp; },
+    "react-router-dom": "^6.21.0",
 
-&nbsp; "dependencies": {
+    "pouchdb": "^8.0.1",
 
-&nbsp;   "react": "^18.2.0",
+    "pouchdb-adapter-http": "^8.0.1",
 
-&nbsp;   "react-dom": "^18.2.0",
+    "pouchdb-replication": "^8.0.1",
 
-&nbsp;   "react-router-dom": "^6.21.0",
+    "zustand": "^4.4.7",
 
-&nbsp;   "pouchdb": "^8.0.1",
+    "react-hook-form": "^7.49.3",
 
-&nbsp;   "pouchdb-adapter-http": "^8.0.1",
+    "zod": "^3.22.4",
 
-&nbsp;   "pouchdb-replication": "^8.0.1",
+    "date-fns": "^3.0.6",
 
-&nbsp;   "zustand": "^4.4.7",
+    "phosphor-react": "^1.4.1",
 
-&nbsp;   "react-hook-form": "^7.49.3",
+    "@headlessui/react": "^1.7.17",
 
-&nbsp;   "zod": "^3.22.4",
+    "file-saver": "^2.0.5",
 
-&nbsp;   "date-fns": "^3.0.6",
+    "jszip": "^3.10.1",
 
-&nbsp;   "phosphor-react": "^1.4.1",
+    "node-schedule": "^2.1.1",
 
-&nbsp;   "@headlessui/react": "^1.7.17",
+    "axios": "^1.6.5"
+  },
 
-&nbsp;   "file-saver": "^2.0.5",
+  "devDependencies": {
+    "@types/react": "^18.2.47",
 
-&nbsp;   "jszip": "^3.10.1",
+    "@types/react-dom": "^18.2.18",
 
-&nbsp;   "node-schedule": "^2.1.1",
+    "@vitejs/plugin-react": "^4.2.1",
 
-&nbsp;   "axios": "^1.6.5"
+    "vite": "^5.0.11",
 
-&nbsp; },
+    "typescript": "^5.3.3",
 
-&nbsp; "devDependencies": {
+    "tailwindcss": "^3.4.1",
 
-&nbsp;   "@types/react": "^18.2.47",
+    "postcss": "^8.4.33",
 
-&nbsp;   "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.16",
 
-&nbsp;   "@vitejs/plugin-react": "^4.2.1",
+    "electron": "^28.1.0",
 
-&nbsp;   "vite": "^5.0.11",
+    "electron-builder": "^24.9.1",
 
-&nbsp;   "typescript": "^5.3.3",
-
-&nbsp;   "tailwindcss": "^3.4.1",
-
-&nbsp;   "postcss": "^8.4.33",
-
-&nbsp;   "autoprefixer": "^10.4.16",
-
-&nbsp;   "electron": "^28.1.0",
-
-&nbsp;   "electron-builder": "^24.9.1",
-
-&nbsp;   "electron-rebuild": "^3.2.13"
-
-&nbsp; }
-
+    "electron-rebuild": "^3.2.13"
+  }
 }
-
 ```
 
+**Key Differences from Manager:**
 
+- `pouchdb-adapter-http` – Connects to remote CouchDB server
 
-\*\*Key Differences from Manager:\*\*
+- `pouchdb-replication` – Handles sync between client and server
 
-\- `pouchdb-adapter-http` – Connects to remote CouchDB server
+- `node-schedule` – Manages automatic sync intervals
 
-\- `pouchdb-replication` – Handles sync between client and server
-
-\- `node-schedule` – Manages automatic sync intervals
-
-\- `axios` – HTTP client for server communication
-
-
+- `axios` – HTTP client for server communication
 
 ---
 
+### Server Setup Steps
 
-
-\### Server Setup Steps
-
-
-
-\#### 1. Install Docker \& Docker Compose
+#### 1. Install Docker & Docker Compose
 
 ```bash
 
-\# Ubuntu/Debian
+# Ubuntu/Debian
 
 sudo apt update
 
@@ -660,7 +525,7 @@ sudo apt install docker.io docker-compose
 
 
 
-\# Enable Docker service
+# Enable Docker service
 
 sudo systemctl enable docker
 
@@ -668,19 +533,17 @@ sudo systemctl start docker
 
 
 
-\# Add user to docker group
+# Add user to docker group
 
 sudo usermod -aG docker $USER
 
 ```
 
-
-
-\#### 2. Create Server Configuration
+#### 2. Create Server Configuration
 
 ```bash
 
-\# Create project directory
+# Create project directory
 
 mkdir library-enterprise-server
 
@@ -688,39 +551,39 @@ cd library-enterprise-server
 
 
 
-\# Create config directory
+# Create config directory
 
 mkdir -p config/couchdb backups
 
 
 
-\# Create CouchDB local.ini
+# Create CouchDB local.ini
 
 cat > config/couchdb/local.ini << EOF
 
-\[chttpd]
+[chttpd]
 
-bind\_address = 0.0.0.0
+bind_address = 0.0.0.0
 
 port = 5984
 
 
 
-\[couchdb]
+[couchdb]
 
-max\_dbs\_open = 500
-
-
-
-\[httpd]
-
-enable\_cors = true
+max_dbs_open = 500
 
 
 
-\[cors]
+[httpd]
 
-origins = \*
+enable_cors = true
+
+
+
+[cors]
+
+origins = *
 
 credentials = true
 
@@ -732,73 +595,69 @@ EOF
 
 ```
 
-
-
-\#### 3. Create Environment File (`.env`)
+#### 3. Create Environment File (`.env`)
 
 ```env
 
-\# CouchDB Configuration
+# CouchDB Configuration
 
-COUCHDB\_USER=admin
+COUCHDB_USER=admin
 
-COUCHDB\_PASSWORD=YourSecurePassword123!
+COUCHDB_PASSWORD=YourSecurePassword123!
 
-COUCHDB\_PORT=5984
-
-
-
-\# Server Configuration
-
-SERVER\_HOST=0.0.0.0
-
-SERVER\_PORT=5984
+COUCHDB_PORT=5984
 
 
 
-\# Backup Configuration
+# Server Configuration
 
-BACKUP\_PATH=/backups
+SERVER_HOST=0.0.0.0
 
-BACKUP\_INTERVAL=86400
-
-RETENTION\_DAYS=30
+SERVER_PORT=5984
 
 
 
-\# Security
+# Backup Configuration
 
-ADMIN\_EMAIL=admin@library.edu.gh
+BACKUP_PATH=/backups
 
-SSL\_ENABLED=false
+BACKUP_INTERVAL=86400
+
+RETENTION_DAYS=30
+
+
+
+# Security
+
+ADMIN_EMAIL=admin@library.edu.gh
+
+SSL_ENABLED=false
 
 ```
 
-
-
-\#### 4. Deploy Server
+#### 4. Deploy Server
 
 ```bash
 
-\# Start services
+# Start services
 
 docker-compose up -d
 
 
 
-\# Check status
+# Check status
 
 docker-compose ps
 
 
 
-\# View logs
+# View logs
 
 docker-compose logs -f couchdb
 
 
 
-\# Create initial databases
+# Create initial databases
 
 curl -X PUT http://admin:YourSecurePassword123!@localhost:5984/books
 
@@ -810,63 +669,55 @@ curl -X PUT http://admin:YourSecurePassword123!@localhost:5984/users
 
 ```
 
-
-
-\#### 5. Configure Security \& Roles
+#### 5. Configure Security & Roles
 
 ```bash
 
-\# Create admin user in CouchDB
+# Create admin user in CouchDB
 
-curl -X PUT http://localhost:5984/\_users/org.couchdb.user:admin\_user \\
+curl -X PUT http://localhost:5984/_users/org.couchdb.user:admin_user \
 
-&nbsp; -H "Content-Type: application/json" \\
+  -H "Content-Type: application/json" \
 
-&nbsp; -d '{
+  -d '{
 
-&nbsp;   "name": "admin\_user",
+    "name": "admin_user",
 
-&nbsp;   "password": "secure\_password",
+    "password": "secure_password",
 
-&nbsp;   "roles": \["admin"],
+    "roles": ["admin"],
 
-&nbsp;   "type": "user"
+    "type": "user"
 
-&nbsp; }'
+  }'
 
 
 
-\# Set database security
+# Set database security
 
-curl -X PUT http://admin:YourSecurePassword123!@localhost:5984/books/\_security \\
+curl -X PUT http://admin:YourSecurePassword123!@localhost:5984/books/_security \
 
-&nbsp; -H "Content-Type: application/json" \\
+  -H "Content-Type: application/json" \
 
-&nbsp; -d '{
+  -d '{
 
-&nbsp;   "admins": { "roles": \["admin"] },
+    "admins": { "roles": ["admin"] },
 
-&nbsp;   "members": { "roles": \["librarian", "science\_dept", "children\_section"] }
+    "members": { "roles": ["librarian", "science_dept", "children_section"] }
 
-&nbsp; }'
+  }'
 
 ```
 
-
-
 ---
 
+### Client Setup Steps
 
-
-\### Client Setup Steps
-
-
-
-\#### 1. Clone \& Install Dependencies
+#### 1. Clone & Install Client Dependencies
 
 ```bash
 
-\# Clone repository
+# Clone repository
 
 git clone https://github.com/your-org/library-enterprise-client.git
 
@@ -874,415 +725,348 @@ cd library-enterprise-client
 
 
 
-\# Install dependencies
+# Install dependencies
 
 pnpm install
 
 ```
 
-
-
-\#### 2. Configure Client Environment (`.env`)
+#### 2. Configure Client Environment (`.env`)
 
 ```env
 
-\# Application Settings
+# Application Settings
 
-APP\_NAME="Library Enterprise Client"
+APP_NAME="Library Enterprise Client"
 
-APP\_VERSION="1.0.0"
+APP_VERSION="1.0.0"
 
 ENVIRONMENT="production"
 
 
 
-\# Server Connection
+# Server Connection
 
-SERVER\_URL="http://192.168.1.100:5984"  # Replace with your server IP
+SERVER_URL="http://192.168.1.100:5984"  # Replace with your server IP
 
-SYNC\_INTERVAL=300  # Sync every 5 minutes (seconds)
-
-
-
-\# Database Settings (Local PouchDB)
-
-LOCAL\_DB\_NAME="library\_local"
-
-LOCAL\_DB\_ADAPTER="websql"
+SYNC_INTERVAL=300  # Sync every 5 minutes (seconds)
 
 
 
-\# User Settings
+# Database Settings (Local PouchDB)
 
-DEFAULT\_DEPARTMENT="general"
+LOCAL_DB_NAME="library_local"
 
-AUTO\_SYNC=true
-
-OFFLINE\_MODE=false
+LOCAL_DB_ADAPTER="websql"
 
 
 
-\# Backup Settings
+# User Settings
 
-BACKUP\_PATH="./backups"
+DEFAULT_DEPARTMENT="general"
 
-BACKUP\_ON\_SYNC=true
+AUTO_SYNC=true
+
+OFFLINE_MODE=false
+
+
+
+# Backup Settings
+
+BACKUP_PATH="./backups"
+
+BACKUP_ON_SYNC=true
 
 ```
 
-
-
-\#### 3. Build \& Install Client
+#### 3. Build & Install Client
 
 ```bash
 
-\# Development mode
+# Development mode
 
 pnpm dev
 
 
 
-\# Build for production
+# Build for production
 
 pnpm build
 
 
 
-\# Package for Windows
+# Package for Windows
 
 pnpm build:win
 
 
 
-\# Install on workstation
+# Install on workstation
 
-\# Windows: Run installer
+# Windows: Run installer
 
-\# macOS: Drag to Applications
+# macOS: Drag to Applications
 
-\# Linux: Install package
+# Linux: Install package
 
 ```
 
-
-
 ---
 
-
-
-\### Environment Configuration Comparison
-
-
+### Environment Configuration Comparison
 
 | Setting | Manager Version | Enterprise Version |
 
 |---------|----------------|-------------------|
 
-| \*\*Database Type\*\* | Embedded SQLite | Remote CouchDB + Local PouchDB |
+| **Database Type** | Embedded SQLite | Remote CouchDB + Local PouchDB |
 
-| \*\*Connection String\*\* | `./data/library\_data.db` | `http://server-ip:5984/books` |
+| **Connection String** | `./data/library_data.db` | `http://server-ip:5984/books` |
 
-| \*\*Sync Mode\*\* | N/A (single device) | Bidirectional replication |
+| **Sync Mode** | N/A (single device) | Bidirectional replication |
 
-| \*\*Backup Location\*\* | Local folder | Server + Local |
+| **Backup Location** | Local folder | Server + Local |
 
-| \*\*User Authentication\*\* | Local accounts | CouchDB `\_users` database |
+| **User Authentication** | Local accounts | CouchDB `_users` database |
 
-| \*\*Role Management\*\* | Hardcoded in app | CouchDB security objects |
+| **Role Management** | Hardcoded in app | CouchDB security objects |
 
-| \*\*Data Isolation\*\* | N/A | Department-based views |
+| **Data Isolation** | N/A | Department-based views |
 
-| \*\*Offline Capability\*\* | Full functionality | Limited (local cache only) |
-
-
+| **Offline Capability** | Full functionality | Limited (local cache only) |
 
 ---
 
+## 🔧 DEPLOYMENT WORKFLOWS
 
-
-\## 🔧 DEPLOYMENT WORKFLOWS
-
-
-
-\### Manager Version Deployment
-
-
+### Manager Version Deployment
 
 ```mermaid
 
 flowchart TD
 
-&nbsp;   A\[Download Installer] --> B\[Run Setup]
+    A[Download Installer] --> B[Run Setup]
 
-&nbsp;   B --> C\[Choose Installation Path]
+    B --> C[Choose Installation Path]
 
-&nbsp;   C --> D\[Create Data Directory]
+    C --> D[Create Data Directory]
 
-&nbsp;   D --> E\[Initialize Database]
+    D --> E[Initialize Database]
 
-&nbsp;   E --> F\[Launch Application]
+    E --> F[Launch Application]
 
-&nbsp;   F --> G\[Start Using Library Manager]
+    F --> G[Start Using Library Manager]
 
 ```
 
+**Steps:**
 
+1. Download installer from release page
 
-\*\*Steps:\*\*
+2. Run installer (no admin rights required)
 
-1\. Download installer from release page
+3. Choose installation directory (default: `C:\Program Files\Library Manager`)
 
-2\. Run installer (no admin rights required)
+4. Application creates `data/` folder automatically
 
-3\. Choose installation directory (default: `C:\\Program Files\\Library Manager`)
+5. First launch initializes empty database
 
-4\. Application creates `data/` folder automatically
-
-5\. First launch initializes empty database
-
-6\. Ready to use immediately
-
-
+6. Ready to use immediately
 
 ---
 
-
-
-\### Enterprise Version Deployment
-
-
+### Enterprise Version Deployment
 
 ```mermaid
 
 flowchart TD
 
-&nbsp;   A\[Set Up Server] --> B\[Install Docker]
+    A[Set Up Server] --> B[Install Docker]
 
-&nbsp;   B --> C\[Deploy CouchDB]
+    B --> C[Deploy CouchDB]
 
-&nbsp;   C --> D\[Configure Security]
+    C --> D[Configure Security]
 
-&nbsp;   D --> E\[Create Databases]
+    D --> E[Create Databases]
 
-&nbsp;   E --> F\[Install Client on Workstations]
+    E --> F[Install Client on Workstations]
 
-&nbsp;   F --> G\[Configure Server URL]
+    F --> G[Configure Server URL]
 
-&nbsp;   G --> H\[Sync Initial Data]
+    G --> H[Sync Initial Data]
 
-&nbsp;   H --> I\[Start Using Enterprise System]
+    H --> I[Start Using Enterprise System]
 
 ```
 
+**Server Setup (One-Time):**
 
+1. Install Ubuntu Server on Raspberry Pi 4 or dedicated machine
 
-\*\*Server Setup (One-Time):\*\*
+2. Install Docker & Docker Compose
 
-1\. Install Ubuntu Server on Raspberry Pi 4 or dedicated machine
+3. Deploy CouchDB using `docker-compose.yml`
 
-2\. Install Docker \& Docker Compose
+4. Configure admin user and security settings
 
-3\. Deploy CouchDB using `docker-compose.yml`
+5. Create databases: `books`, `patrons`, `loans`, `users`
 
-4\. Configure admin user and security settings
+6. Set up backup schedule (daily incremental)
 
-5\. Create databases: `books`, `patrons`, `loans`, `users`
+**Client Setup (Per Workstation):**
 
-6\. Set up backup schedule (daily incremental)
+1. Download client installer
 
+2. Run installer on each library workstation
 
+3. Configure server URL during first launch
 
-\*\*Client Setup (Per Workstation):\*\*
+4. Authenticate with admin credentials
 
-1\. Download client installer
+5. Initial sync pulls all data from server
 
-2\. Run installer on each library workstation
-
-3\. Configure server URL during first launch
-
-4\. Authenticate with admin credentials
-
-5\. Initial sync pulls all data from server
-
-6\. Ready to use with offline capability
-
-
+6. Ready to use with offline capability
 
 ---
 
+## 📋 PRE-DEPLOYMENT CHECKLIST
 
+### Manager Version Checklist
 
-\## 📋 PRE-DEPLOYMENT CHECKLIST
+- [ ] Verify target PC meets minimum requirements
 
+- [ ] Ensure 100 MB free disk space available
 
+- [ ] Test installer on clean Windows/macOS/Linux VM
 
-\### Manager Version
+- [ ] Validate database creation on first launch
 
-\- \[ ] Verify target PC meets minimum requirements
+- [ ] Confirm backup functionality works
 
-\- \[ ] Ensure 100 MB free disk space available
+- [ ] Test on low-spec hardware (Celeron, 2GB RAM)
 
-\- \[ ] Test installer on clean Windows/macOS/Linux VM
+### Enterprise Version Checklist
 
-\- \[ ] Validate database creation on first launch
+- [ ] Server hardware meets minimum specs
 
-\- \[ ] Confirm backup functionality works
+- [ ] Network connectivity between server and clients
 
-\- \[ ] Test on low-spec hardware (Celeron, 2GB RAM)
+- [ ] Docker installed and running on server
 
+- [ ] CouchDB accessible from client machines
 
+- [ ] Security roles configured correctly
 
-\### Enterprise Version
+- [ ] Backup system tested and verified
 
-\- \[ ] Server hardware meets minimum specs
+- [ ] Client sync tested on multiple workstations
 
-\- \[ ] Network connectivity between server and clients
-
-\- \[ ] Docker installed and running on server
-
-\- \[ ] CouchDB accessible from client machines
-
-\- \[ ] Security roles configured correctly
-
-\- \[ ] Backup system tested and verified
-
-\- \[ ] Client sync tested on multiple workstations
-
-\- \[ ] Offline mode validated on client devices
-
-
+- [ ] Offline mode validated on client devices
 
 ---
 
+## 🔐 SECURITY CONSIDERATIONS
 
-
-\## 🔐 SECURITY CONSIDERATIONS
-
-
-
-\### Manager Version
+### Manager Version Security
 
 | Aspect | Implementation |
 
 |--------|----------------|
 
-| \*\*Data Encryption\*\* | SQLite file encrypted at rest (optional) |
+| **Data Encryption** | SQLite file encrypted at rest (optional) |
 
-| \*\*User Authentication\*\* | Local password hashing (bcrypt) |
+| **User Authentication** | Local password hashing (bcrypt) |
 
-| \*\*Access Control\*\* | Role-based within single application |
+| **Access Control** | Role-based within single application |
 
-| \*\*Audit Trail\*\* | Local logs stored in `logs/` directory |
+| **Audit Trail** | Local logs stored in `logs/` directory |
 
-| \*\*Backup Security\*\* | Encrypted backup files (optional) |
+| **Backup Security** | Encrypted backup files (optional) |
 
-
-
-\### Enterprise Version
+### Enterprise Version Security
 
 | Aspect | Implementation |
 
 |--------|----------------|
 
-| \*\*Data Encryption\*\* | TLS/SSL for server communication |
+| **Data Encryption** | TLS/SSL for server communication |
 
-| \*\*User Authentication\*\* | CouchDB `\_users` database with hashed passwords |
+| **User Authentication** | CouchDB `_users` database with hashed passwords |
 
-| \*\*Access Control\*\* | Database-level security objects per department |
+| **Access Control** | Database-level security objects per department |
 
-| \*\*Audit Trail\*\* | Server logs + client sync logs |
+| **Audit Trail** | Server logs + client sync logs |
 
-| \*\*Backup Security\*\* | Encrypted backups stored on server |
+| **Backup Security** | Encrypted backups stored on server |
 
-| \*\*Network Security\*\* | Firewall rules, VPN option for remote access |
-
-
+| **Network Security** | Firewall rules, VPN option for remote access |
 
 ---
 
+## 💡 RECOMMENDATIONS BY USE CASE
 
+### Choose **Manager Version** if
 
-\## 💡 RECOMMENDATIONS BY USE CASE
+- ✅ Single library location
 
+- ✅ Limited or no IT support
 
+- ✅ Budget constraints (free solution)
 
-\### Choose \*\*Manager Version\*\* if:
+- ✅ Unreliable internet connectivity
 
-\- ✅ Single library location
+- ✅ Small collection (<10,000 items)
 
-\- ✅ Limited or no IT support
+- ✅ Rural school or community library
 
-\- ✅ Budget constraints (free solution)
+### Choose **Enterprise Version** if
 
-\- ✅ Unreliable internet connectivity
+- ✅ Multiple departments or branches
 
-\- ✅ Small collection (<10,000 items)
+- ✅ Need centralized data management
 
-\- ✅ Rural school or community library
+- ✅ Real-time data sharing between locations
 
+- ✅ Large collection (>10,000 items)
 
+- ✅ University or district-level deployment
 
-\### Choose \*\*Enterprise Version\*\* if:
-
-\- ✅ Multiple departments or branches
-
-\- ✅ Need centralized data management
-
-\- ✅ Real-time data sharing between locations
-
-\- ✅ Large collection (>10,000 items)
-
-\- ✅ University or district-level deployment
-
-\- ✅ IT support available for server maintenance
-
-
+- ✅ IT support available for server maintenance
 
 ---
 
+## 🚀 NEXT STEPS
 
+### For Manager Version
 
-\## 🚀 NEXT STEPS
+1. Clone repository: `git clone https://github.com/your-org/library-manager.git`
 
+2. Install dependencies: `pnpm install`
 
+3. Build installer: `pnpm build:win` (or mac/linux)
 
-\### For Manager Version:
+4. Test on target hardware
 
-1\. Clone repository: `git clone https://github.com/your-org/library-manager.git`
+5. Deploy to library workstations
 
-2\. Install dependencies: `pnpm install`
+### For Enterprise Version
 
-3\. Build installer: `pnpm build:win` (or mac/linux)
+1. Set up server hardware (Raspberry Pi 4 recommended)
 
-4\. Test on target hardware
+2. Install Ubuntu Server + Docker
 
-5\. Deploy to library workstations
+3. Deploy CouchDB: `docker-compose up -d`
 
+4. Configure security and databases
 
+5. Build client installer: `pnpm build:win`
 
-\### For Enterprise Version:
+6. Install client on all workstations
 
-1\. Set up server hardware (Raspberry Pi 4 recommended)
+7. Configure server URL on each client
 
-2\. Install Ubuntu Server + Docker
-
-3\. Deploy CouchDB: `docker-compose up -d`
-
-4\. Configure security and databases
-
-5\. Build client installer: `pnpm build:win`
-
-6\. Install client on all workstations
-
-7\. Configure server URL on each client
-
-8\. Test sync and offline functionality
-
-
+8. Test sync and offline functionality
 
 ---
-
-
 
 This comparison provides clear, actionable guidance for setting up either version of the Library Management System. The Manager version is ideal for quick deployment with minimal overhead, while the Enterprise version offers scalability and multi-department support for larger institutions.
-

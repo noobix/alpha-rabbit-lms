@@ -1,6 +1,6 @@
-\# Library Management System: Workflow \& Departmental Functionality Specification  
+# Library Management System: Workflow & Departmental Functionality Specification  
 
-\*End-to-end acquisition-to-distribution workflow with role-based access for Manager (standalone) and Enterprise (multi-department) versions\*
+*End-to-end acquisition-to-distribution workflow with role-based access for Manager (standalone) and Enterprise (multi-department) versions*
 
 
 
@@ -8,9 +8,9 @@
 
 
 
-\## 📚 Core Workflow Architecture  
+## 📚 Core Workflow Architecture  
 
-\*Physical book lifecycle from selection to shelf placement\*
+*Physical book lifecycle from selection to shelf placement*
 
 
 
@@ -18,53 +18,53 @@
 
 flowchart TD
 
-&nbsp;   A\[Acquisitions Department] -->|Orders placed| B\[Processing Department]
+    A[Acquisitions Department] -->|Orders placed| B[Processing Department]
 
-&nbsp;   B -->|Cataloged \& classified| C\[Distribution Department]
+    B -->|Cataloged & classified| C[Distribution Department]
 
-&nbsp;   C -->|Routed by classification| D{Library Sections}
+    C -->|Routed by classification| D{Library Sections}
 
-&nbsp;   D --> E\[Children's Library]
+    D --> E[Children's Library]
 
-&nbsp;   D --> F\[Adult Library]
+    D --> F[Adult Library]
 
-&nbsp;   D --> G\[Reference Section]
+    D --> G[Reference Section]
 
-&nbsp;   D --> H\[Lending Section]
+    D --> H[Lending Section]
 
-&nbsp;   D --> I\[Extension Services]
+    D --> I[Extension Services]
 
-&nbsp;   D --> J\[Digital Library]
+    D --> J[Digital Library]
 
-&nbsp;   
+    
 
-&nbsp;   subgraph “External Departments”
+    subgraph “External Departments”
 
-&nbsp;       A
+        A
 
-&nbsp;       B
+        B
 
-&nbsp;       C
+        C
 
-&nbsp;   end
+    end
 
-&nbsp;   
+    
 
-&nbsp;   subgraph “Library Sections”
+    subgraph “Library Sections”
 
-&nbsp;       E
+        E
 
-&nbsp;       F
+        F
 
-&nbsp;       G
+        G
 
-&nbsp;       H
+        H
 
-&nbsp;       I
+        I
 
-&nbsp;       J
+        J
 
-&nbsp;   end
+    end
 
 ```
 
@@ -74,43 +74,43 @@ flowchart TD
 
 
 
-\## 👥 Department Roles \& Responsibilities
+## 👥 Department Roles & Responsibilities
 
 
 
-\### 1. Acquisitions Department (External to Library)
-
-| Role | Responsibilities | Key Data Captured | Manager vs Enterprise |
-
-|------|------------------|-------------------|------------------------|
-
-| \*\*Acquisitions Librarian\*\* | • Selects titles based on curriculum needs<br>• Places orders with publishers/vendors<br>• Tracks budget allocation per department<br>• Manages Ghana Card ID for vendor verification | • ISBN/ISSN<br>• Title, author, publisher<br>• Publication year<br>• Ghana Curriculum Tag (e.g., `BASIC-MATH-GRADE-6`)<br>• Vendor details + Ghana Card ID<br>• Budget code (e.g., `CHILDREN-2024-Q1`)<br>• Expected delivery date | \*\*Manager\*\*: Single user handles all acquisitions<br>\*\*Enterprise\*\*: Dedicated role with budget approval workflows |
-
-| \*\*Vendor Coordinator\*\* | • Verifies vendor credentials<br>• Tracks shipment status<br>• Receives physical deliveries<br>• Logs condition on arrival | • Shipment tracking number<br>• Delivery date/time<br>• Condition on arrival (1-5 scale)<br>• Discrepancy notes | \*\*Manager\*\*: Combined with Acquisitions Librarian role<br>\*\*Enterprise\*\*: Separate role with vendor portal access |
-
-
-
-\### 2. Processing Department (External to Library)
+### 1. Acquisitions Department (External to Library)
 
 | Role | Responsibilities | Key Data Captured | Manager vs Enterprise |
 
 |------|------------------|-------------------|------------------------|
 
-| \*\*Cataloging Specialist\*\* | • Assigns Dewey Decimal + Ghana Curriculum Tags<br>• Creates MARC21 records (simplified)<br>• Attaches RFID/barcode labels<br>• Records physical attributes | • Dewey Decimal classification<br>• Ghana Curriculum Tag (required)<br>• Barcode/RFID ID<br>• Spine condition (1-5)<br>• Cover condition (1-5)<br>• Page quality (1-5)<br>• Language (English/Twi/Ga) | \*\*Manager\*\*: All cataloging done by single user<br>\*\*Enterprise\*\*: Specialized roles per material type (children's vs academic) |
+| **Acquisitions Librarian** | • Selects titles based on curriculum needs<br>• Places orders with publishers/vendors<br>• Tracks budget allocation per department<br>• Manages Ghana Card ID for vendor verification | • ISBN/ISSN<br>• Title, author, publisher<br>• Publication year<br>• Ghana Curriculum Tag (e.g., `BASIC-MATH-GRADE-6`)<br>• Vendor details + Ghana Card ID<br>• Budget code (e.g., `CHILDREN-2024-Q1`)<br>• Expected delivery date | **Manager**: Single user handles all acquisitions<br>**Enterprise**: Dedicated role with budget approval workflows |
 
-| \*\*Quality Controller\*\* | • Verifies cataloging accuracy<br>• Inspects physical condition<br>• Flags damaged items for return<br>• Approves books for distribution | • Quality check timestamp<br>• Inspector name/service number<br>• Approval status (approved/returned/repair)<br>• Notes on discrepancies | \*\*Manager\*\*: Optional step (toggle in settings)<br>\*\*Enterprise\*\*: Mandatory approval workflow with audit trail |
+| **Vendor Coordinator** | • Verifies vendor credentials<br>• Tracks shipment status<br>• Receives physical deliveries<br>• Logs condition on arrival | • Shipment tracking number<br>• Delivery date/time<br>• Condition on arrival (1-5 scale)<br>• Discrepancy notes | **Manager**: Combined with Acquisitions Librarian role<br>**Enterprise**: Separate role with vendor portal access |
 
 
 
-\### 3. Distribution Department (External to Library)
+### 2. Processing Department (External to Library)
 
 | Role | Responsibilities | Key Data Captured | Manager vs Enterprise |
 
 |------|------------------|-------------------|------------------------|
 
-| \*\*Distribution Manager\*\* | • Routes books to library sections based on classification<br>• Generates packing slips per section<br>• Coordinates delivery logistics<br>• Tracks section inventory levels | • Destination section (children's/adult/reference/etc.)<br>• Packing slip ID<br>• Delivery date/time<br>• Transport method (internal cart/van)<br>• Section inventory threshold alerts | \*\*Manager\*\*: Manual routing via dropdown selection<br>\*\*Enterprise\*\*: Auto-routing rules + delivery scheduling |
+| **Cataloging Specialist** | • Assigns Dewey Decimal + Ghana Curriculum Tags<br>• Creates MARC21 records (simplified)<br>• Attaches RFID/barcode labels<br>• Records physical attributes | • Dewey Decimal classification<br>• Ghana Curriculum Tag (required)<br>• Barcode/RFID ID<br>• Spine condition (1-5)<br>• Cover condition (1-5)<br>• Page quality (1-5)<br>• Language (English/Twi/Ga) | **Manager**: All cataloging done by single user<br>**Enterprise**: Specialized roles per material type (children's vs academic) |
 
-| \*\*Logistics Coordinator\*\* | • Physically transports materials<br>• Confirms delivery receipt<br>• Reports delivery issues | • Delivery confirmation timestamp<br>• Recipient signature (digital)<br>• Condition on delivery notes | \*\*Manager\*\*: Combined with Distribution Manager<br>\*\*Enterprise\*\*: Mobile app for delivery confirmation |
+| **Quality Controller** | • Verifies cataloging accuracy<br>• Inspects physical condition<br>• Flags damaged items for return<br>• Approves books for distribution | • Quality check timestamp<br>• Inspector name/service number<br>• Approval status (approved/returned/repair)<br>• Notes on discrepancies | **Manager**: Optional step (toggle in settings)<br>**Enterprise**: Mandatory approval workflow with audit trail |
+
+
+
+### 3. Distribution Department (External to Library)
+
+| Role | Responsibilities | Key Data Captured | Manager vs Enterprise |
+
+|------|------------------|-------------------|------------------------|
+
+| **Distribution Manager** | • Routes books to library sections based on classification<br>• Generates packing slips per section<br>• Coordinates delivery logistics<br>• Tracks section inventory levels | • Destination section (children's/adult/reference/etc.)<br>• Packing slip ID<br>• Delivery date/time<br>• Transport method (internal cart/van)<br>• Section inventory threshold alerts | **Manager**: Manual routing via dropdown selection<br>**Enterprise**: Auto-routing rules + delivery scheduling |
+
+| **Logistics Coordinator** | • Physically transports materials<br>• Confirms delivery receipt<br>• Reports delivery issues | • Delivery confirmation timestamp<br>• Recipient signature (digital)<br>• Condition on delivery notes | **Manager**: Combined with Distribution Manager<br>**Enterprise**: Mobile app for delivery confirmation |
 
 
 
@@ -118,7 +118,7 @@ flowchart TD
 
 
 
-\## 📖 Library Sections \& Their Functions
+## 📖 Library Sections & Their Functions
 
 
 
@@ -126,17 +126,17 @@ flowchart TD
 
 |---------|----------------------|----------------------|------------------------------|
 
-| \*\*Children's Library\*\* | • Ghana Curriculum Tags: `KG-\*`, `PRIMARY-1` to `PRIMARY-6`<br>• Dewey: 000-099 (General), 398 (Folktales)<br>• Language: Twi/Ga prioritized | • Age-appropriate shelving (low shelves)<br>• Storytime scheduling<br>• Parent/guardian registration<br>• Batch management (Grade 1-6) | Receives packing slips tagged `SECTION:CHILDREN`<br>Confirms receipt via mobile scanner |
+| **Children's Library** | • Ghana Curriculum Tags: `KG-*`, `PRIMARY-1` to `PRIMARY-6`<br>• Dewey: 000-099 (General), 398 (Folktales)<br>• Language: Twi/Ga prioritized | • Age-appropriate shelving (low shelves)<br>• Storytime scheduling<br>• Parent/guardian registration<br>• Batch management (Grade 1-6) | Receives packing slips tagged `SECTION:CHILDREN`<br>Confirms receipt via mobile scanner |
 
-| \*\*Adult Library\*\* | • Ghana Curriculum Tags: `JHS-\*`, `SHS-\*`, `TERTIARY`<br>• Dewey: 100-999 (all subjects)<br>• Language: English primary | • Subject-based shelving<br>• Reading room management<br>• Patron research assistance | Receives packing slips tagged `SECTION:ADULT`<br>Updates shelf location in system |
+| **Adult Library** | • Ghana Curriculum Tags: `JHS-*`, `SHS-*`, `TERTIARY`<br>• Dewey: 100-999 (all subjects)<br>• Language: English primary | • Subject-based shelving<br>• Reading room management<br>• Patron research assistance | Receives packing slips tagged `SECTION:ADULT`<br>Updates shelf location in system |
 
-| \*\*Reference Section\*\* | • Dewey: 030 (Encyclopedias), 300-399 (Social Sciences)<br>• Non-circulating materials<br>• Ghana-specific resources (Constitution, District Maps) | • In-library use only<br>• Photocopy services<br>• Research assistance | Receives packing slips tagged `SECTION:REFERENCE`<br>Flags non-circulating status |
+| **Reference Section** | • Dewey: 030 (Encyclopedias), 300-399 (Social Sciences)<br>• Non-circulating materials<br>• Ghana-specific resources (Constitution, District Maps) | • In-library use only<br>• Photocopy services<br>• Research assistance | Receives packing slips tagged `SECTION:REFERENCE`<br>Flags non-circulating status |
 
-| \*\*Lending Section\*\* | • All circulating materials<br>• High-demand titles<br>• New arrivals display | • Checkout/return processing<br>• Due date management<br>• Overdue notices | Receives packing slips tagged `SECTION:LENDING`<br>Updates availability status |
+| **Lending Section** | • All circulating materials<br>• High-demand titles<br>• New arrivals display | • Checkout/return processing<br>• Due date management<br>• Overdue notices | Receives packing slips tagged `SECTION:LENDING`<br>Updates availability status |
 
-| \*\*Extension Services\*\* | • Mobile library materials<br>• Community outreach kits<br>• Rural school support | • Route planning<br>• Community schedule management<br>• Damage tracking from field use | Receives packing slips tagged `SECTION:EXTENSION`<br>Logs field usage conditions |
+| **Extension Services** | • Mobile library materials<br>• Community outreach kits<br>• Rural school support | • Route planning<br>• Community schedule management<br>• Damage tracking from field use | Receives packing slips tagged `SECTION:EXTENSION`<br>Logs field usage conditions |
 
-| \*\*Digital Library\*\* | • ISBN with digital format flag<br>• E-book/PDF/Audio formats<br>• DRM status | • Digital access management<br>• Device lending<br>• Usage analytics | Receives digital assets via secure transfer<br>Generates access codes per patron type |
+| **Digital Library** | • ISBN with digital format flag<br>• E-book/PDF/Audio formats<br>• DRM status | • Digital access management<br>• Device lending<br>• Usage analytics | Receives digital assets via secure transfer<br>Generates access codes per patron type |
 
 
 
@@ -144,7 +144,7 @@ flowchart TD
 
 
 
-\## 🔑 User Role Matrix \& Permissions
+## 🔑 User Role Matrix & Permissions
 
 
 
@@ -152,25 +152,25 @@ flowchart TD
 
 |------|--------------|------------|--------------|------------------|-----------------|-------------------|
 
-| \*\*System Admin\*\* | View only | View only | View only | Full access | Single user | District-level oversight |
+| **System Admin** | View only | View only | View only | Full access | Single user | District-level oversight |
 
-| \*\*Acquisitions Librarian\*\* | ✅ Full | View only | View only | View only | Combined role | Dedicated department |
+| **Acquisitions Librarian** | ✅ Full | View only | View only | View only | Combined role | Dedicated department |
 
-| \*\*Cataloging Specialist\*\* | View only | ✅ Full | View only | View only | Combined role | Specialized per material type |
+| **Cataloging Specialist** | View only | ✅ Full | View only | View only | Combined role | Specialized per material type |
 
-| \*\*Distribution Manager\*\* | View only | View only | ✅ Full | View only | Combined role | Dedicated department |
+| **Distribution Manager** | View only | View only | ✅ Full | View only | Combined role | Dedicated department |
 
-| \*\*Section Head\*\* | View only | View only | Receive only | ✅ Full for section | Combined role | Department head with analytics |
+| **Section Head** | View only | View only | Receive only | ✅ Full for section | Combined role | Department head with analytics |
 
-| \*\*Library Assistant\*\* | ❌ No access | ❌ No access | ❌ No access | ✅ Checkout/checkin only | Single role | Section-specific access |
+| **Library Assistant** | ❌ No access | ❌ No access | ❌ No access | ✅ Checkout/checkin only | Single role | Section-specific access |
 
 
 
-> 💡 \*\*Critical Design Principle\*\*:  
+> 💡 **Critical Design Principle**:  
 
-> - \*\*Manager Version\*\*: All roles exist within single installation; user switches roles via profile dropdown  
+> - **Manager Version**: All roles exist within single installation; user switches roles via profile dropdown  
 
-> - \*\*Enterprise Version\*\*: Role enforced at database level via CouchDB security objects; users cannot access other departments' data
+> - **Enterprise Version**: Role enforced at database level via CouchDB security objects; users cannot access other departments' data
 
 
 
@@ -178,39 +178,39 @@ flowchart TD
 
 
 
-\## ⚙️ Functionality Specification by Version
+## ⚙️ Functionality Specification by Version
 
 
 
-\### Manager Version (Standalone Desktop)
+### Manager Version (Standalone Desktop)
 
 | Workflow Stage | Core Functionality | Technical Implementation |
 
 |----------------|-------------------|--------------------------|
 
-| \*\*Acquisitions\*\* | • Manual order entry form<br>• CSV import for bulk orders<br>• Budget tracking (simple ledger)<br>• Vendor list with Ghana Card ID storage | PouchDB documents:<br>`{ type: 'order', vendorGhanaCard: 'hashed', items: \[...] }` |
+| **Acquisitions** | • Manual order entry form<br>• CSV import for bulk orders<br>• Budget tracking (simple ledger)<br>• Vendor list with Ghana Card ID storage | PouchDB documents:<br>`{ type: 'order', vendorGhanaCard: 'hashed', items: [...] }` |
 
-| \*\*Processing\*\* | • Simplified cataloging form<br>• Barcode generation (PDF417)<br>• Health scoring sliders (1-5)<br>• Batch assignment for schools | PouchDB documents:<br>`{ type: 'book', ghanaCurriculumTag: 'BASIC-MATH-GRADE-6', spineCondition: 4, ... }` |
+| **Processing** | • Simplified cataloging form<br>• Barcode generation (PDF417)<br>• Health scoring sliders (1-5)<br>• Batch assignment for schools | PouchDB documents:<br>`{ type: 'book', ghanaCurriculumTag: 'BASIC-MATH-GRADE-6', spineCondition: 4, ... }` |
 
-| \*\*Distribution\*\* | • Manual section assignment dropdown<br>• Packing slip PDF generator<br>• Delivery confirmation checkbox | PouchDB documents:<br>`{ type: 'distribution', destinationSection: 'children', packingSlipId: 'PS-2024-001', ... }` |
+| **Distribution** | • Manual section assignment dropdown<br>• Packing slip PDF generator<br>• Delivery confirmation checkbox | PouchDB documents:<br>`{ type: 'distribution', destinationSection: 'children', packingSlipId: 'PS-2024-001', ... }` |
 
-| \*\*Library Sections\*\* | • Unified interface for all sections<br>• Role switcher in header<br>• Section filter toggle | Single React component with `currentSection` state |
+| **Library Sections** | • Unified interface for all sections<br>• Role switcher in header<br>• Section filter toggle | Single React component with `currentSection` state |
 
 
 
-\### Enterprise Version (Multi-Department)
+### Enterprise Version (Multi-Department)
 
 | Workflow Stage | Core Functionality | Technical Implementation |
 
 |----------------|-------------------|--------------------------|
 
-| \*\*Acquisitions\*\* | • Budget approval workflows<br>• Vendor portal integration<br>• Automated ISBN lookup<br>• Ghana Education Service curriculum alignment checks | CouchDB design docs:<br>`\_design/acquisitions` with validation functions enforcing Ghana Card ID format |
+| **Acquisitions** | • Budget approval workflows<br>• Vendor portal integration<br>• Automated ISBN lookup<br>• Ghana Education Service curriculum alignment checks | CouchDB design docs:<br>`_design/acquisitions` with validation functions enforcing Ghana Card ID format |
 
-| \*\*Processing\*\* | • MARC21 import/export<br>• Auto-classification via ISBN<br>• Quality control approval chains<br>• RFID batch programming | CouchDB replication filters:<br>`processing-only` filter replicates only `type: 'book'` docs to processing clients |
+| **Processing** | • MARC21 import/export<br>• Auto-classification via ISBN<br>• Quality control approval chains<br>• RFID batch programming | CouchDB replication filters:<br>`processing-only` filter replicates only `type: 'book'` docs to processing clients |
 
-| \*\*Distribution\*\* | • Auto-routing rules engine<br>• Delivery scheduling calendar<br>• Mobile delivery confirmation app<br>• Section inventory threshold alerts | CouchDB update handlers:<br>Trigger `distribution-ready` event when book status changes to `approved` |
+| **Distribution** | • Auto-routing rules engine<br>• Delivery scheduling calendar<br>• Mobile delivery confirmation app<br>• Section inventory threshold alerts | CouchDB update handlers:<br>Trigger `distribution-ready` event when book status changes to `approved` |
 
-| \*\*Library Sections\*\* | • Department-specific dashboards<br>• Real-time inventory sync<br>• Section head analytics<br>• Mobile scanner integration | CouchDB security objects:<br>`members: { roles: \['children\_section'] }` restricts data access |
+| **Library Sections** | • Department-specific dashboards<br>• Real-time inventory sync<br>• Section head analytics<br>• Mobile scanner integration | CouchDB security objects:<br>`members: { roles: ['children_section'] }` restricts data access |
 
 
 
@@ -218,61 +218,61 @@ flowchart TD
 
 
 
-\## 🔄 Workflow Data Model (PouchDB/CouchDB Documents)
+## 🔄 Workflow Data Model (PouchDB/CouchDB Documents)
 
 
 
-\### Acquisition Order Document
+### Acquisition Order Document
 
 ```json
 
 {
 
-&nbsp; "\_id": "order-2024-001",
+  "_id": "order-2024-001",
 
-&nbsp; "type": "acquisition\_order",
+  "type": "acquisition_order",
 
-&nbsp; "status": "placed",
+  "status": "placed",
 
-&nbsp; "placedAt": "2024-02-15T08:30:00Z",
+  "placedAt": "2024-02-15T08:30:00Z",
 
-&nbsp; "vendor": {
+  "vendor": {
 
-&nbsp;   "name": "Accra Educational Publishers",
+    "name": "Accra Educational Publishers",
 
-&nbsp;   "ghanaCardId": "GHA-123456789-0", // Stored hashed
+    "ghanaCardId": "GHA-123456789-0", // Stored hashed
 
-&nbsp;   "contactPhone": "+233241234567"
+    "contactPhone": "+233241234567"
 
-&nbsp; },
+  },
 
-&nbsp; "items": \[
+  "items": [
 
-&nbsp;   {
+    {
 
-&nbsp;     "isbn": "978-9964-883-15-2",
+      "isbn": "978-9964-883-15-2",
 
-&nbsp;     "title": "Basic Science for Primary 6",
+      "title": "Basic Science for Primary 6",
 
-&nbsp;     "author": "Kofi Mensah",
+      "author": "Kofi Mensah",
 
-&nbsp;     "quantity": 50,
+      "quantity": 50,
 
-&nbsp;     "unitPrice": 15.50,
+      "unitPrice": 15.50,
 
-&nbsp;     "ghanaCurriculumTag": "BASIC-SCIENCE-GRADE-6",
+      "ghanaCurriculumTag": "BASIC-SCIENCE-GRADE-6",
 
-&nbsp;     "targetSection": "children"
+      "targetSection": "children"
 
-&nbsp;   }
+    }
 
-&nbsp; ],
+  ],
 
-&nbsp; "budgetCode": "CHILDREN-2024-Q1",
+  "budgetCode": "CHILDREN-2024-Q1",
 
-&nbsp; "totalAmount": 775.00,
+  "totalAmount": 775.00,
 
-&nbsp; "placedBy": "user:librarian-001"
+  "placedBy": "user:librarian-001"
 
 }
 
@@ -280,71 +280,71 @@ flowchart TD
 
 
 
-\### Processed Book Document
+### Processed Book Document
 
 ```json
 
 {
 
-&nbsp; "\_id": "book-BASIC-SCI-G6-001",
+  "_id": "book-BASIC-SCI-G6-001",
 
-&nbsp; "type": "processed\_book",
+  "type": "processed_book",
 
-&nbsp; "acquisitionOrderId": "order-2024-001",
+  "acquisitionOrderId": "order-2024-001",
 
-&nbsp; "status": "approved",
+  "status": "approved",
 
-&nbsp; "cataloging": {
+  "cataloging": {
 
-&nbsp;   "isbn": "978-9964-883-15-2",
+    "isbn": "978-9964-883-15-2",
 
-&nbsp;   "title": "Basic Science for Primary 6",
+    "title": "Basic Science for Primary 6",
 
-&nbsp;   "author": "Kofi Mensah",
+    "author": "Kofi Mensah",
 
-&nbsp;   "deweyDecimal": "500",
+    "deweyDecimal": "500",
 
-&nbsp;   "ghanaCurriculumTag": "BASIC-SCIENCE-GRADE-6",
+    "ghanaCurriculumTag": "BASIC-SCIENCE-GRADE-6",
 
-&nbsp;   "language": "en",
+    "language": "en",
 
-&nbsp;   "barcode": "BASIC-SCI-G6-001"
+    "barcode": "BASIC-SCI-G6-001"
 
-&nbsp; },
+  },
 
-&nbsp; "physicalAttributes": {
+  "physicalAttributes": {
 
-&nbsp;   "spineCondition": 5,
+    "spineCondition": 5,
 
-&nbsp;   "coverCondition": 4,
+    "coverCondition": 4,
 
-&nbsp;   "pagesCondition": 5,
+    "pagesCondition": 5,
 
-&nbsp;   "healthScore": 4.7 // Auto-calculated average
+    "healthScore": 4.7 // Auto-calculated average
 
-&nbsp; },
+  },
 
-&nbsp; "classification": {
+  "classification": {
 
-&nbsp;   "primarySection": "children",
+    "primarySection": "children",
 
-&nbsp;   "ageGroup": "10-12",
+    "ageGroup": "10-12",
 
-&nbsp;   "readingLevel": "grade-6"
+    "readingLevel": "grade-6"
 
-&nbsp; },
+  },
 
-&nbsp; "qualityControl": {
+  "qualityControl": {
 
-&nbsp;   "inspectedBy": "user:qc-specialist-003",
+    "inspectedBy": "user:qc-specialist-003",
 
-&nbsp;   "inspectedAt": "2024-02-20T14:22:00Z",
+    "inspectedAt": "2024-02-20T14:22:00Z",
 
-&nbsp;   "approved": true,
+    "approved": true,
 
-&nbsp;   "notes": "Minor cover wear on 3 copies"
+    "notes": "Minor cover wear on 3 copies"
 
-&nbsp; }
+  }
 
 }
 
@@ -352,57 +352,57 @@ flowchart TD
 
 
 
-\### Distribution Record
+### Distribution Record
 
 ```json
 
 {
 
-&nbsp; "\_id": "dist-2024-001",
+  "_id": "dist-2024-001",
 
-&nbsp; "type": "distribution\_record",
+  "type": "distribution_record",
 
-&nbsp; "status": "delivered",
+  "status": "delivered",
 
-&nbsp; "processedBookIds": \[
+  "processedBookIds": [
 
-&nbsp;   "book-BASIC-SCI-G6-001",
+    "book-BASIC-SCI-G6-001",
 
-&nbsp;   "book-BASIC-SCI-G6-002",
+    "book-BASIC-SCI-G6-002",
 
-&nbsp;   // ... 48 more
+    // ... 48 more
 
-&nbsp; ],
+  ],
 
-&nbsp; "routing": {
+  "routing": {
 
-&nbsp;   "source": "processing-center-accra",
+    "source": "processing-center-accra",
 
-&nbsp;   "destinationSection": "children",
+    "destinationSection": "children",
 
-&nbsp;   "destinationLocation": "St. Peter's School Library",
+    "destinationLocation": "St. Peter's School Library",
 
-&nbsp;   "schoolId": "ACCRA-GREATER-001",
+    "schoolId": "ACCRA-GREATER-001",
 
-&nbsp;   "batchCode": "GRADE-6A"
+    "batchCode": "GRADE-6A"
 
-&nbsp; },
+  },
 
-&nbsp; "logistics": {
+  "logistics": {
 
-&nbsp;   "packingSlipId": "PS-2024-001",
+    "packingSlipId": "PS-2024-001",
 
-&nbsp;   "dispatchedAt": "2024-02-22T09:15:00Z",
+    "dispatchedAt": "2024-02-22T09:15:00Z",
 
-&nbsp;   "deliveredAt": "2024-02-22T11:45:00Z",
+    "deliveredAt": "2024-02-22T11:45:00Z",
 
-&nbsp;   "deliveredBy": "user:logistics-005",
+    "deliveredBy": "user:logistics-005",
 
-&nbsp;   "receivedBy": "user:section-head-children-002",
+    "receivedBy": "user:section-head-children-002",
 
-&nbsp;   "conditionOnDelivery": "good"
+    "conditionOnDelivery": "good"
 
-&nbsp; }
+  }
 
 }
 
@@ -414,7 +414,7 @@ flowchart TD
 
 
 
-\## 🌍 Ghana-Specific Workflow Adaptations
+## 🌍 Ghana-Specific Workflow Adaptations
 
 
 
@@ -422,17 +422,17 @@ flowchart TD
 
 |------------------|-------------------|------------------|
 
-| \*\*Vendor Verification\*\* | Business license check | Ghana Card ID validation + Education Service vendor registry cross-check |
+| **Vendor Verification** | Business license check | Ghana Card ID validation + Education Service vendor registry cross-check |
 
-| \*\*Curriculum Tagging\*\* | Dewey Decimal only | Dual classification: Dewey + Ghana Education Service syllabus tags |
+| **Curriculum Tagging** | Dewey Decimal only | Dual classification: Dewey + Ghana Education Service syllabus tags |
 
-| \*\*School Distribution\*\* | Generic "children" section | Batch-aware routing: `GRADE-6A` at St. Peter's ≠ `GRADE-6B` at Presby School |
+| **School Distribution** | Generic "children" section | Batch-aware routing: `GRADE-6A` at St. Peter's ≠ `GRADE-6B` at Presby School |
 
-| \*\*Language Support\*\* | English primary | Twi/Ga language flags for children's materials; section heads can filter by language |
+| **Language Support** | English primary | Twi/Ga language flags for children's materials; section heads can filter by language |
 
-| \*\*Rural Delivery\*\* | Standard courier | Extension Services workflow with mobile library routes (Tamale → Bolgatanga corridor) |
+| **Rural Delivery** | Standard courier | Extension Services workflow with mobile library routes (Tamale → Bolgatanga corridor) |
 
-| \*\*Budget Tracking\*\* | Fiscal year | Aligns with Ghana academic calendar (September–August) + Ministry of Education budget cycles |
+| **Budget Tracking** | Fiscal year | Aligns with Ghana academic calendar (September–August) + Ministry of Education budget cycles |
 
 
 
@@ -440,11 +440,11 @@ flowchart TD
 
 
 
-\## 🔐 Security \& Access Control Implementation
+## 🔐 Security & Access Control Implementation
 
 
 
-\### Manager Version (PouchDB Security)
+### Manager Version (PouchDB Security)
 
 ```javascript
 
@@ -452,13 +452,13 @@ flowchart TD
 
 const canAccessSection = (userRole, requestedSection) => {
 
-&nbsp; if (userRole === 'admin') return true;
+  if (userRole === 'admin') return true;
 
-&nbsp; if (userRole === 'librarian') return true; // Combined role has full access
+  if (userRole === 'librarian') return true; // Combined role has full access
 
-&nbsp; if (userRole === 'assistant' \&\& requestedSection === currentUserSection) return true;
+  if (userRole === 'assistant' && requestedSection === currentUserSection) return true;
 
-&nbsp; return false;
+  return false;
 
 };
 
@@ -468,7 +468,7 @@ const canAccessSection = (userRole, requestedSection) => {
 
 db.createIndex({
 
-&nbsp; index: { fields: \['type', 'section'] }
+  index: { fields: ['type', 'section'] }
 
 });
 
@@ -478,13 +478,13 @@ db.createIndex({
 
 db.find({
 
-&nbsp; selector: {
+  selector: {
 
-&nbsp;   type: 'processed\_book',
+    type: 'processed_book',
 
-&nbsp;   section: currentUserSection // e.g., 'children'
+    section: currentUserSection // e.g., 'children'
 
-&nbsp; }
+  }
 
 });
 
@@ -492,7 +492,7 @@ db.find({
 
 
 
-\### Enterprise Version (CouchDB Security Objects)
+### Enterprise Version (CouchDB Security Objects)
 
 ```json
 
@@ -500,35 +500,35 @@ db.find({
 
 {
 
-&nbsp; "\_id": "\_security",
+  "_id": "_security",
 
-&nbsp; "admins": {
+  "admins": {
 
-&nbsp;   "roles": \["admin"],
+    "roles": ["admin"],
 
-&nbsp;   "names": \["system-admin"]
+    "names": ["system-admin"]
 
-&nbsp; },
+  },
 
-&nbsp; "members": {
+  "members": {
 
-&nbsp;   "roles": \[
+    "roles": [
 
-&nbsp;     "acquisitions\_dept",
+      "acquisitions_dept",
 
-&nbsp;     "processing\_dept",
+      "processing_dept",
 
-&nbsp;     "distribution\_dept",
+      "distribution_dept",
 
-&nbsp;     "children\_section",
+      "children_section",
 
-&nbsp;     "adult\_section",
+      "adult_section",
 
-&nbsp;     "reference\_section"
+      "reference_section"
 
-&nbsp;   ]
+    ]
 
-&nbsp; }
+  }
 
 }
 
@@ -538,39 +538,39 @@ db.find({
 
 {
 
-&nbsp; "\_id": "\_design/validation",
+  "_id": "_design/validation",
 
-&nbsp; "validate\_doc\_update": "function(newDoc, oldDoc, userCtx) {
+  "validate_doc_update": "function(newDoc, oldDoc, userCtx) {
 
-&nbsp;   // Acquisitions can only create order documents
+    // Acquisitions can only create order documents
 
-&nbsp;   if (newDoc.type === 'acquisition\_order' \&\& !userCtx.roles.includes('acquisitions\_dept')) {
+    if (newDoc.type === 'acquisition_order' && !userCtx.roles.includes('acquisitions_dept')) {
 
-&nbsp;     throw { forbidden: 'Acquisitions role required' };
+      throw { forbidden: 'Acquisitions role required' };
 
-&nbsp;   }
+    }
 
-&nbsp;   
+    
 
-&nbsp;   // Section heads can only update books in their section
+    // Section heads can only update books in their section
 
-&nbsp;   if (newDoc.type === 'processed\_book' \&\& newDoc.section !== userCtx.section) {
+    if (newDoc.type === 'processed_book' && newDoc.section !== userCtx.section) {
 
-&nbsp;     throw { forbidden: 'Cannot modify books outside your section' };
+      throw { forbidden: 'Cannot modify books outside your section' };
 
-&nbsp;   }
+    }
 
-&nbsp;   
+    
 
-&nbsp;   // Ghana Card ID must be hashed before storage
+    // Ghana Card ID must be hashed before storage
 
-&nbsp;   if (newDoc.vendor?.ghanaCardId \&\& !newDoc.vendor.ghanaCardId.startsWith('hashed:')) {
+    if (newDoc.vendor?.ghanaCardId && !newDoc.vendor.ghanaCardId.startsWith('hashed:')) {
 
-&nbsp;     throw { forbidden: 'Ghana Card ID must be hashed' };
+      throw { forbidden: 'Ghana Card ID must be hashed' };
 
-&nbsp;   }
+    }
 
-&nbsp; }"
+  }"
 
 }
 
@@ -582,7 +582,7 @@ db.find({
 
 
 
-\## 📊 Departmental Analytics \& Reporting
+## 📊 Departmental Analytics & Reporting
 
 
 
@@ -590,15 +590,15 @@ db.find({
 
 |------------|-------------|-----------------|-------------------|
 
-| \*\*Acquisitions\*\* | • Budget vs actual spending<br>• Vendor performance (on-time delivery)<br>• Curriculum coverage gaps | Basic CSV export | Real-time dashboards + Ministry of Education compliance reports |
+| **Acquisitions** | • Budget vs actual spending<br>• Vendor performance (on-time delivery)<br>• Curriculum coverage gaps | Basic CSV export | Real-time dashboards + Ministry of Education compliance reports |
 
-| \*\*Processing\*\* | • Cataloging throughput<br>• Quality rejection rates<br>• Health score distribution | Simple charts | Predictive analytics: "Books likely to need repair in 6 months" |
+| **Processing** | • Cataloging throughput<br>• Quality rejection rates<br>• Health score distribution | Simple charts | Predictive analytics: "Books likely to need repair in 6 months" |
 
-| \*\*Distribution\*\* | • Delivery timeliness<br>• Section inventory levels<br>• Route efficiency | Manual logs | GPS-tracked deliveries + automated restocking alerts |
+| **Distribution** | • Delivery timeliness<br>• Section inventory levels<br>• Route efficiency | Manual logs | GPS-tracked deliveries + automated restocking alerts |
 
-| \*\*Children's Section\*\* | • Batch reading progress<br>• Popular titles by grade<br>• Repeat borrowers | Patron history view | Integration with Ghana Education Service literacy metrics |
+| **Children's Section** | • Batch reading progress<br>• Popular titles by grade<br>• Repeat borrowers | Patron history view | Integration with Ghana Education Service literacy metrics |
 
-| \*\*All Sections\*\* | • Collection health report<br>• Withdrawal recommendations<br>• Patron engagement scores | Manual health scoring | AI-assisted withdrawal flags based on spine/cover degradation patterns |
+| **All Sections** | • Collection health report<br>• Withdrawal recommendations<br>• Patron engagement scores | Manual health scoring | AI-assisted withdrawal flags based on spine/cover degradation patterns |
 
 
 
@@ -606,11 +606,11 @@ db.find({
 
 
 
-\## ✅ Implementation Roadmap by Version
+## ✅ Implementation Roadmap by Version
 
 
 
-\### Manager Version (Weeks 1-8)
+### Manager Version (Weeks 1-8)
 
 | Week | Focus Area | Key Deliverables |
 
@@ -626,7 +626,7 @@ db.find({
 
 
 
-\### Enterprise Version (Weeks 9-16)
+### Enterprise Version (Weeks 9-16)
 
 | Week | Focus Area | Key Deliverables |
 
@@ -646,37 +646,37 @@ db.find({
 
 
 
-\## ⚠️ Critical Success Factors for Ghana Deployment
+## ⚠️ Critical Success Factors for Ghana Deployment
 
 
 
-1\. \*\*Offline-First Processing\*\*  
+1. **Offline-First Processing**  
 
-&nbsp;  - Processing centers often have unstable internet → All cataloging must work offline with sync-on-connect
+   - Processing centers often have unstable internet → All cataloging must work offline with sync-on-connect
 
-&nbsp;  
+   
 
-2\. \*\*Ghana Card ID Handling\*\*  
+2. **Ghana Card ID Handling**  
 
-&nbsp;  - Never store plaintext Ghana Card IDs → Always hash with salt before storage
+   - Never store plaintext Ghana Card IDs → Always hash with salt before storage
 
-&nbsp;  
+   
 
-3\. \*\*Batch-Aware Distribution\*\*  
+3. **Batch-Aware Distribution**  
 
-&nbsp;  - School libraries need grade-specific routing → Distribution must preserve batch context (`GRADE-6A` ≠ `GRADE-6B`)
+   - School libraries need grade-specific routing → Distribution must preserve batch context (`GRADE-6A` ≠ `GRADE-6B`)
 
-&nbsp;  
+   
 
-4\. \*\*Low-Spec Hardware Support\*\*  
+4. **Low-Spec Hardware Support**  
 
-&nbsp;  - Processing centers use aging Windows PCs → Manager version must run on 4GB RAM devices
+   - Processing centers use aging Windows PCs → Manager version must run on 4GB RAM devices
 
-&nbsp;  
+   
 
-5\. \*\*Ministry of Education Alignment\*\*  
+5. **Ministry of Education Alignment**  
 
-&nbsp;  - Curriculum tags must match Ghana Education Service syllabus → Quarterly updates via OTA
+   - Curriculum tags must match Ghana Education Service syllabus → Quarterly updates via OTA
 
 
 
@@ -684,23 +684,23 @@ db.find({
 
 
 
-\## 📥 Ready-to-Implement Specifications
+## 📥 Ready-to-Implement Specifications
 
 
 
 This document provides:
 
-\- ✅ Clear departmental responsibilities with Ghana-specific adaptations
+- ✅ Clear departmental responsibilities with Ghana-specific adaptations
 
-\- ✅ Role-based access control patterns for both Manager and Enterprise versions
+- ✅ Role-based access control patterns for both Manager and Enterprise versions
 
-\- ✅ Document schemas ready for PouchDB/CouchDB implementation
+- ✅ Document schemas ready for PouchDB/CouchDB implementation
 
-\- ✅ Workflow automation rules for distribution routing
+- ✅ Workflow automation rules for distribution routing
 
-\- ✅ Security patterns compliant with Ghana Data Protection Act
+- ✅ Security patterns compliant with Ghana Data Protection Act
 
 
 
-\*\*Next Step\*\*: Begin implementation with Manager version acquisition module using the provided document schema. Enterprise version can be built incrementally by adding CouchDB security objects atop the same data model.
+**Next Step**: Begin implementation with Manager version acquisition module using the provided document schema. Enterprise version can be built incrementally by adding CouchDB security objects atop the same data model.
 

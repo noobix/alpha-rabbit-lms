@@ -36,6 +36,7 @@ Primary objective: keep all build decisions anchored to `docs/jira/compression.m
 - No plaintext Ghana Card IDs in storage, logs, backups, exports, or UI state dumps.
 - Ghana Card hashing must execute in Electron main process only.
 - Core data docs include `_id`, `type`, `createdAt`, `updatedAt`, `_syncStatus`, `_schemaVersion`.
+- Package manager standard: `pnpm` is the default for this project; use `pnpm` for install/run/build scripts and avoid `npm`/`yarn` commands in implementation docs.
 - Device baseline: Windows 10, 4GB RAM, unstable power/internet expected.
 - Offline-first means every critical workflow completes locally and sync is deferred.
 
