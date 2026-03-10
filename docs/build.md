@@ -862,3 +862,157 @@ A ticket is complete only if all conditions are true:
 - Manager/Enterprise impact is recorded in implementation notes.
 - Extension Services department boundary verified: Extension staff cannot access library section data, and vice versa.
 - Bulk allocation workflow integrity confirmed where applicable: books tracked from Lending → Extension → return.
+
+---
+
+## 5) Git Branching & Commit Workflow
+
+### Overview
+
+All feature development follows a branch-per-ticket model anchored to ticket IDs from `docs/jira/compression.md`. The `testing-main` branch is the integration target for all feature work. Pull requests are the only merge path into `testing-main`.
+
+### Branch Naming Convention
+
+```
+LMS-[XXX]/[title-or-description]
+```
+
+- `[XXX]` = the numeric ticket ID from `compression.md` (e.g., `101`, `302`, `801`)
+- `[title-or-description]` = kebab-case summary of the ticket title
+
+**Examples:**
+
+| Ticket | Branch Name |
+|--------|-------------|
+| LMS-101 | `LMS-101/implement-sha256-hashing-ghana-card-id` |
+| LMS-302 | `LMS-302/build-budget-tracking-ges-alignment` |
+| LMS-801 | `LMS-801/create-bulk-book-requests-rotation-cycles` |
+| LMS-NA-001 | `LMS-NA-001/power-outage-resilience-validation` |
+
+### Workflow Steps (Using GitHub MCP Tools)
+
+#### Step 1: Create Feature Branch from `testing-main`
+
+Use the GitHub MCP `create_branch` tool to create the branch on the remote, branching off `testing-main`:
+
+```
+Tool: mcp_io_github_git_create_branch
+  owner: noobix
+  repo: alpha-rabbit-lms
+  branch: LMS-[XXX]/[title-or-description]
+  from_branch: testing-main
+```
+
+Then fetch and checkout locally:
+
+```bash
+git fetch alpha-rabbit-lms
+git checkout -b LMS-[XXX]/[title-or-description] alpha-rabbit-lms/LMS-[XXX]/[title-or-description]
+```
+
+#### Step 2: Pull Latest from `testing-main`
+
+Before starting work, ensure the feature branch has the latest from `testing-main`:
+
+```bash
+git pull alpha-rabbit-lms testing-main
+```
+
+#### Step 3: Implement the Feature
+
+Work on the ticket. Commit messages should reference the ticket ID:
+
+```
+LMS-[XXX]: <short description of change>
+```
+
+**Commit message format:**
+
+```
+LMS-[XXX]: <type>: <description>
+
+- <detail 1>
+- <detail 2>
+```
+
+Where `<type>` is one of: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
+
+#### Step 4: Push Feature Branch
+
+Use the GitHub MCP `push_files` tool or push via git to the feature branch:
+
+```
+Tool: mcp_io_github_git_push_files
+  owner: noobix
+  repo: alpha-rabbit-lms
+  branch: LMS-[XXX]/[title-or-description]
+  files: [{ path: "<file>", content: "<content>" }]
+  message: "LMS-[XXX]: <commit message>"
+```
+
+Or via local git:
+
+```bash
+git add -A
+git commit -m "LMS-[XXX]: <type>: <description>"
+git push alpha-rabbit-lms LMS-[XXX]/[title-or-description]
+```
+
+#### Step 5: Create Pull Request to `testing-main`
+
+Use the GitHub MCP `create_pull_request` tool:
+
+```
+Tool: mcp_io_github_git_create_pull_request
+  owner: noobix
+  repo: alpha-rabbit-lms
+  title: "LMS-[XXX]: <ticket title>"
+  head: LMS-[XXX]/[title-or-description]
+  base: testing-main
+  body: |
+    ## Ticket
+    **LMS-[XXX]**: <ticket title>
+
+    ## Changes
+    - <summary of what was implemented>
+
+    ## Acceptance Criteria (from compression.md)
+    - [ ] <AC 1>
+    - [ ] <AC 2>
+    - [ ] <AC 3>
+
+    ## Completion Gate Checklist
+    - [ ] All acceptance criteria satisfied
+    - [ ] Offline behavior demonstrated
+    - [ ] Security/privacy checks pass
+    - [ ] Audit artifacts exist where required
+    - [ ] Manager/Enterprise impact recorded
+```
+
+#### Step 6: Review & Merge
+
+After PR approval, merge into `testing-main`. Delete the feature branch after merge.
+
+### Sprint Branch Mapping (from compression.md)
+
+| Sprint | Tickets | Branch Names |
+|--------|---------|-------------|
+| Sprint 1 | LMS-101, LMS-102, LMS-103 | `LMS-101/implement-sha256-hashing-ghana-card-id`<br>`LMS-102/build-incremental-backup-whatsapp-compression`<br>`LMS-103/implement-30-second-auto-save-power-outage` |
+| Sprint 2 | LMS-201, LMS-202, LMS-301, LMS-302 | `LMS-201/ghana-data-protection-act-compliance`<br>`LMS-202/integrate-ges-curriculum-tags`<br>`LMS-301/vendor-management-ghana-card-validation`<br>`LMS-302/build-budget-tracking-ges-alignment` |
+| Sprint 3 | LMS-401, LMS-402, LMS-403, LMS-404 | `LMS-401/condition-scoring-sliders`<br>`LMS-402/mold-risk-assessment-seasonal-calendar`<br>`LMS-403/generate-pdf417-barcodes-gla-format`<br>`LMS-404/route-books-extension-services-durability` |
+| Sprint 4 | LMS-501, LMS-502, LMS-503, LMS-504 | `LMS-501/batch-aware-packing-slips`<br>`LMS-502/rural-delivery-tamale-bolgatanga`<br>`LMS-503/rainy-season-alerts-packing-slips`<br>`LMS-504/deliver-books-extension-depot-rotation` |
+| Sprint 5 | LMS-601, LMS-602, LMS-603 | `LMS-601/ges-batch-promotion-workflow`<br>`LMS-602/degradation-threshold-enforcement`<br>`LMS-603/teleporter-detection-oral-tradition` |
+| Sprint 6 | LMS-701, LMS-702, LMS-703, LMS-851, LMS-852, LMS-860 | `LMS-701/staff-profile-ghana-card-hashing`<br>`LMS-702/role-switcher-manager-version`<br>`LMS-703/extension-staff-route-certification`<br>`LMS-851/fulfill-bulk-allocation-extension`<br>`LMS-852/rotation-tracking-return-workflow`<br>`LMS-860/cross-department-book-status-tracking` |
+| Sprint 7 | LMS-105, LMS-801, LMS-802, LMS-803, LMS-812, LMS-813 | `LMS-105/department-security-objects`<br>`LMS-801/create-bulk-book-requests-rotation-cycles`<br>`LMS-802/rotation-cycle-management-ges-calendar`<br>`LMS-803/school-delivery-tracking-mobile-van`<br>`LMS-812/extension-lending-cross-department-sync`<br>`LMS-813/extension-schedule-corridor-safety` |
+| Sprint 8 | LMS-804, LMS-805, LMS-810, LMS-811, LMS-NA-001 to LMS-NA-007 | `LMS-804/qr-learner-checkout-return-android`<br>`LMS-805/dagbani-sms-templates-northern-region`<br>`LMS-810/android-offline-transaction-app`<br>`LMS-811/qr-learner-identification-smart-tag`<br>`LMS-NA-001/power-outage-resilience-validation`<br>`LMS-NA-002/battery-drain-profiling`<br>`LMS-NA-003/translate-critical-screens-twi-dagbani`<br>`LMS-NA-004/language-toggle-settings`<br>`LMS-NA-005/anonymized-patron-heartbeat`<br>`LMS-NA-006/qa-tooling-patron-simulation`<br>`LMS-NA-007/validate-extension-bulk-allocation-e2e` |
+
+### Quick Reference: MCP Tool Sequence
+
+```
+1. mcp_io_github_git_create_branch    → Create feature branch from testing-main
+2. git fetch + checkout locally        → Work on feature
+3. git pull testing-main               → Stay up to date
+4. mcp_io_github_git_push_files        → Push completed work (or git push)
+5. mcp_io_github_git_create_pull_request → Open PR to testing-main
+6. mcp_io_github_git_merge_pull_request  → Merge after approval
+```
