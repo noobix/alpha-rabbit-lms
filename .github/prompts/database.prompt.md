@@ -1,7 +1,7 @@
 # Alpha Rabbit LMS Database Schema Guide
 
 This document is the canonical schema reference for LLM-assisted database design.
-It consolidates entities from acquisitions, processing, distribution, patron intelligence, governance, and Ghana-specific workflows.
+It consolidates entities from acquisitions, processing, distribution, extension services, patron intelligence, governance, and Ghana-specific workflows.
 
 ## 1) Design Goals
 
@@ -20,6 +20,7 @@ It consolidates entities from acquisitions, processing, distribution, patron int
   - `orders`
   - `processing`
   - `distribution`
+  - `extension`
   - `patrons`
   - `programs`
   - `staff`
@@ -63,6 +64,10 @@ Every document should include:
 | School                     | `school`                | Ghana Context       | ✅      | ✅                          |
 | Batch                      | `batch`                 | Ghana Context       | ✅      | ✅                          |
 | BatchPromotionEvent        | `batch_promotion_event` | Ghana Context       | ✅      | ✅                          |
+| ExtensionRequest           | `extension_request`     | Extension Services  | ✅      | ✅                          |
+| ExtensionLearner           | `extension_learner`     | Extension Services  | ✅      | ✅                          |
+| ExtensionTransaction       | `extension_transaction` | Extension Services  | ✅      | ✅                          |
+| ExtensionSchedule          | `extension_schedule`    | Extension Services  | ✅      | ✅                          |
 | BackupManifest             | `backup_manifest`       | Platform            | ✅      | ⚠️ (server-side equivalent) |
 
 ## 5) Core Schemas
@@ -158,11 +163,21 @@ Every document should include:
 - `classification`:
   - `ghanaCurriculumTag` (required)
   - `deweyDecimal`
-  - `sectionRouting`
+  - `sectionRouting`: `children | adult | reference | lending | digital` (note: `extension` removed — Extension Services borrows from Lending)
   - `batchAssignment { schoolId, batchCode, expiryDate }`
 - `barcode`, `barcodeType`, optional `rfidTag`
 - `qualityControl`: `approved`, approver fields, notes, repair flags
 - `climateAssessment`: humidity exposure + storage recommendation
+- `extensionLoan` (optional — present when book is on loan to Extension Services):
+  - `allocatedTo`: `extension_services` (fixed value)
+  - `rotationCycle`: `CYCLE-1 | CYCLE-2 | CYCLE-3 | CYCLE-4`
+  - `schoolId`: string
+  - `schoolName`: string
+  - `allocatedDate`: ISO date
+  - `dueDate`: string (GES standard: Aug 31 of academic year)
+  - `allocatedBy`: string (Lending staff ID)
+  - `status`: `allocated | returned | overdue`
+  - `returnDate`: optional string
 - `processingHistory[]`
 
 ## 5.8 DistributionRecord (`distribution_record`)
@@ -172,8 +187,11 @@ Every document should include:
 - `books[]`: denormalized dispatch snapshot (title, tag, barcode, condition)
 - `routing`:
   - `source`
-  - `destinationSection`
-  - `destinationSchool { id, name, address, contactPerson, contactPhone }`
+  - `destination`: `children_section | adult_section | reference_section | lending_section | extension_services | digital_section`
+  - `destinationDetails`: one of:
+    - `{ type: 'library_section', section: string }`
+    - `{ type: 'extension_services', depotLocation: string, communityLeader?: { name, phone } }` (community leader required for rural depots)
+  - `destinationSchool { id, name, address, contactPerson, contactPhone }` (for non-extension routes)
   - `batchGrouping[] { batchCode, bookIds[], learnerCount }`
   - `requiresSpecialHandling`, `specialHandlingNotes`
 - `logistics`:
@@ -181,12 +199,17 @@ Every document should include:
   - `dispatchedAt`, `expectedDeliveryDate`, `actualDeliveryDate`
   - `dispatchedBy`, `deliveredBy`
   - `deliveryMethod`
+  - `deliveryDestination`:
+    - `type`: `library_section | extension_depot`
+    - `name`: string (e.g., "Tamale Regional Extension Depot")
   - `ruralMode`, optional `gpsCoordinates`
   - `conditionOnDelivery`, `deliveryPhotos[]`
 - `ghanaContext`:
   - `academicYear`
   - `rainySeasonAlert`
   - `communityLeaderNotified`, leader contact
+  - `corridorSafetyProtocol`: optional `none | tamale_bolgatanga | wa_navrongo`
+  - `safetyProtocolStatus`: optional `pending | completed | waived`
 
 ## 5.9 PackingSlip (`packing_slip`)
 
@@ -267,6 +290,60 @@ Every document should include:
 - `initiatedBy`
 - `notificationStatus`
 
+## 5.16 ExtensionRequest (`extension_request`)
+
+- `_id`: string (e.g., `ext-req-BOLGATANGA-2024-CYCLE-2-001`)
+- `status`: `pending | fulfilled | rejected | cancelled`
+- `requestedBy`: string (Extension staff ID)
+- `schoolId`: string (e.g., `BOLGATANGA-UE-001`)
+- `rotationCycle`: `CYCLE-1 | CYCLE-2 | CYCLE-3 | CYCLE-4`
+- `cycleEndDate`: string (GES standard: `2025-08-31`)
+- `subjectAreas`: string[]
+- `totalBooksRequested`: number
+- `bookRequirements`: `{ curriculumTags: string[], conditionMinimum: 1-5 }`
+- `fulfilledBy`: optional string (Lending Section staff ID)
+- `booksAllocated`: string[] (`processed_book._id` array)
+- `packingSlipId`: optional string (links to `DistributionRecord`)
+
+## 5.17 ExtensionLearner (`extension_learner`)
+
+- `_id`: string (e.g., `ext-learner-BOLGATANGA-UE-001-042`)
+- `qrCodeId`: string (e.g., `EXT-QR-BOL-00042` — **only** data encoded in QR)
+- `qrCodeImageUrl`: optional string (Base64 PNG for laminated card)
+- `personalInfo`:
+  - `firstName`, `lastName`
+  - `schoolId`: string
+  - `level`: string (e.g., `GRADE-4`)
+  - `expiryDate`: string (GES academic year end)
+- `currentBooks[]`: `{ bookBarcode, checkoutDate }`
+- `borrowingHistory[]`: `{ bookBarcode, checkoutDate, returnDate }`
+- `extensionServiceTag`: `true` (always true)
+- `serviceLocationType`: `mobile_van | designated_room`
+
+## 5.18 ExtensionTransaction (`extension_transaction`)
+
+- `_id`: string (e.g., `ext-trans-20240228-BOL-001`)
+- `learnerQrCodeId`: string (e.g., `EXT-QR-BOL-00042`)
+- `learnerSchoolId`: string
+- `bookBarcode`: string
+- `transactionType`: `checkout | return`
+- `transactionDate`: ISO datetime
+- `serviceDate`: ISO date
+- `serviceLocation`: string (e.g., `Bolgatanga Mobile Van Route 3`)
+- `serviceLocationType`: `mobile_van | designated_room`
+- `staffId`: string
+- Note: condition scores are **explicitly excluded** (per traffic/bandwidth constraint)
+
+## 5.19 ExtensionSchedule (`extension_schedule`)
+
+- `_id`: string (e.g., `ext-schedule-BOLGATANGA-UE-001-2024-03-15`)
+- `schoolId`: string
+- `serviceLocationType`: `mobile_van | designated_room`
+- `scheduledDate`: string
+- `assignedStaff[]`: `{ staffId, role: 'mobile_librarian' }`
+- `bookSetsAllocated[]`: `{ setId, rotationCycle, bookCount }`
+- `status`: `planned | completed | cancelled`
+
 ## 6) Relationships (Conceptual)
 
 ```mermaid
@@ -280,6 +357,14 @@ erDiagram
   STAFF ||--o{ ACQUISITION_ORDER : places_approves
   STAFF ||--o{ PROCESSED_BOOK : inspects_approves
   STAFF ||--o{ DISTRIBUTION_RECORD : dispatches_delivers
+
+  LENDING_SECTION }o--o{ EXTENSION_REQUEST : fulfills
+  EXTENSION_REQUEST ||--o{ PROCESSED_BOOK : allocates
+  EXTENSION_REQUEST ||--o{ DISTRIBUTION_RECORD : triggers
+  DISTRIBUTION_RECORD }o--o| EXTENSION_DEPOT : delivers_to
+  EXTENSION_DEPOT ||--o{ EXTENSION_SCHEDULE : hosts
+  EXTENSION_SCHEDULE ||--o{ EXTENSION_LEARNER : serves
+  EXTENSION_LEARNER ||--o{ EXTENSION_TRANSACTION : generates
 
   PATRON ||--o{ PROGRAM_PARTICIPATION : participates
   PROGRAM ||--o{ PROGRAM_PARTICIPATION : has
@@ -297,17 +382,24 @@ erDiagram
 - Ghana Card ID must pass format validation before hashing: `GHA-000000000-0`.
 - No plaintext Ghana Card ID may be stored in any entity.
 - `ghanaCurriculumTag` is required in Acquisitions and Processing records.
-- Distribution dispatch requires a valid destination school and generated packing slip ID.
+- Distribution dispatch requires a valid destination and generated packing slip ID.
 - Degradation override requires `reason` and audit log entry.
 - Batch-aware routing must preserve distinctions (example: `GRADE-4A` != `GRADE-4B`).
+- **Extension Loan Integrity**: `processed_book.extensionLoan` requires `sectionRouting = 'lending'`.
+- **Depot Delivery Validation**: `distribution_record.routing.destination = 'extension_services'` requires `deliveryDestination.type = 'extension_depot'`.
+- **GES Calendar Enforcement**: `extensionLoan.dueDate` MUST be August 31 of the academic year.
+- **Rural Depot Safety**: Depots in Tamale/Bolgatanga/Wa regions require `communityLeader` in `destinationDetails`.
+- **No Condition Scores in Extension Transactions**: `extension_transaction` explicitly excludes condition fields (per traffic constraint).
+- **QR Privacy**: `extension_learner.qrCodeId` contains ONLY the ID (no personal data).
 
 ## 8) Recommended Indexes
 
 - `books`: `type`, `ghanaCurriculumTag`, `status`, `sectionRouting`, `updatedAt`
 - `orders`: `type`, `status`, `placedAt`, `vendor.id`, `budget.code`
 - `vendors`: `type`, `status`, `name`, `region`
-- `processing`: `type`, `processingStatus`, `qualityControl.approved`, `inspectionDate`
-- `distribution`: `type`, `status`, `routing.destinationSchool.id`, `logistics.dispatchedAt`
+- `processing`: `type`, `processingStatus`, `qualityControl.approved`, `inspectionDate`, `extensionLoan.status`, `extensionLoan.dueDate`
+- `distribution`: `type`, `status`, `routing.destination`, `logistics.deliveryDestination.name`, `logistics.dispatchedAt`
+- `extension`: `type`, `status`, `schoolId`, `rotationCycle`, `qrCodeId`, `learnerQrCodeId`, `serviceDate`, `_syncStatus`
 - `patrons`: `type`, `patronType`, `basicInfo.schoolId`, `basicInfo.batchCode`, `readingMetrics.degradationRate`
 - `staff`: `type`, `role`, `department`, `isActive`
 - `audit_logs`: `type`, `actorId`, `action`, `timestamp`
@@ -317,6 +409,7 @@ erDiagram
 - Add `updatedAt` to all writes for deterministic merge support.
 - Default conflict policy: last-write-wins by timestamp for non-sensitive fields.
 - Sensitive conflicts (identity, approvals, overrides, delivery confirmation) require manual resolution queue.
+- **Extension Services Android sync**: `extension_transaction` and `extension_learner` records sync from the Android app via `_syncStatus` field. Conflicts resolved by `transactionDate` timestamp (latest wins).
 
 ## 10) LLM Output Expectations (When Generating DB Artifacts)
 
