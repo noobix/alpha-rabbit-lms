@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "electron": {
+      "source": "gentleman-programming/gentleman-skills",
+      "sourceType": "github",
+      "computedHash": "bbd212026af96f3bbc650885e98cac4e8e88a1c414133f216cc6e97c95a246d1"
+    },
+    "frontend-design": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "computedHash": "a6b1161c5ab5faa4559ffe2ffa6e9e7b22a07e55e70cbb8a095c890ea31606c4"
+    }
+  }
+}

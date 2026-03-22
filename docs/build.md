@@ -5,29 +5,29 @@
 This file is the implementation control document used with `prompt_main.md`.
 Primary objective: keep all build decisions anchored to `docs/jira/compression.md` while using docs in `docs/ressources` as the source assets.
 
-*Critical correction: Extension Services is a full external department (not library section) that borrows books from Lending section via bulk allocation workflow*
+_Critical correction: Extension Services is a full external department (not library section) that borrows books from Lending section via bulk allocation workflow_
 
 ---
 
 ## 0) Source Assets Table (Read First)
 
-| Asset | Purpose in Build | Required Use |
-| --- | --- | --- |
-| `docs/jira/compression.md` | Canonical ticket scope and acceptance criteria (v1.2 — Extension Services update) | Must be treated as source of truth for every ticket in this file |
-| `docs/jira/jira_doc.md` | Detailed ticket specification with sprint planning | Use for sprint sequencing, labeling conventions, and quality gates |
-| `docs/prompt_main.md` | Architecture constraints and project structure | Use for codebase layout, mode split (Manager/Enterprise), and non-functional constraints |
-| `docs/ressources/product_specs.md` | Stack and deployment decisions | Use to enforce offline-first stack, packaging assumptions, and Ghana hardware constraints |
-| `docs/ressources/system_specs.md` | Manager vs Enterprise setup detail | Use for environment-specific behavior and operational boundaries |
-| `docs/ressources/functionality_specs.md` | End-to-end module behavior | Use for flow details across acquisitions → processing → distribution → sections |
-| `docs/ressources/module_functionality_specs.md` | User-centric module acceptance examples (updated with Extension Services) | Use for user stories, offline behavior specifics, and Extension workflows |
-| `docs/ressources/functionality_specs_expanded.md` | Patron intelligence, governance extensions, and expanded specs | Use for degradation engine, badges, patron profile signals, and cross-check details |
-| `docs/database.md` | Canonical schema contracts (updated with Extension Services) | Use for doc types, retention fields, sync state, audit fields, and Extension loan objects |
-| `docs/research_dmp/aquisisions_module.md` | Deep implementation notes for acquisitions | Use for forms, metadata shape, and offline create/sync patterns |
-| `docs/research_dmp/processing_module.md` | Deep implementation notes for processing (updated with Extension routing) | Use for condition model, mold risk logic, barcode behavior, and Extension durability scoring |
-| `docs/research_dmp/distribution_module.md` | Deep implementation notes for distribution (updated with Extension depot delivery) | Use for packing slips, rural mode, delivery confirmation queue, and Extension depot workflows |
-| `docs/research_dmp/extension_module.md` | Deep implementation notes for Extension Services | Use for Android app, QR learner tracking, bulk allocation workflow, schedule management |
-| `docs/research_dmp/library_sections_pi_sg.md` | Deep implementation notes for sections + PI + governance (includes Lending Section) | Use for degradation enforcement, section workflows, and Lending bulk allocation fulfillment |
-| `docs/research_dmp/deploy_doc.md` | Pilot/deployment/validation package | Use for pilot validation checks and packaging constraints |
+| Asset                                             | Purpose in Build                                                                    | Required Use                                                                                  |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `docs/jira/compression.md`                        | Canonical ticket scope and acceptance criteria (v1.2 — Extension Services update)   | Must be treated as source of truth for every ticket in this file                              |
+| `docs/jira/jira_doc.md`                           | Detailed ticket specification with sprint planning                                  | Use for sprint sequencing, labeling conventions, and quality gates                            |
+| `docs/prompt_main.md`                             | Architecture constraints and project structure                                      | Use for codebase layout, mode split (Manager/Enterprise), and non-functional constraints      |
+| `docs/ressources/product_specs.md`                | Stack and deployment decisions                                                      | Use to enforce offline-first stack, packaging assumptions, and Ghana hardware constraints     |
+| `docs/ressources/system_specs.md`                 | Manager vs Enterprise setup detail                                                  | Use for environment-specific behavior and operational boundaries                              |
+| `docs/ressources/functionality_specs.md`          | End-to-end module behavior                                                          | Use for flow details across acquisitions → processing → distribution → sections               |
+| `docs/ressources/module_functionality_specs.md`   | User-centric module acceptance examples (updated with Extension Services)           | Use for user stories, offline behavior specifics, and Extension workflows                     |
+| `docs/ressources/functionality_specs_expanded.md` | Patron intelligence, governance extensions, and expanded specs                      | Use for degradation engine, badges, patron profile signals, and cross-check details           |
+| `docs/database.md`                                | Canonical schema contracts (updated with Extension Services)                        | Use for doc types, retention fields, sync state, audit fields, and Extension loan objects     |
+| `docs/research_dmp/aquisisions_module.md`         | Deep implementation notes for acquisitions                                          | Use for forms, metadata shape, and offline create/sync patterns                               |
+| `docs/research_dmp/processing_module.md`          | Deep implementation notes for processing (updated with Extension routing)           | Use for condition model, mold risk logic, barcode behavior, and Extension durability scoring  |
+| `docs/research_dmp/distribution_module.md`        | Deep implementation notes for distribution (updated with Extension depot delivery)  | Use for packing slips, rural mode, delivery confirmation queue, and Extension depot workflows |
+| `docs/research_dmp/extension_module.md`           | Deep implementation notes for Extension Services                                    | Use for Android app, QR learner tracking, bulk allocation workflow, schedule management       |
+| `docs/research_dmp/library_sections_pi_sg.md`     | Deep implementation notes for sections + PI + governance (includes Lending Section) | Use for degradation enforcement, section workflows, and Lending bulk allocation fulfillment   |
+| `docs/research_dmp/deploy_doc.md`                 | Pilot/deployment/validation package                                                 | Use for pilot validation checks and packaging constraints                                     |
 
 ---
 
@@ -873,7 +873,7 @@ All feature development follows a branch-per-ticket model anchored to ticket IDs
 
 ### Branch Naming Convention
 
-```
+```text
 LMS-[XXX]/[title-or-description]
 ```
 
@@ -882,12 +882,12 @@ LMS-[XXX]/[title-or-description]
 
 **Examples:**
 
-| Ticket | Branch Name |
-|--------|-------------|
-| LMS-101 | `LMS-101/implement-sha256-hashing-ghana-card-id` |
-| LMS-302 | `LMS-302/build-budget-tracking-ges-alignment` |
-| LMS-801 | `LMS-801/create-bulk-book-requests-rotation-cycles` |
-| LMS-NA-001 | `LMS-NA-001/power-outage-resilience-validation` |
+| Ticket     | Branch Name                                         |
+| ---------- | --------------------------------------------------- |
+| LMS-101    | `LMS-101/implement-sha256-hashing-ghana-card-id`    |
+| LMS-302    | `LMS-302/build-budget-tracking-ges-alignment`       |
+| LMS-801    | `LMS-801/create-bulk-book-requests-rotation-cycles` |
+| LMS-NA-001 | `LMS-NA-001/power-outage-resilience-validation`     |
 
 ### Workflow Steps (Using GitHub MCP Tools)
 
@@ -895,7 +895,7 @@ LMS-[XXX]/[title-or-description]
 
 Use the GitHub MCP `create_branch` tool to create the branch on the remote, branching off `testing-main`:
 
-```
+```yaml
 Tool: mcp_io_github_git_create_branch
   owner: noobix
   repo: alpha-rabbit-lms
@@ -903,66 +903,85 @@ Tool: mcp_io_github_git_create_branch
   from_branch: testing-main
 ```
 
-Then fetch and checkout locally:
+#### Step 2: Sync with `testing-main`
 
-```bash
-git fetch alpha-rabbit-lms
-git checkout -b LMS-[XXX]/[title-or-description] alpha-rabbit-lms/LMS-[XXX]/[title-or-description]
+If a PR already exists for the branch and `testing-main` has moved ahead, use the MCP `update_pull_request_branch` tool to pull the latest base branch changes into the feature branch:
+
+```yaml
+Tool: mcp_io_github_git_update_pull_request_branch
+  owner: noobix
+  repo: alpha-rabbit-lms
+  pullNumber: <PR number>
 ```
 
-#### Step 2: Pull Latest from `testing-main`
-
-Before starting work, ensure the feature branch has the latest from `testing-main`:
-
-```bash
-git pull alpha-rabbit-lms testing-main
-```
+This merges the latest `testing-main` into the feature branch on the remote — no local pull needed.
 
 #### Step 3: Implement the Feature
 
-Work on the ticket. Commit messages should reference the ticket ID:
-
-```
-LMS-[XXX]: <short description of change>
-```
+Work on the ticket. Every commit message must paint a clear picture of what was built and why. Use the acceptance criteria from `compression.md` as context to inform what you write — don't copy them verbatim, describe the work you actually did.
 
 **Commit message format:**
 
-```
-LMS-[XXX]: <type>: <description>
+```text
+LMS-[XXX]: <type>: <vivid summary of what was accomplished>
 
-- <detail 1>
-- <detail 2>
+<Paragraph explaining what was built, how it works, and why it was
+done this way. Reference the real behavior and constraints from the
+ticket naturally — not as a checklist.>
 ```
 
 Where `<type>` is one of: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 
-#### Step 4: Push Feature Branch
+**Example (LMS-101):**
 
-Use the GitHub MCP `push_files` tool or push via git to the feature branch:
+```text
+LMS-101: feat: implement SHA-256 hashing pipeline for Ghana Card ID storage
 
+Built the hashing service in the Electron main process to ensure plaintext
+Ghana Card IDs never reach the renderer. IDs are validated against the
+GHA-000000000-0 format at the form boundary, salted and hashed with SHA-256
+before persistence, and displayed as masked values (GHA-123***89-0) across
+all UI surfaces. Log sanitization strips any accidental plaintext leakage
+from backups and debug output. The masked format function is shared with
+the vendor Ghana Card display for reuse in LMS-301.
 ```
+
+#### Step 4: Commit and Push Feature Branch
+
+Use the GitHub MCP `push_files` tool to commit and push all changed files to the feature branch in a single operation. Use `get_file_contents` to read current file contents from the branch if needed.
+
+```yaml
 Tool: mcp_io_github_git_push_files
   owner: noobix
   repo: alpha-rabbit-lms
   branch: LMS-[XXX]/[title-or-description]
-  files: [{ path: "<file>", content: "<content>" }]
-  message: "LMS-[XXX]: <commit message>"
+  files:
+    - path: "<relative/path/to/file>"
+      content: "<full file content>"
+    - path: "<relative/path/to/another-file>"
+      content: "<full file content>"
+  message: |
+    LMS-[XXX]: <type>: <vivid summary>
+
+    <Paragraph describing what was built, how it works,
+    and why it was done this way.>
 ```
 
-Or via local git:
+To read existing file contents before pushing updates:
 
-```bash
-git add -A
-git commit -m "LMS-[XXX]: <type>: <description>"
-git push alpha-rabbit-lms LMS-[XXX]/[title-or-description]
+```yaml
+Tool: mcp_io_github_git_get_file_contents
+  owner: noobix
+  repo: alpha-rabbit-lms
+  path: "<relative/path/to/file>"
+  ref: "refs/heads/LMS-[XXX]/[title-or-description]"
 ```
 
 #### Step 5: Create Pull Request to `testing-main`
 
 Use the GitHub MCP `create_pull_request` tool:
 
-```
+```yaml
 Tool: mcp_io_github_git_create_pull_request
   owner: noobix
   repo: alpha-rabbit-lms
@@ -989,30 +1008,25 @@ Tool: mcp_io_github_git_create_pull_request
     - [ ] Manager/Enterprise impact recorded
 ```
 
-#### Step 6: Review & Merge
-
-After PR approval, merge into `testing-main`. Delete the feature branch after merge.
-
 ### Sprint Branch Mapping (from compression.md)
 
-| Sprint | Tickets | Branch Names |
-|--------|---------|-------------|
-| Sprint 1 | LMS-101, LMS-102, LMS-103 | `LMS-101/implement-sha256-hashing-ghana-card-id`<br>`LMS-102/build-incremental-backup-whatsapp-compression`<br>`LMS-103/implement-30-second-auto-save-power-outage` |
-| Sprint 2 | LMS-201, LMS-202, LMS-301, LMS-302 | `LMS-201/ghana-data-protection-act-compliance`<br>`LMS-202/integrate-ges-curriculum-tags`<br>`LMS-301/vendor-management-ghana-card-validation`<br>`LMS-302/build-budget-tracking-ges-alignment` |
-| Sprint 3 | LMS-401, LMS-402, LMS-403, LMS-404 | `LMS-401/condition-scoring-sliders`<br>`LMS-402/mold-risk-assessment-seasonal-calendar`<br>`LMS-403/generate-pdf417-barcodes-gla-format`<br>`LMS-404/route-books-extension-services-durability` |
-| Sprint 4 | LMS-501, LMS-502, LMS-503, LMS-504 | `LMS-501/batch-aware-packing-slips`<br>`LMS-502/rural-delivery-tamale-bolgatanga`<br>`LMS-503/rainy-season-alerts-packing-slips`<br>`LMS-504/deliver-books-extension-depot-rotation` |
-| Sprint 5 | LMS-601, LMS-602, LMS-603 | `LMS-601/ges-batch-promotion-workflow`<br>`LMS-602/degradation-threshold-enforcement`<br>`LMS-603/teleporter-detection-oral-tradition` |
-| Sprint 6 | LMS-701, LMS-702, LMS-703, LMS-851, LMS-852, LMS-860 | `LMS-701/staff-profile-ghana-card-hashing`<br>`LMS-702/role-switcher-manager-version`<br>`LMS-703/extension-staff-route-certification`<br>`LMS-851/fulfill-bulk-allocation-extension`<br>`LMS-852/rotation-tracking-return-workflow`<br>`LMS-860/cross-department-book-status-tracking` |
-| Sprint 7 | LMS-105, LMS-801, LMS-802, LMS-803, LMS-812, LMS-813 | `LMS-105/department-security-objects`<br>`LMS-801/create-bulk-book-requests-rotation-cycles`<br>`LMS-802/rotation-cycle-management-ges-calendar`<br>`LMS-803/school-delivery-tracking-mobile-van`<br>`LMS-812/extension-lending-cross-department-sync`<br>`LMS-813/extension-schedule-corridor-safety` |
+| Sprint   | Tickets                                                      | Branch Names                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| -------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sprint 1 | LMS-101, LMS-102, LMS-103                                    | `LMS-101/implement-sha256-hashing-ghana-card-id`<br>`LMS-102/build-incremental-backup-whatsapp-compression`<br>`LMS-103/implement-30-second-auto-save-power-outage`                                                                                                                                                                                                                                                                                                                                                                      |
+| Sprint 2 | LMS-201, LMS-202, LMS-301, LMS-302                           | `LMS-201/ghana-data-protection-act-compliance`<br>`LMS-202/integrate-ges-curriculum-tags`<br>`LMS-301/vendor-management-ghana-card-validation`<br>`LMS-302/build-budget-tracking-ges-alignment`                                                                                                                                                                                                                                                                                                                                          |
+| Sprint 3 | LMS-401, LMS-402, LMS-403, LMS-404                           | `LMS-401/condition-scoring-sliders`<br>`LMS-402/mold-risk-assessment-seasonal-calendar`<br>`LMS-403/generate-pdf417-barcodes-gla-format`<br>`LMS-404/route-books-extension-services-durability`                                                                                                                                                                                                                                                                                                                                          |
+| Sprint 4 | LMS-501, LMS-502, LMS-503, LMS-504                           | `LMS-501/batch-aware-packing-slips`<br>`LMS-502/rural-delivery-tamale-bolgatanga`<br>`LMS-503/rainy-season-alerts-packing-slips`<br>`LMS-504/deliver-books-extension-depot-rotation`                                                                                                                                                                                                                                                                                                                                                     |
+| Sprint 5 | LMS-601, LMS-602, LMS-603                                    | `LMS-601/ges-batch-promotion-workflow`<br>`LMS-602/degradation-threshold-enforcement`<br>`LMS-603/teleporter-detection-oral-tradition`                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Sprint 6 | LMS-701, LMS-702, LMS-703, LMS-851, LMS-852, LMS-860         | `LMS-701/staff-profile-ghana-card-hashing`<br>`LMS-702/role-switcher-manager-version`<br>`LMS-703/extension-staff-route-certification`<br>`LMS-851/fulfill-bulk-allocation-extension`<br>`LMS-852/rotation-tracking-return-workflow`<br>`LMS-860/cross-department-book-status-tracking`                                                                                                                                                                                                                                                  |
+| Sprint 7 | LMS-105, LMS-801, LMS-802, LMS-803, LMS-812, LMS-813         | `LMS-105/department-security-objects`<br>`LMS-801/create-bulk-book-requests-rotation-cycles`<br>`LMS-802/rotation-cycle-management-ges-calendar`<br>`LMS-803/school-delivery-tracking-mobile-van`<br>`LMS-812/extension-lending-cross-department-sync`<br>`LMS-813/extension-schedule-corridor-safety`                                                                                                                                                                                                                                   |
 | Sprint 8 | LMS-804, LMS-805, LMS-810, LMS-811, LMS-NA-001 to LMS-NA-007 | `LMS-804/qr-learner-checkout-return-android`<br>`LMS-805/dagbani-sms-templates-northern-region`<br>`LMS-810/android-offline-transaction-app`<br>`LMS-811/qr-learner-identification-smart-tag`<br>`LMS-NA-001/power-outage-resilience-validation`<br>`LMS-NA-002/battery-drain-profiling`<br>`LMS-NA-003/translate-critical-screens-twi-dagbani`<br>`LMS-NA-004/language-toggle-settings`<br>`LMS-NA-005/anonymized-patron-heartbeat`<br>`LMS-NA-006/qa-tooling-patron-simulation`<br>`LMS-NA-007/validate-extension-bulk-allocation-e2e` |
 
 ### Quick Reference: MCP Tool Sequence
 
-```
-1. mcp_io_github_git_create_branch    → Create feature branch from testing-main
-2. git fetch + checkout locally        → Work on feature
-3. git pull testing-main               → Stay up to date
-4. mcp_io_github_git_push_files        → Push completed work (or git push)
-5. mcp_io_github_git_create_pull_request → Open PR to testing-main
-6. mcp_io_github_git_merge_pull_request  → Merge after approval
+```text
+1. mcp_io_github_git_create_branch         → Create feature branch from testing-main
+2. mcp_io_github_git_update_pull_request_branch → Sync feature branch with testing-main
+3. mcp_io_github_git_get_file_contents      → Read existing files before editing
+4. mcp_io_github_git_push_files             → Commit and push all changes
+5. mcp_io_github_git_create_pull_request    → Open PR to testing-main
 ```
