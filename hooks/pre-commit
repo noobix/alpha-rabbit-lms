@@ -1,0 +1,38 @@
+/*
+ * Author: Kelvin Kabute
+ * Last-updated: 2026-04-19
+ */
+
+
+#!/usr/bin/env bash
+# Pre-commit hook to append provenance metadata to staged files.
+# Prefer the project's virtualenv Python (`.venv`) if present, then fall back
+# to system `python3`/`python`.
+
+# Resolve candidate Python executables in order of preference.
+if [ -x ".venv/Scripts/python.exe" ]; then
+  PYTHON=".venv/Scripts/python.exe"
+elif [ -x ".venv/bin/python" ]; then
+  PYTHON=".venv/bin/python"
+else
+  PYTHON=$(command -v python3 || command -v python || true)
+fi
+
+if [ -z "$PYTHON" ]; then
+  echo "Python not found; skipping provenance hook." >&2
+  exit 0
+fi
+
+echo "Running provenance appender using: $PYTHON"
+# Execute the appender via runpy so relative imports inside `scripts/` resolve
+"$PYTHON" - <<'PY'
+import runpy
+runpy.run_path('scripts/append_provenance.py', run_name='__main__')
+PY
+RET=$?
+if [ $RET -ne 0 ]; then
+  echo "Provenance appender failed (exit $RET). Aborting commit." >&2
+  exit $RET
+fi
+
+exit 0
