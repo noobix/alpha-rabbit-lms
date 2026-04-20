@@ -1,8 +1,11 @@
-# 
+#
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
 
 #!/usr/bin/env python3
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
 """
 Append provenance metadata to staged files. Intended for use from a pre-commit hook.
 
@@ -32,6 +35,12 @@ EXT_COMMENT_STYLES = {
     ".css": ("/*\n", " * ", "\n */\n"),
     ".json": ("/*\n", " * ", "\n */\n"),
 }
+
+# Treat YAML files as hash/comment style; default to hash for unknown extensions
+EXT_COMMENT_STYLES.update({
+    ".yml": ("# ", "# ", ""),
+    ".yaml": ("# ", "# ", ""),
+})
 
 
 def get_staged_files():
@@ -80,7 +89,7 @@ def append_header(path: Path, author_line: str, updated_line: str):
         # append author near existing header block if possible
 
     # Compose header block according to file type
-    start, line_prefix, end = EXT_COMMENT_STYLES.get(ext, ("/*\n", " * ", "\n */\n"))
+    start, line_prefix, end = EXT_COMMENT_STYLES.get(ext, ("# ", "# ", ""))
 
     header_lines = []
     if start:
