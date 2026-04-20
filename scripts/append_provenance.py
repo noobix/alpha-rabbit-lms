@@ -2,6 +2,10 @@
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
 
+# 
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
 #!/usr/bin/env python3
 """
 Append provenance metadata to staged files. Intended for use from a pre-commit hook.
@@ -20,7 +24,10 @@ import re
 from datetime import date
 from pathlib import Path
 
-from scripts.detect_agent_provenance import detect_text
+try:
+    from scripts.detect_agent_provenance import detect_text
+except Exception:
+    detect_text = None
 
 
 EXT_COMMENT_STYLES = {
@@ -55,8 +62,13 @@ def write_file(path: Path, text: str):
 
 
 def detect_agent_for_text(text: str):
-    agent, confidence, evidence = detect_text(text)
-    return agent, confidence, evidence
+    # If the detector isn't importable (hook context), gracefully fall back.
+    if detect_text is None:
+        return None, 0.0, []
+    try:
+        return detect_text(text)
+    except Exception:
+        return None, 0.0, []
 
 
 def append_header(path: Path, author_line: str, updated_line: str):
