@@ -1,6 +1,4 @@
-# 
-# Author: Kelvin Kabute
-# Last-updated: 2026-04-20
+"""Tests for the agent provenance detector."""
 
 from scripts.detect_agent_provenance import detect_text
 
