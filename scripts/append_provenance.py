@@ -2,25 +2,13 @@
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
 
-# 
-# Author: Kelvin Kabute
-# Last-updated: 2026-04-20
-
 #!/usr/bin/env python3
-# Author: Kelvin Kabute
-# Last-updated: 2026-04-20
+"""Append provenance metadata to staged files.
 
+Intended for use from a pre-commit hook. Scans staged files and appends
+an `Author:` and `Last-updated:` header when appropriate.
 """
-Append provenance metadata to staged files. Intended for use from a pre-commit hook.
 
-Behavior:
-- Scans staged files (`git diff --cached --name-only --diff-filter=ACM`).
-- For each file, runs the detector to see if an agent likely authored it.
-- Appends an `Author:` line (append-only) and a `Last-updated:` line.
-- If `Last-updated` already equals today's date, assumes agent already appended author; otherwise appends git user name.
-
-This script modifies files and re-adds them to the index when changed.
-"""
 import subprocess
 import sys
 import re

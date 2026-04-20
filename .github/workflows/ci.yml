@@ -2,9 +2,6 @@
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
 
-# Author: Kelvin Kabute
-# Last-updated: 2026-04-20
-
 name: CI
 
 on:
@@ -40,4 +37,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest -q
+          PYTHONPATH="$PWD" pytest -q
