@@ -4,6 +4,12 @@
  */
 
 
+/*
+ * Author: Kelvin Kabute
+ * Last-updated: 2026-04-20
+ */
+
+
 name: Enable Branch Protection
 
 on:
@@ -29,7 +35,7 @@ jobs:
       - name: Enable protection via REST API
         env:
           REPO: ${{ github.repository }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ secrets.ADMIN_TOKEN }}
           BRANCHES: ${{ github.event.inputs.branches }}
         run: |
           IFS=',' read -ra B <<< "$BRANCHES"
