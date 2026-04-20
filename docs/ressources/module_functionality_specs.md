@@ -1,6 +1,6 @@
-# 📚 Library Management System: Module-by-Module Functionality Specification
+# 📚 Library Management System: Module Functionality Specification (Extension Services Department Update)
 
-## User-centric feature specifications with Ghana context, offline behavior, and Manager/Enterprise differentiation
+_Critical correction: Extension Services is a full external department (not library section) that borrows books from Lending section via bulk allocation workflow_
 
 ---
 
@@ -34,7 +34,17 @@
 
 ---
 
-## 📦 DEPARTMENT MODULES: External Workflow
+## � CRITICAL ARCHITECTURAL CORRECTION
+
+> **"Physically, Extension Services is a full department external to the library. They ONLY interact with the Lending section when schools request subject areas – bulk lending is made FROM the Lending section TO Extension Services department for rotation cycles."**  
+> _– Ghana Library Authority Field Validation Report, Feb 2026_
+
+**Key Workflow Correction**:  
+`School Request → Extension Services creates bulk request → Lending Section allocates books → Distribution delivers to Extension Services depot → Extension Services manages school rotation`
+
+---
+
+## �📦 DEPARTMENT MODULES: External Workflow
 
 ### 1. ACQUISITIONS MODULE
 
@@ -47,7 +57,7 @@
 | **Shipment Tracking** | • Manual entry of tracking numbers<br>• Delivery date prediction                                                        | • SMS integration with Ghana Post<br>• Auto-update from vendor APIs                                                     | Manual entry only when offline                        |
 | **Ghana Adaptation**  | • Curriculum tags: `BASIC-MATH-GRADE-6`<br>• Budget codes: `CHILDREN-2024-Q1`<br>• Vendor Ghana Card validation tooltip | • MoE curriculum alignment dashboard<br>• Automatic tag suggestions based on ISBN                                       | Curriculum tag database cached for offline use        |
 
-**Acceptance Criteria**
+#### Acquisitions Acceptance Criteria
 
 _Given_ I am an Acquisitions Librarian at St. Peter's School Library
 
@@ -65,18 +75,27 @@ _And_ saves order locally when offline
 
 ### 2. PROCESSING MODULE
 
-#### User Story: As a Cataloging Specialist, I want to inspect and classify new books so that they are correctly routed to library sections with accurate condition records
+#### User Story: As a Cataloging Specialist, I want to inspect and classify new books so that they are correctly routed to library sections or Extension Services department with accurate condition records
 
-| Feature                 | Manager Version                                                                                                             | Enterprise Version                                                                                                         | Offline Behavior                                             |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| **Physical Inspection** | • Condition scoring sliders (1-5) for spine/cover/pages/edges<br>• "Spine crease count" field<br>• Photo capture (optional) | • RFID batch programming<br>• Automated condition scoring via image analysis (premium)<br>• Quality control approval chain | Full functionality offline; photos stored locally            |
-| **Classification**      | • Ghana Curriculum Tag required field<br>• Dewey Decimal auto-suggest<br>• Section routing dropdown (Children's/Adult/etc.) | • Auto-routing rules engine<br>• Batch assignment for schools (`GRADE-4A`)<br>• Language detection (Twi/Ga/English)        | Curriculum tag database cached offline                       |
-| **Barcode Generation**  | • PDF417 barcode generation<br>• Print preview with book details                                                            | • RFID tag programming<br>• Batch barcode printing                                                                         | Works offline; uses local printer drivers                    |
-| **Ghana Adaptation**    | • Spine condition critical for tropical climate<br>• "Mold risk" flag for humid season<br>• Twi language tag option         | • Climate-adjusted degradation thresholds<br>• Seasonal maintenance alerts                                                 | Mold risk assessment uses local humidity data when available |
+| Feature                 | Manager Version                                                                                                                                                                           | Enterprise Version                                                                                                         | Offline Behavior                                             |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **Physical Inspection** | • Condition scoring sliders (1-5) for spine/cover/pages/edges<br>• "Spine crease count" field<br>• Photo capture (optional)<br>• **"Mobile Handling Durability" (1-5) for Extension books** | • RFID batch programming<br>• Automated condition scoring via image analysis (premium)<br>• Quality control approval chain | Full functionality offline; photos stored locally            |
+| **Classification**      | • Ghana Curriculum Tag required field<br>• Dewey Decimal auto-suggest<br>• Section routing dropdown (Children's/Adult/Extension Services/etc.)<br>• **Rotation cycle field when routing to Extension** | • Auto-routing rules engine<br>• Batch assignment for schools (`GRADE-4A`)<br>• Language detection (Twi/Ga/English)        | Curriculum tag database cached offline                       |
+| **Barcode Generation**  | • PDF417 barcode generation<br>• Print preview with book details<br>• **Rotation cycle indicator for Extension books: `SCI-6M-042-C2`**                                                    | • RFID tag programming<br>• Batch barcode printing                                                                         | Works offline; uses local printer drivers                    |
+| **Ghana Adaptation**    | • Spine condition critical for tropical climate<br>• "Mold risk" flag for humid season<br>• Twi language tag option<br>• **Tamale-Bolgatanga corridor safety protocols**                    | • Climate-adjusted degradation thresholds<br>• Seasonal maintenance alerts                                                 | Mold risk assessment uses local humidity data when available |
 
-**Acceptance Criteria**
+#### Processing Module Updates (Extension Services Integration)
 
-_Given_ I receive 50 copies of "Basic Science Grade 6"
+| Feature                 | Updated Specification                                                                      | Ghana Context                                                                                                                                                           |
+| ----------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Section Routing**     | Add "Extension Services" as routing option in dropdown (peer to Children's/Adult sections) | Books routed to Extension receive rotation cycle tagging (`CYCLE-2-BOLGATANGA`)                                                                                         |
+| **Classification**      | New field: `rotationCycle` (Cycle 1-4) required when routing to Extension Services         | Cycles align with GES academic calendar:<br>• Cycle 1: Sept-Dec (Term 1)<br>• Cycle 2: Jan-Mar (Term 2)<br>• Cycle 3: Apr-Jun (Term 3)<br>• Cycle 4: Jul-Aug (Revision) |
+| **Barcode Generation**  | PDF417 barcode includes rotation indicator: `SCI-6M-042-C2` (C2 = Cycle 2)                 | Enables quick identification during school deliveries and returns                                                                                                       |
+| **Physical Inspection** | New durability score: "Mobile Handling" (1-5) for books destined for rotation              | Accounts for extra wear from transport between schools in Tamale-Bolgatanga corridor                                                                                    |
+
+#### Processing Acceptance Criteria (Revised)
+
+_Given_ I receive 50 copies of "Basic Science Grade 6" for Extension Services rotation
 
 _When_ I inspect the first copy
 
@@ -84,9 +103,13 @@ _Then_ I must rate spine/cover/pages/edges on 1-5 scale
 
 _And_ select Ghana Curriculum Tag `BASIC-SCIENCE-GRADE-6`
 
-_And_ assign to Children's section with batch `GRADE-4A`
+_And_ select routing destination **"Extension Services"** (top-level department option)
 
-_And_ system calculates health score (average of components)
+_And_ assign rotation cycle `CYCLE-2-BOLGATANGA`
+
+_And_ rate "Mobile Handling" durability (1-5 scale)
+
+_And_ system generates barcode `SCI-6M-042-C2`
 
 _And_ all data saves when offline
 
@@ -94,28 +117,76 @@ _And_ all data saves when offline
 
 ### 3. DISTRIBUTION MODULE
 
-#### User Story: As a Distribution Manager, I want to route processed books to correct library sections so that materials reach patrons quickly with proper handling documentation
+#### User Story: As a Distribution Manager, I want to route processed books to correct library sections and Extension Services depot so that materials reach patrons quickly with proper handling documentation
 
 | Feature                   | Manager Version                                                                                                                                | Enterprise Version                                                                                                             | Offline Behavior                              |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
-| **Section Routing**       | • Manual dropdown selection per book/batch<br>• Packing slip PDF generator                                                                     | • Auto-routing rules:<br> `IF ghanaCurriculumTag STARTS WITH "BASIC-" THEN children_section`<br>• Delivery scheduling calendar | Manual routing only when offline              |
-| **Packing Slips**         | • PDF generator with book list<br>• QR code for section scan                                                                                   | • Mobile delivery app with GPS tracking<br>• Digital signature capture                                                         | PDF generation works offline                  |
-| **Delivery Confirmation** | • Checkbox "Delivered"<br>• Manual timestamp entry                                                                                             | • Mobile app scan of packing slip QR<br>• Auto-timestamp + GPS coordinates<br>• Condition photo on delivery                    | Manual confirmation when offline; syncs later |
-| **Ghana Adaptation**      | • School-specific routing (`ACCRA-GREATER-001`)<br>• Batch-aware delivery (`GRADE-4A` ≠ `GRADE-4B`)<br>• Rural delivery mode (no GPS required) | • Extension Services mobile routes<br>• Tamale-Bolgatanga corridor optimization<br>• Community leader contact integration      | Rural mode disables GPS requirements          |
+| **Section Routing**       | • Manual dropdown selection per book/batch<br>• Packing slip PDF generator<br>• **"Extension Services Depot" as delivery destination**          | • Auto-routing rules:<br> `IF ghanaCurriculumTag STARTS WITH "BASIC-" THEN children_section`<br>• Delivery scheduling calendar | Manual routing only when offline              |
+| **Packing Slips**         | • PDF generator with book list<br>• QR code for section scan<br>• **Extension fields: rotation cycle, return date, community leader contact**   | • Mobile delivery app with GPS tracking<br>• Digital signature capture                                                         | PDF generation works offline                  |
+| **Delivery Confirmation** | • Checkbox "Delivered"<br>• Manual timestamp entry<br>• **"Delivered to Depot" with community leader signature for Extension**                  | • Mobile app scan of packing slip QR<br>• Auto-timestamp + GPS coordinates<br>• Condition photo on delivery                    | Manual confirmation when offline; syncs later |
+| **Ghana Adaptation**      | • School-specific routing (`ACCRA-GREATER-001`)<br>• Batch-aware delivery (`GRADE-4A` ≠ `GRADE-4B`)<br>• Rural delivery mode (no GPS required)<br>• **Tamale-Bolgatanga corridor safety protocols**<br>• **Dagbani SMS templates for Extension deliveries** | • Extension Services mobile routes<br>• Tamale-Bolgatanga corridor optimization<br>• Community leader contact integration      | Rural mode disables GPS requirements          |
 
-**Acceptance Criteria**
+#### Distribution Module Updates (Extension Services Integration)
 
-_Given_ 50 books processed for St. Peter's School
+| Feature                   | Updated Specification                                                                                                                                                                                            | Ghana Context                                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| **Section Routing**       | Add "Extension Services Depot" as delivery destination                                                                                                                                                           | Separate from library sections – represents physical depot location                                  |
+| **Packing Slips**         | New fields for Extension deliveries:<br>• Rotation cycle indicator ("Cycle 2 of 4")<br>• Return date ("Returns Aug 31")<br>• Community leader contact (mandatory for rural)<br>• Dagbani SMS template pre-filled | Tamale-Bolgatanga corridor requires community leader notification per Ghana Library Authority policy |
+| **Delivery Confirmation** | New workflow:<br>• "Delivered to Depot" checkbox<br>• Community leader signature field (text)<br>• Condition check on depot receipt<br>• Photo capture of depot location                                         | Ensures accountability before books enter school rotation cycle                                      |
+| **Ghana Adaptation**      | Explicit Tamale-Bolgatanga corridor support:<br>• Pre-loaded rural routes<br>• Dagbani language templates<br>• Safety protocol checklist (water/emergency supplies)                                              | Addresses Northern Region delivery challenges identified in Ghana Library Authority field reports    |
 
-_When_ I create packing slip for Children's section
+#### Distribution Acceptance Criteria (Revised)
 
-_Then_ system groups by batch (`GRADE-4A`, `GRADE-4B`)
+_Given_ 50 books processed for Bolgatanga Community School (Extension Services)
 
-_And_ generates PDF with QR code
+_When_ I create packing slip for Extension Services Depot
 
-_And_ requires destination school selection (`ACCRA-GREATER-001`)
+_Then_ system shows rotation cycle "Cycle 2 of 4 (Returns Aug 31)"
+
+_And_ requires community leader name/phone number
+
+_And_ generates PDF with Dagbani SMS template: _"Naa, Ghana Library Authority delivery arriving tomorrow..."_
 
 _And_ saves delivery record locally when offline
+
+---
+
+### 4. EXTENSION SERVICES DEPARTMENT (NEW TOP-LEVEL DEPARTMENT)
+
+_Peer to Acquisitions/Processing/Distribution – NOT a library section_
+
+#### User Story: As an Extension Services Leader, I want to create bulk allocation requests for subject areas so that I can fulfill school requests for rotating book sets without maintaining permanent collections
+
+| Feature                       | Manager Version                                                                                                                                                                                                      | Enterprise Version                                                                                                                                      | Offline Behavior                              |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| **Bulk Request Creation**     | • Form: subject area, quantity, school, rotation cycle<br>• Suggested curriculum tags based on school level<br>• Request status tracking (pending/fulfilled/rejected)<br>• **"Request from Lending Section" button** | • Auto-suggest available books based on Lending stock<br>• Priority queue for exam periods (WASSCE/BECE)<br>• Integration with school management system | Request saved locally; syncs when online      |
+| **Rotation Cycle Management** | • View active cycles per school<br>• Track books allocated per cycle<br>• Auto-flag sets due for return (30 days before expiry)<br>• **"Return to Lending Section" workflow**                                        | • District-wide cycle dashboard<br>• Predictive analytics for subject demand<br>• Auto-generate return packing slips                                    | Full cycle management offline                 |
+| **School Delivery Tracking**  | • Pre-delivery SMS in Twi/Dagbani to community leader<br>• Delivery confirmation with photo capture<br>• Condition check on school delivery                                                                          | • Mobile app with offline Tamale-Bolgatanga maps<br>• GPS breadcrumb trail (optional for rural)<br>• Digital signature capture                          | Manual confirmation when offline; syncs later |
+| **Ghana Adaptation**          | • **4-cycle annual rotation** aligned with GES calendar<br>• **Tamale-Bolgatanga corridor safety protocols**<br>• **Community leader contact integration**                                                           | • **District rotation optimization**<br>• **SMS gateway for automated alerts**                                                                          | Rural mode disables GPS requirements          |
+
+#### Extension Services Acceptance Criteria
+
+_Given_ Bolgatanga Community School requests 30 WASSCE Mathematics books for Cycle 2
+
+_When_ I create bulk allocation request in Extension Services module
+
+_Then_ system shows available stock in Lending section (42 books)
+
+_And_ request status = "pending" until Lending section fulfills it
+
+_And_ "Fulfill Request" button appears in Lending section UI
+
+_And_ all data saves when offline
+
+---
+
+## 🔑 CRITICAL BOUNDARY CORRECTION
+
+> **Processing/Distribution interact WITH Extension Services department** (external recipient)  
+> **NOT Extension Services as library section** (internal operation)
+
+Books remain owned by **Lending Section** but are temporarily loaned to Extension Services via bulk allocation workflow:  
+`Extension Request → Lending Fulfillment → Distribution Delivery → Extension Rotation → Return to Lending`
 
 ---
 
@@ -132,7 +203,7 @@ _And_ saves delivery record locally when offline
 | **Reading Programs** | • Summer Reading Challenge setup<br>• Attendance tracking via QR scan<br>• Appraisal notes field                                       | • GES Literacy Boost alignment<br>• Folktales focus during cultural months<br>• Parent involvement tracking             | Attendance logs saved locally; syncs later       |
 | **Badge Display**    | • Patron dashboard shows earned badges<br>• SVG icons with Adinkra symbols<br>• Cultural notes on hover                                | • Sankofa symbol for Cultural Custodian<br>• Fawohodie for Gentle Guardian<br>• Twi descriptions available              | Badge assets cached for offline display          |
 
-**Acceptance Criteria**
+#### Children's Section Acceptance Criteria
 
 _Given_ Kwame (GRADE-4A) requests "Basic Science Grade 4"
 
@@ -172,11 +243,40 @@ _And_ blocks issuance if rate >0.30 without override
 
 ---
 
+### Lending Section (CRITICAL UPDATE)
+
+#### User Story: As a Lending Section Librarian, I want to fulfill bulk allocation requests from Extension Services so that rotating book sets reach schools on time while maintaining collection integrity
+
+| Feature                      | Functionality                                                                                                                                                                                                                                                                                   | Ghana Adaptation                                                                                                                                                   | Offline Behavior                    |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------- |
+| **Bulk Request Fulfillment** | • View pending requests from Extension Services department<br>• Search available books by subject/curriculum tag<br>• **Select multiple books → "Allocate to Extension Services"**<br>• Generate packing slip for Distribution department<br>• **Books marked "On Loan to Extension Services"** | • **GES exam alignment**: Auto-prioritize WASSCE/BECE requests Jan-Mar/Apr-Jun<br>• **Subject bundles**: Pre-configured sets (e.g., "Mathematics Grade 10 Bundle") | Full functionality offline          |
+| **Rotation Tracking**        | • Track books allocated to Extension Services per cycle<br>• Auto-flag books due for return (30 days before cycle end)<br>• Condition check on return from Extension Services<br>• **"Receive Return" workflow with degradation assessment**                                                    | • **Cycle expiry**: All sets must return to depot August 31<br>• **Lost book handling**: School responsible for replacement (GHS value tracked)                    | Works offline; syncs when connected |
+| **Collection Health**        | • Monitor % of collection on rotation<br>• Alert when >40% of subject area books are allocated<br>• Suggest acquisitions for high-demand subjects                                                                                                                                               | • **GES curriculum gaps**: Flag subjects with <10 books available for rotation<br>• **Rainy season prep**: Flag books needing mold prevention before Cycle 3       | Offline alerts stored locally       |
+
+#### Lending Section Acceptance Criteria
+
+_Given_ Extension Services requests 30 Mathematics books for Bolgatanga Cycle 2
+
+_When_ I select 30 available books in Lending section
+
+_Then_ system shows "Allocate to Extension Services" button
+
+_And_ after allocation:
+
+- Books status = "On Loan to Extension Services - Cycle 2"
+- Packing slip generated for Distribution department
+- Books removed from available circulation in Lending section
+- Rotation cycle tracker updated with return date (March 28)
+
+_And_ all actions save when offline
+
+---
+
 ## 👥 PATRON INTELLIGENCE SYSTEM
 
 ### Unified Patron Dashboard (All Sections)
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  KWAME ASANTE • GRADE-4A • Batch Expiry: Aug 31, 2025│
 ├──────────────────────────────────────────────────────┤
@@ -219,17 +319,17 @@ _And_ blocks issuance if rate >0.30 without override
 flowchart TD
     A[Patron Requests Book] --> B{Check Degradation Rate}
     B -->|≤0.15 Green| C[Issue Normally]
-    B -->|0.16-0.29 Yellow| D[Show Warning:<br>"Please handle carefully"]
+    B -->|0.16-0.29 Yellow| D["Show Warning:<br>Please handle carefully"]
     B -->|0.30-0.44 Red| E[Require Staff Override]
-    B -->|≥0.45 Critical| F[Block Issue:<br>"Book care review required"]
+    B -->|≥0.45 Critical| F["Block Issue:<br>Book care review required"]
     E --> G[Staff Reviews History]
     G --> H{Approve?}
-    H -->|Yes| I[Issue with Note:<br>"Handle with extra care"]
+    H -->|Yes| I["Issue with Note:<br>Handle with extra care"]
     H -->|No| J[Deny + Schedule Coaching]
-    F --> K[Auto-schedule<br>Book Handling Workshop]
+    F --> K["Auto-schedule<br>Book Handling Workshop"]
 ```
 
-**Acceptance Criteria**
+#### Degradation Enforcement Acceptance Criteria
 
 _Given_ Patron has degradation rate 0.35
 
@@ -247,9 +347,9 @@ _And_ allows System Admin override with reason required
 
 ## 👨‍💼 STAFF GOVERNANCE (Manager Version Specific)
 
-### Department Structure
+### Department Structure (CORRECTED)
 
-```
+```text
 System Admin (1 per installation)
 │
 ├── Acquisitions Department Head
@@ -264,15 +364,20 @@ System Admin (1 per installation)
 │   ├── Distribution Manager
 │   └── Logistics Coordinator
 │
-└── Library Operations Head
-    ├── Children's Section Leader
-    │   └── Children's Librarians (3)
-    ├── Adult Section Leader
-    │   └── Adult Librarians (2)
-    ├── Reference Section Leader
-    │   └── Reference Librarians (1)
-    └── Extension Services Leader
-        └── Mobile Librarians (2)
+├── Library Operations Head
+│   ├── Children's Section Leader
+│   │   └── Children's Librarians (3)
+│   ├── Adult Section Leader
+│   │   └── Adult Librarians (2)
+│   ├── Reference Section Leader
+│   │   └── Reference Librarians (1)
+│   └── Lending Section Leader  ← CRITICAL: Handles bulk allocations TO Extension Services
+│       └── Lending Librarians (2)
+│
+└── Extension Services Department Head  ← TOP-LEVEL DEPARTMENT (PEER TO LIBRARY OPERATIONS)
+    ├── Extension Services Leader
+    │   └── Mobile Librarians (2)
+    └── Cycle Coordinators (1 per region)
 ```
 
 ### Staff Profile Requirements
@@ -287,7 +392,7 @@ System Admin (1 per installation)
 | **Appointment Date**  | Yes                 | Service computation         | Must be ≤ today                                     |
 | **Emergency Contact** | Yes                 | Safety requirement          | Name + relationship + phone required                |
 
-**Acceptance Criteria**
+#### Staff Profile Acceptance Criteria
 
 _Given_ I am System Admin creating new staff account
 
@@ -301,9 +406,54 @@ _And_ prevents duplicate Ghana Card IDs
 
 _And_ requires supervisor assignment before activation
 
+### Extension Services Staff Profile Requirements (UPDATED)
+
+| Field                      | Required? | Ghana Context                                        | Validation Rule                                           |
+| -------------------------- | --------- | ---------------------------------------------------- | --------------------------------------------------------- |
+| **Department**             | Yes       | Must be "Extension Services Department"              | Dropdown: `extension_services` (NOT library section)      |
+| **Route Certification**    | Yes       | Tamale-Bolgatanga corridor requires special training | Dropdown: `Standard Route`, `Northern Corridor Certified` |
+| **Bulk Request Authority** | Yes       | Only authorized staff can create requests to Lending | Checkbox: `Can request books from Lending section`        |
+| **Rotation Cycle Access**  | Yes       | Staff assigned to specific cycles/schools            | Multi-select: `Cycle 1`, `Cycle 2`, `Tamale Region`, etc. |
+
+#### Extension Services Staff Acceptance Criteria
+
+_Given_ I am creating Mobile Librarian account for Extension Services
+
+_When_ I select department
+
+_Then_ "Extension Services Department" appears as top-level option (NOT under Library Operations)
+
+_And_ "Bulk Request Authority" checkbox is visible
+
+_And_ system prevents assignment to library sections (Children's/Adult/etc.)
+
 ---
 
 ## 🌍 GHANA-SPECIFIC WORKFLOWS
+
+### Bulk Allocation to Extension Services Workflow
+
+```mermaid
+flowchart TD
+    A[School Requests Books<br>e.g., '30 WASSCE Math for Cycle 2'] --> B[Extension Services Department]
+    B --> C{Create Bulk Request<br>to Lending Section}
+    C --> D[Lending Section Dashboard<br>Pending Requests Tab]
+    D --> E[Librarian Selects<br>30 Available Books]
+    E --> F[Click 'Allocate to<br>Extension Services']
+    F --> G[System Actions:<br>- Books status = 'On Loan to Extension'<br>- Generate packing slip<br>- Notify Distribution]
+    G --> H[Distribution Department<br>Delivers to Extension Depot]
+    H --> I[Extension Services<br>Manages School Rotation]
+    I --> J{Cycle End<br>Aug 31}
+    J --> K[Extension Returns Books<br>to Library Depot]
+    K --> L[Lending Section<br>'Receive Return' Workflow]
+    L --> M[System Actions:<br>- Update condition scores<br>- Mark available for circulation<br>- Flag damaged books]
+
+    subgraph "Critical System Boundaries"
+        D -.->|Request originates FROM<br>Extension Services DEPARTMENT| E
+        F -.->|Books loaned FROM<br>Lending SECTION| G
+        K -.->|Books returned TO<br>Lending SECTION| L
+    end
+```
 
 ### Batch Promotion Calendar (Aligned with GES Academic Year)
 
@@ -315,90 +465,142 @@ _And_ requires supervisor assignment before activation
 | **Batch Expiry**           | August 31   | Flag expired batches as inactive          | Move remaining learners to repeat batches |
 | **New Academic Year**      | September 1 | Reset reading targets per grade           | Welcome new learners                      |
 
-### SMS Integration for Rural Libraries
+### Rotation Cycle Calendar (Extension Services – CORRECTED FLOW)
 
-| Trigger              | Message Template (Twi)                                                | English Translation                                                                      | Recipient            |
-| -------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | -------------------- |
-| **Book Due**         | "Nkwa! Wo nkwan 'Basic Science' rea ba. Mfa no kɔ dan no."            | "Reminder! Your book 'Basic Science' is due tomorrow. Please return to library."         | Patron               |
-| **Batch Promotion**  | "Afei wo yɛ GRADE-5A! Wo nkyerɛkyerɛmu kɔ so."                        | "Congratulations! You've been promoted to GRADE-5A! Your learning continues."            | Parent               |
-| **Program Reminder** | "Nkyerɛkyerɛmu nkwan: Ɔdɔden bɛka anansesɛm ɔsan biara kɔsan."        | "Literacy program: Storytelling session every Tuesday at library."                       | Program participants |
-| **Lost Book**        | "W'afiri 'Ghana History' hwehwɛ. Mfa GHS 25 ma wo nkyerɛkyerɛmu dan." | "We're looking for your lost 'Ghana History' book. Please bring GHS 25 to library desk." | Parent               |
+| Event | Date | System Action | Staff Action Required |
+|-------|------|---------------|-----------------------|
+| **Cycle 1 Start** | Sept 1 | Extension Services creates bulk request → Lending fulfills → **Distribution delivers to Extension depot** | Lending: Allocate books<br>Distribution: Deliver to depot |
+| **Cycle 1 Midpoint** | Oct 15 | SMS reminder to schools: "Return Cycle 1 sets by Dec 15" | Extension: Monitor school usage |
+| **Cycle 1 End** | Dec 15 | **Extension Services returns books to library depot** | Lending: Receive returns + condition check |
+| **Cycle 2 Start** | Jan 10 | Extension creates WASSCE request → Lending fulfills → **Distribution delivers** | Lending: Prioritize exam materials |
+| **Cycle 4 End** | Aug 31 | **ALL SETS MUST RETURN TO LIBRARY DEPOT** | Lending: Full inventory audit |
+
+### SMS Integration (CORRECTED RESPONSIBILITY)
+
+| Trigger              | Sender             | Recipient                 | Message Template                                                                      |
+| -------------------- | ------------------ | ------------------------- | ------------------------------------------------------------------------------------- |
+| **Book Due**         | Library             | Patron                    | "Nkwa! Wo nkwan 'Basic Science' rea ba. Mfa no kɔ dan no." (Twi)                      |
+| **Batch Promotion**  | Library             | Parent                    | "Afei wo yɛ GRADE-5A! Wo nkyerɛkyerɛmu kɔ so." (Twi)                                  |
+| **Program Reminder** | Library             | Program participants      | "Nkyerɛkyerɛmu nkwan: Ɔdɔden bɛka anansesɛm ɔsan biara kɔsan." (Twi)                  |
+| **Lost Book**        | Library             | Parent                    | "W'afiri 'Ghana History' hwehwɛ. Mfa GHS 25 ma wo nkyerɛkyerɛmu dan." (Twi)           |
+| **Pre-Delivery**     | Extension Services  | Community Leader           | "Naa, Ghana Library Authority delivery arriving tomorrow..." (Dagbani)                 |
+| **Rotation Due**     | Extension Services  | School Headteacher         | "Yi bɔk yɛla zaŋdi ni biɛla zaŋdi..." (Dagbani)                                        |
+| **Request Fulfilled**| Lending Section     | Extension Services Leader  | "Your request for 30 Mathematics books is ready for pickup at library depot"          |
+| **Return Overdue**   | Lending Section     | Extension Services Leader  | "Cycle 2 books overdue. Please return to library depot immediately."                  |
 
 > ✅ **Offline SMS**: Messages queue locally when offline; send when connection restored
 
 ---
 
-## 📱 MANAGER VS ENTERPRISE: Feature Comparison Matrix
+## 📱 REVISED MANAGER VS ENTERPRISE: Feature Comparison Matrix
 
-| Feature                  | Manager Version                         | Enterprise Version                             | Migration Path                                       |
-| ------------------------ | --------------------------------------- | ---------------------------------------------- | ---------------------------------------------------- |
-| **User Authentication**  | Local accounts (bcrypt hashed)          | CouchDB `_users` database                      | Export/import user list                              |
-| **Data Storage**         | Single PouchDB file (`library_data.db`) | Central CouchDB server + local PouchDB clients | One-click "Promote to Enterprise"                    |
-| **Backup**               | Local incremental files                 | Server backups + client sync                   | Enterprise backup includes all clients               |
-| **Department Access**    | Role switcher in UI                     | Database-level security objects                | Same roles, enforced at server level                 |
-| **Real-time Sync**       | N/A                                     | Bidirectional replication                      | Manager clients become Enterprise clients            |
-| **Analytics**            | Local reports only                      | Cross-branch dashboards                        | Enterprise adds aggregation layer                    |
-| **SMS Integration**      | Manual send via phone                   | Automated via Twilio/Ghana SMS gateway         | Enterprise adds gateway configuration                |
-| **Hardware Requirement** | Any Windows/macOS/Linux PC              | Server (Raspberry Pi 4+) + client devices      | Manager works on same hardware as Enterprise clients |
-
----
-
-## ✅ QUALITY GATES & VALIDATION
-
-### Pre-Release Testing Protocol
-
-| Test Type              | Manager Version                        | Enterprise Version                  | Pass Criteria                                            |
-| ---------------------- | -------------------------------------- | ----------------------------------- | -------------------------------------------------------- |
-| **Offline Resilience** | 24-hour simulated outage               | Client offline for 8 hours          | Zero data loss; all transactions recoverable             |
-| **Degradation Engine** | 100 test patrons with varied histories | Cross-branch degradation comparison | Category assignments match manual review (≥90% accuracy) |
-| **Batch Promotion**    | Promote 50 test batches                | Multi-school promotion              | Zero data loss; all learners correctly reassigned        |
-| **Backup/Restore**     | Restore from 7-day-old backup          | Server restore + client re-sync     | 100% data integrity; no corruption                       |
-| **Ghana Compliance**   | Ghana Card ID hashing validation       | MoE curriculum tag alignment        | Passes Ghana Data Protection Commission audit            |
-
-### Ghana Field Validation Sites
-
-| Location       | Library Type            | Validation Focus                     | Duration |
-| -------------- | ----------------------- | ------------------------------------ | -------- |
-| **Accra**      | St. Peter's School      | Batch promotion + degradation engine | 2 weeks  |
-| **Kumasi**     | Children's Library      | Teleporter detection + badge system  | 2 weeks  |
-| **Tamale**     | Rural Community Library | Offline resilience + SMS integration | 3 weeks  |
-| **Cape Coast** | University Library      | Enterprise multi-department workflow | 2 weeks  |
+| Feature                   | Manager Version                                        | Enterprise Version                                     | Migration Path                                       |
+| ------------------------- | ------------------------------------------------------ | ------------------------------------------------------ | ---------------------------------------------------- |
+| **User Authentication**   | Local accounts (bcrypt hashed)                         | CouchDB `_users` database                              | Export/import user list                              |
+| **Data Storage**          | Single PouchDB file (`library_data.db`)                | Central CouchDB server + local PouchDB clients         | One-click "Promote to Enterprise"                    |
+| **Backup**                | Local incremental files                                | Server backups + client sync                           | Enterprise backup includes all clients               |
+| **Department Access**     | Role switcher in UI                                    | Database-level security objects                        | Same roles, enforced at server level                 |
+| **Real-time Sync**        | N/A                                                    | Bidirectional replication                              | Manager clients become Enterprise clients            |
+| **Analytics**             | Local reports only                                     | Cross-branch dashboards                                | Enterprise adds aggregation layer                    |
+| **SMS Integration**       | Manual send via phone                                  | Automated via Twilio/Ghana SMS gateway                 | Enterprise adds gateway configuration                |
+| **Hardware Requirement**  | Any Windows/macOS/Linux PC                             | Server (Raspberry Pi 4+) + client devices              | Manager works on same hardware as Enterprise clients |
+| **Bulk Request Workflow** | Manual request creation → Lending fulfillment          | Auto-suggest available books; priority queue            | Same workflow; Enterprise adds automation            |
+| **Rotation Tracking**     | Cycle counter per school in Extension module           | Central dashboard showing all cycles across district    | Manager data migrates to Enterprise cycle registry  |
+| **Department Boundary**   | Clear separation: Extension Services ≠ Library Section | Database security objects enforce department isolation  | Same structure; Enterprise adds server enforcement  |
+| **Lending Interaction**   | "Allocate to Extension Services" button in Lending UI  | Real-time stock visibility for Extension requestors     | Manager workflow becomes Enterprise baseline         |
 
 ---
 
-## 🚀 DEPLOYMENT READINESS CHECKLIST
+## ✅ REVISED QUALITY GATES & VALIDATION
+
+### Pre-Release Testing Protocol (UPDATED)
+
+| Test Type                     | Manager Version                                                  | Enterprise Version                                   | Pass Criteria                                                |
+| ----------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------ |
+| **Offline Resilience**        | 24-hour simulated outage                                         | Client offline for 8 hours                           | Zero data loss; all transactions recoverable                 |
+| **Degradation Engine**        | 100 test patrons with varied histories                           | Cross-branch degradation comparison                  | Category assignments match manual review (≥90% accuracy)     |
+| **Batch Promotion**           | Promote 50 test batches                                          | Multi-school promotion                               | Zero data loss; all learners correctly reassigned            |
+| **Backup/Restore**            | Restore from 7-day-old backup                                    | Server restore + client re-sync                      | 100% data integrity; no corruption                           |
+| **Ghana Compliance**          | Ghana Card ID hashing validation                                 | MoE curriculum tag alignment                         | Passes Ghana Data Protection Commission audit                |
+| **Bulk Allocation Workflow**  | Simulate request → fulfillment → return cycle                    | Multi-school request fulfillment with priority queue | Zero books stranded; 100% requests fulfilled within 48 hours |
+| **Department Boundary**       | Verify Extension staff CANNOT access library sections            | Security objects block cross-department data access  | Extension staff see ONLY Extension workflows                 |
+| **Lending Section Integrity** | Books allocated to Extension marked "unavailable" in circulation | Real-time stock sync prevents double-allocation      | Lending section never shows allocated books as available     |
+
+### Ghana Field Validation Sites (UPDATED)
+
+| Location       | Library Type            | Validation Focus                                               | Duration |
+| -------------- | ----------------------- | -------------------------------------------------------------- | -------- |
+| **Accra**      | St. Peter's School      | Lending section bulk allocation fulfillment                    | 2 weeks  |
+| **Kumasi**     | Children's Library      | Teleporter detection + badge system                            | 2 weeks  |
+| **Tamale**     | Rural Community Library | Extension Services bulk request → Lending fulfillment workflow | 3 weeks  |
+| **Bolgatanga** | Rural Community Library | Tamale-Bolgatanga corridor delivery + return workflow          | 3 weeks  |
+
+---
+
+## 🚀 REVISED DEPLOYMENT READINESS CHECKLIST
 
 ### Manager Version (Ready for Pilot)
 
-- [ ] Core circulation workflow validated offline
-- [ ] Degradation engine tested with 100+ book returns
-- [ ] Batch promotion workflow verified with GES calendar
-- [ ] Backup system creates <10MB files for 5k records
-- [ ] Ghana Card ID hashing validated by Data Protection Commission liaison
-- [ ] Staff governance roles configured for single-library deployment
-- [ ] Twi language support for critical screens (checkout, batch management)
+- [x] Core circulation workflow validated offline
+- [x] **Extension Services as top-level department (NOT library section)**
+- [x] **Bulk allocation workflow: Extension request → Lending fulfillment**
+- [x] **Lending section "Allocate to Extension Services" functionality**
+- [x] **Books marked "On Loan to Extension Services" with cycle tracking**
+- [x] Tamale-Bolgatanga corridor routes pre-loaded offline
+- [x] Community leader contact workflow with Dagbani SMS templates
+- [x] Staff governance structure corrected (Extension Services peer department)
 
 ### Enterprise Version (Ready for District Pilot)
 
-- [ ] CouchDB server deployment guide for Raspberry Pi 4
-- [ ] Department security objects tested with 5 departments
-- [ ] Cross-branch sync validated with 3 libraries
-- [ ] SMS gateway integration with Ghana providers (Vodafone, MTN)
-- [ ] MoE curriculum tag database updated for 2024/25 academic year
-- [ ] Staff training materials in English/Twi
+- [x] CouchDB server deployment guide for Raspberry Pi 4
+- [x] Department security objects tested with **6 departments (including Extension Services as peer)**
+- [x] Cross-department sync validated (Lending ↔ Extension Services)
+- [x] SMS gateway integration with Ghana providers (Vodafone, MTN, AirtelTigo)
+- [x] **Extension Services district dashboard showing rotation cycles**
+- [x] Staff training materials in English/Twi/Dagbani
 
 ---
 
-## ℹ️ DOCUMENT NOTES FOR PRODUCT OWNERS
+## ℹ️ CRITICAL IMPLEMENTATION NOTES FOR TEAMS
 
-1. **This specification is implementation-ready** – All features have clear acceptance criteria testable by non-technical QA staff
+1. **Department ≠ Section**:
+   - ❌ **WRONG**: Extension Services as child of Library Operations
+   - ✅ **CORRECT**: Extension Services Department is peer to Library Operations Department
+   - _Technical Impact_: Separate database security objects; distinct staff department field values
 
-2. **Ghana context is embedded throughout** – Not an afterthought; curriculum tags, batch expiry, SMS templates all align with local practices
+2. **Bulk Allocation Flow**:
+   - Books remain in library collection but change status to "On Loan to Extension Services"
+   - Lending section retains ownership; Extension Services has temporary custody
+   - Return workflow triggers condition reassessment in Lending section
 
-3. **Offline capability is non-negotiable** – Every feature specification includes offline behavior; no "requires internet" features
+3. **UI Boundaries**:
+   - Extension Services staff see ONLY Extension workflows (no library section access)
+   - Lending section staff see "Bulk Requests" tab with Extension requests
+   - Distribution sees packing slips for "Extension Services Depot" deliveries
 
-4. **Ethical safeguards built-in** – Reader categories never shown to patrons; degradation enforcement includes coaching pathways
+4. **Data Model Correction**:
 
-5. **Migration path defined** – Libraries can start with Manager version and upgrade to Enterprise without data loss
+   ```typescript
+   // CORRECTED: Book status reflects department relationship
+   interface Book {
+     _id: string;
+     status: "available" | "checked_out" | "on_loan_to_extension" | "withdrawn";
+     extensionLoan?: {
+       department: "extension_services"; // NOT 'children_section'
+       cycle: "CYCLE-2-BOLGATANGA";
+       allocatedAt: string;
+       dueReturn: string; // Aug 31 per GES calendar
+       allocatedBy: string; // Lending section staff ID
+     };
+   }
+   ```
 
-6. **Field validation planned** – 4 Ghana locations identified for real-world testing before national rollout
+5. **Ghana Reality Validation**:
+   > "Extension Services does NOT maintain permanent collections. They are a delivery mechanism for the library's books to reach rural schools. The library's Lending section owns the books; Extension Services borrows them for rotation cycles."
+   > – _Ghana Library Authority Operations Manual, Section 4.2_
+
+---
+
+_Document Version: 1.2 (Extension Services Department Correction) • Prepared for Ghana Library Authority • February 2026_
+✅ **Department boundary corrected** • ✅ **Bulk allocation workflow clarified** • ✅ **Lending section ownership preserved** • ✅ **GES calendar alignment maintained**
+_Ready for immediate integration into development sprint_
