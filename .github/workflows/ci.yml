@@ -40,4 +40,4 @@ jobs:
 
       - name: Run tests
         run: |
-          PYTHONPATH="$GITHUB_WORKSPACE" pytest -q
+          PYTHONPATH="$PWD" pytest -q
