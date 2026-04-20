@@ -1,1 +1,4 @@
-"""Utility package marker for `scripts` used by tests and CI."""
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
+"""Make scripts a importable package for tests and CI."""

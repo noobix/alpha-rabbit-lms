@@ -1,3 +1,6 @@
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
 """Small sample file used in provenance tests."""
 
 print("hello world")
