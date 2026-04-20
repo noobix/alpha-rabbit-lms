@@ -1,24 +1,17 @@
-# 
+#!/usr/bin/env python3
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
+"""Append provenance metadata to staged files.
 
-#!/usr/bin/env python3
+Intended for use from a pre-commit hook. Scans staged files and appends
+an `Author:` and `Last-updated:` header when appropriate.
 """
-Append provenance metadata to staged files. Intended for use from a pre-commit hook.
 
-Behavior:
-- Scans staged files (`git diff --cached --name-only --diff-filter=ACM`).
-- For each file, runs the detector to see if an agent likely authored it.
-- Appends an `Author:` line (append-only) and a `Last-updated:` line.
-- If `Last-updated` already equals today's date, assumes agent already appended author; otherwise appends git user name.
-
-This script modifies files and re-adds them to the index when changed.
-"""
 import subprocess
 import sys
+from pathlib import Path
 import re
 from datetime import date
-from pathlib import Path
 
 from scripts.detect_agent_provenance import detect_text
 
@@ -32,6 +25,12 @@ EXT_COMMENT_STYLES = {
     ".css": ("/*\n", " * ", "\n */\n"),
     ".json": ("/*\n", " * ", "\n */\n"),
 }
+
+# Treat YAML files as hash/comment style; default to hash for unknown extensions
+EXT_COMMENT_STYLES.update({
+    ".yml": ("# ", "# ", ""),
+    ".yaml": ("# ", "# ", ""),
+})
 
 
 def get_staged_files():
