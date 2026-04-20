@@ -2,6 +2,10 @@
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
 
+# 
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
 #!/usr/bin/env python3
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
@@ -35,6 +39,12 @@ EXT_COMMENT_STYLES = {
     ".css": ("/*\n", " * ", "\n */\n"),
     ".json": ("/*\n", " * ", "\n */\n"),
 }
+
+# Treat YAML files as hash/comment style; default to hash for unknown extensions
+EXT_COMMENT_STYLES.update({
+    ".yml": ("# ", "# ", ""),
+    ".yaml": ("# ", "# ", ""),
+})
 
 
 def get_staged_files():
