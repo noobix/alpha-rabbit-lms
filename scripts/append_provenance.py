@@ -1,6 +1,11 @@
 # 
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
+# Provenance-Evidence: low-lexical-uniqueness:0.30, comment-density:0.13, code-tokens:2, long-comment-block
+
+# 
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
 
 # 
 # Author: Kelvin Kabute
@@ -71,7 +76,9 @@ def detect_agent_for_text(text: str):
         return None, 0.0, []
 
 
-def append_header(path: Path, author_line: str, updated_line: str):
+def append_header(path: Path, author_line: str, updated_line: str,
+                  provenance_agent: str = None, provenance_confidence: float = 0.0,
+                  provenance_evidence: list | None = None):
     ext = path.suffix.lower()
     content = read_file(path)
     if content is None:
@@ -100,10 +107,22 @@ def append_header(path: Path, author_line: str, updated_line: str):
     if line_prefix:
         header_lines.append(f"{line_prefix}Author: {author_line}".rstrip())
         header_lines.append(f"{line_prefix}Last-updated: {updated_line}".rstrip())
+        if provenance_agent:
+            header_lines.append(f"{line_prefix}Provenance-Agent: {provenance_agent}".rstrip())
+            header_lines.append(f"{line_prefix}Provenance-Confidence: {provenance_confidence:.2f}".rstrip())
+        if provenance_evidence:
+            ev = ", ".join(str(e) for e in provenance_evidence)
+            header_lines.append(f"{line_prefix}Provenance-Evidence: {ev}".rstrip())
     else:
         # YAML front-matter or markdown
         header_lines.append(f"Author: {author_line}")
         header_lines.append(f"Last-updated: {updated_line}")
+        if provenance_agent:
+            header_lines.append(f"Provenance-Agent: {provenance_agent}")
+            header_lines.append(f"Provenance-Confidence: {provenance_confidence:.2f}")
+        if provenance_evidence:
+            ev = ", ".join(str(e) for e in provenance_evidence)
+            header_lines.append(f"Provenance-Evidence: {ev}")
 
     if end:
         header_lines.append(end.lstrip('\n'))
@@ -157,16 +176,17 @@ def main():
         # run detector
         agent, confidence, evidence = detect_agent_for_text(text)
 
-        # decide author to append
-        if updated_match and updated_match.group(1) == today:
-            # assume agent already appended; if no author but agent detected, append agent
-            author_to_append = agent if agent else git_user
+        # choose author: prefer detected agent when confidence >= 0.5
+        if agent and confidence >= 0.5:
+            author_choice = agent
         else:
-            # not updated today: use git user
-            author_to_append = git_user
+            author_choice = git_user
 
-        # Append author (append-only) and last-updated (today)
-        changed = append_header(p, f"{author_to_append}", today)
+        # If file already updated today, only add missing author; still include provenance
+        changed = append_header(p, f"{author_choice}", today,
+                                provenance_agent=agent,
+                                provenance_confidence=confidence,
+                                provenance_evidence=evidence)
         if changed:
             git_add(str(p))
             modified.append(str(p))
