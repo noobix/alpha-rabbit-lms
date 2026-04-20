@@ -1,1 +1,1 @@
-"""Make scripts a importable package for tests and CI."""
+"""Utility package marker for `scripts` used by tests and CI."""
