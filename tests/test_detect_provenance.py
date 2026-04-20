@@ -2,6 +2,9 @@
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
 
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
 from scripts.detect_agent_provenance import detect_text
 
 

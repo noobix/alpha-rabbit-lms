@@ -3,6 +3,9 @@
 # Last-updated: 2026-04-20
 
 #!/usr/bin/env python3
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
 """
 Simple CI checker: fails if tracked source files lack `Author:` or `Last-updated:` metadata.
 

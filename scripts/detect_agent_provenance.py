@@ -3,6 +3,9 @@
 # Last-updated: 2026-04-20
 
 #!/usr/bin/env python3
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
 """
 Lightweight heuristic detector for agent provenance.
 Usage: python scripts/detect_agent_provenance.py [file1 file2 ...]

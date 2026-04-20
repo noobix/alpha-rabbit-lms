@@ -4,11 +4,8 @@
  */
 
 
-/*
- * Author: Kelvin Kabute
- * Last-updated: 2026-04-20
- */
-
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
 
 name: Enable Branch Protection
 
@@ -16,9 +13,9 @@ on:
   workflow_dispatch:
     inputs:
       branches:
-        description: 'Comma-separated branches to protect'
+        description: "Comma-separated branches to protect"
         required: false
-        default: 'main,testing-main'
+        default: "main,testing-main"
 
 permissions:
   contents: read
