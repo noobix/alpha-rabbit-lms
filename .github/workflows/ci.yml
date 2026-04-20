@@ -9,6 +9,7 @@ on:
     branches: [main, testing-main]
   pull_request:
     branches: [main, testing-main]
+  workflow_dispatch:
 
 jobs:
   test:
