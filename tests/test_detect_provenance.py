@@ -1,6 +1,16 @@
 """Tests for the agent provenance detector."""
 
-from scripts.detect_agent_provenance import detect_text
+from pathlib import Path
+import importlib.util
+
+# Load the detector directly from the scripts file to avoid import path issues in CI
+spec = importlib.util.spec_from_file_location(
+    "detect_agent_provenance",
+    Path(__file__).resolve().parents[1] / "scripts" / "detect_agent_provenance.py",
+)
+_mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(_mod)
+detect_text = _mod.detect_text
 
 
 def test_detect_simple_copilot():
