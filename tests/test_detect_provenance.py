@@ -4,19 +4,11 @@
 
 """Tests for the agent provenance detector."""
 
-from pathlib import Path
-import importlib.util
-import pytest
+import importlib
 
 
 def _load_detector_module():
-    detector_path = Path(__file__).resolve().parents[1] / "scripts" / "detect_agent_provenance.py"
-    if not detector_path.exists():
-        pytest.skip(f"Detector file not present: {detector_path}")
-    spec = importlib.util.spec_from_file_location("detect_agent_provenance", str(detector_path))
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+    return importlib.import_module("scripts.detect_agent_provenance")
 
 
 def test_detect_simple_copilot():
