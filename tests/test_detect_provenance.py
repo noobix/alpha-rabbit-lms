@@ -12,6 +12,8 @@ def _load_detector_module():
     if not detector_path.exists():
         pytest.skip(f"Detector file not present: {detector_path}")
     spec = importlib.util.spec_from_file_location("detect_agent_provenance", str(detector_path))
+    if spec is None or spec.loader is None:
+        pytest.skip(f"Detector module could not be loaded from: {detector_path}")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
