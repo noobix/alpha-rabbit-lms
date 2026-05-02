@@ -9,16 +9,32 @@ Run in CI before merge: `python scripts/check_provenance.py`
 """
 import sys
 import re
+import subprocess
 from pathlib import Path
 
 EXTS = [".py", ".js", ".ts", ".md"]
 
 
 def files_to_check(root: Path):
-    for ext in EXTS:
-        for p in root.rglob(f"*{ext}"):
-            if p.is_file():
-                yield p
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root), "ls-files"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        excluded_dirs = {".git", ".venv", "venv", "node_modules", "vendor", "dist"}
+        for ext in EXTS:
+            for p in root.rglob(f"*{ext}"):
+                if p.is_file() and not any(part in excluded_dirs for part in p.parts):
+                    yield p
+        return
+
+    for rel_path in result.stdout.splitlines():
+        p = root / rel_path
+        if p.is_file() and p.suffix in EXTS:
+            yield p
 
 
 def check_file(p: Path):
