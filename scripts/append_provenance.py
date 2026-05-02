@@ -79,7 +79,7 @@ def append_header(path: Path, author_line: str, updated_line: str):
         # append author near existing header block if possible
 
     # Compose header block according to file type
-    start, line_prefix, end = EXT_COMMENT_STYLES.get(ext, ("/*\n", " * ", "\n */\n"))
+    start, line_prefix, end = EXT_COMMENT_STYLES.get(ext, ("# ", "# ", ""))
 
     header_lines = []
     if start:
