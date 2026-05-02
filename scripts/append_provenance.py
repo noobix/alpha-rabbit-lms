@@ -3,9 +3,6 @@
 # Last-updated: 2026-04-20
 
 #!/usr/bin/env python3
-# Author: Kelvin Kabute
-# Last-updated: 2026-04-20
-
 """
 Append provenance metadata to staged files. Intended for use from a pre-commit hook.
 
@@ -36,7 +33,7 @@ EXT_COMMENT_STYLES = {
     ".json": ("/*\n", " * ", "\n */\n"),
 }
 
-# Treat YAML files as hash/comment style; default to hash for unknown extensions
+# Treat YAML files as hash/comment style; default to C-style for unknown extensions
 EXT_COMMENT_STYLES.update({
     ".yml": ("# ", "# ", ""),
     ".yaml": ("# ", "# ", ""),
@@ -75,8 +72,8 @@ def append_header(path: Path, author_line: str, updated_line: str):
         return False
 
     # find existing author/last-updated
-    author_re = re.compile(r"^Author:\s*(.+)$", re.I | re.M)
-    updated_re = re.compile(r"^Last-updated:\s*(\d{4}-\d{2}-\d{2})$", re.I | re.M)
+    author_re = re.compile(r"^(?:#\s*)?Author:\s*(.+)$", re.I | re.M)
+    updated_re = re.compile(r"^(?:#\s*)?Last-updated:\s*(\d{4}-\d{2}-\d{2})$", re.I | re.M)
 
     has_author = bool(author_re.search(content))
     updated_match = updated_re.search(content)
@@ -89,7 +86,7 @@ def append_header(path: Path, author_line: str, updated_line: str):
         # append author near existing header block if possible
 
     # Compose header block according to file type
-    start, line_prefix, end = EXT_COMMENT_STYLES.get(ext, ("# ", "# ", ""))
+    start, line_prefix, end = EXT_COMMENT_STYLES.get(ext, ("/*\n", " * ", "\n */\n"))
 
     header_lines = []
     if start:
@@ -148,7 +145,7 @@ def main():
             continue
 
         # check for existing Last-updated
-        updated_re = re.compile(r"^Last-updated:\s*(\d{4}-\d{2}-\d{2})$", re.I | re.M)
+        updated_re = re.compile(r"^(?:#\s*)?Last-updated:\s*(\d{4}-\d{2}-\d{2})$", re.I | re.M)
         updated_match = updated_re.search(text)
 
         # run detector
