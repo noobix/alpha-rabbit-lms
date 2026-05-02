@@ -23,8 +23,8 @@ def files_to_check(root: Path):
 
 def check_file(p: Path):
     text = p.read_text(encoding='utf-8')
-    has_author = bool(re.search(r"^Author:\s*.+$", text, re.I | re.M))
-    has_updated = bool(re.search(r"^Last-updated:\s*\d{4}-\d{2}-\d{2}$", text, re.I | re.M))
+    has_author = bool(re.search(r"^\s*(?:(?:#|//|\*)\s*)*Author:\s*.+$", text, re.I | re.M))
+    has_updated = bool(re.search(r"^\s*(?:(?:#|//|\*)\s*)*Last-updated:\s*\d{4}-\d{2}-\d{2}$", text, re.I | re.M))
     return has_author, has_updated
 
 
