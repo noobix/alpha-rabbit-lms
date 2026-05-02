@@ -15,7 +15,7 @@ import sys
 import re
 from pathlib import Path
 
-EXTS = [".py", ".js", ".ts", ".md"]
+EXTS = [".py", ".js", ".ts", ".md", ".yml", ".yaml"]
 
 
 def files_to_check(root: Path):
