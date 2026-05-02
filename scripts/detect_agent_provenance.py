@@ -1,7 +1,3 @@
-# 
-# Author: Kelvin Kabute
-# Last-updated: 2026-04-20
-
 #!/usr/bin/env python3
 # Author: Kelvin Kabute
 # Last-updated: 2026-04-20
@@ -24,7 +20,10 @@ AGENT_PATTERNS = [
     (re.compile(r"LLM-assisted|LLM assisted|AI-assisted|AI generated", re.I), "llm-assisted"),
 ]
 
-FRONT_MATTER_KEYS = [re.compile(r"^author:\s*(.+)$", re.I | re.M), re.compile(r"^generated-by:\s*(.+)$", re.I | re.M)]
+FRONT_MATTER_KEYS = [
+    re.compile(r"^[#/*\s]*author:\s*(.+)$", re.I | re.M),
+    re.compile(r"^[#/*\s]*generated-by:\s*(.+)$", re.I | re.M),
+]
 
 
 def detect_text(text: str):
@@ -42,13 +41,14 @@ def detect_text(text: str):
         if m:
             val = m.group(1).strip()
             evidence.append(f"front-matter:{val}")
-            # try to classify
+            # Only increment a known AI agent; skip human author values
             if "copilot" in val.lower():
                 agent_hits["github-copilot"] = agent_hits.get("github-copilot", 0) + 1
             elif "openai" in val.lower() or "gpt" in val.lower():
                 agent_hits["openai-gpt"] = agent_hits.get("openai-gpt", 0) + 1
-            else:
-                agent_hits["llm-assisted"] = agent_hits.get("llm-assisted", 0) + 1
+            elif "claude" in val.lower() or "anthropic" in val.lower():
+                agent_hits["anthropic-claude"] = agent_hits.get("anthropic-claude", 0) + 1
+            # else: human author value — do not count as AI-generated
 
     if not agent_hits:
         return None, 0.0, evidence
