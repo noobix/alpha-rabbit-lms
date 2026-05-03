@@ -1,14 +1,6 @@
-# 
-# Author: Kelvin Kabute
-# Last-updated: 2026-05-03
-
-# 
-# Author: Kelvin Kabute
-# Last-updated: 2026-05-03
-
 #
 # Author: Kelvin Kabute
-# Last-updated: 2026-04-20
+# Last-updated: 2026-05-03
 
 name: CI
 
@@ -19,6 +11,10 @@ on:
     branches: [main, testing-main]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   test:
     # Use GitHub-hosted Ubuntu runners
@@ -26,9 +22,6 @@ jobs:
     # Opt into Node.js 24 for JavaScript actions to avoid deprecation warnings
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
     strategy:
       fail-fast: true
       matrix:
