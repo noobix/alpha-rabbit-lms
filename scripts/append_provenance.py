@@ -1,3 +1,6 @@
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-03
+
 # 
 # Author: Kelvin Kabute
 # Last-updated: 2026-05-03
@@ -17,6 +20,7 @@ import sys
 from pathlib import Path
 import re
 from datetime import date
+from typing import List
 
 from scripts.detect_agent_provenance import detect_text
 
