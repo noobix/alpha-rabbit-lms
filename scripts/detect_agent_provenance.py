@@ -1,12 +1,16 @@
-#!/usr/bin/env python3
+# 
 # Author: Kelvin Kabute
-# Last-updated: 2026-04-20
+# Last-updated: 2026-05-03
 
 """
 Lightweight heuristic detector for agent provenance.
 Usage: python scripts/detect_agent_provenance.py [file1 file2 ...]
 Outputs JSON lines with fields: path, agent, confidence, evidence
 """
+
+# !/usr/bin/env python3
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
 import sys
 import re
 import json

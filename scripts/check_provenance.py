@@ -1,12 +1,16 @@
-#!/usr/bin/env python3
+# 
 # Author: Kelvin Kabute
-# Last-updated: 2026-04-20
+# Last-updated: 2026-05-03
 
 """
 Simple CI checker: fails if tracked source files lack `Author:` or `Last-updated:` metadata.
 
 Run in CI before merge: `python scripts/check_provenance.py`
 """
+
+# !/usr/bin/env python3
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
 import subprocess
 import sys
 import re
