@@ -1,8 +1,18 @@
 # 
 # Author: Kelvin Kabute
-# Last-updated: 2026-04-20
+# Last-updated: 2026-05-03
 
 #!/usr/bin/env python3
+
+
+# !/usr/bin/env python3
+
+
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
+
 """Append provenance metadata to staged files.
 
 Intended for use from a pre-commit hook. Scans staged files and appends
