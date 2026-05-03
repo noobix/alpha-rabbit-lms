@@ -4,7 +4,6 @@
 # Author: Kelvin Kabute
 # Last-updated: 2026-05-03
 
-# 
 # Author: Kelvin Kabute
 # Last-updated: 2026-05-03
 
@@ -108,33 +107,32 @@ def append_header(path: Path, author_line: str, updated_line: str):
     lines = content.splitlines(True)
     i = 0
     prefix_lines: List[str] = []
-    while i < len(lines) and (lines[i].startswith("#!") or lines[i].lstrip().startswith("# -*-") or lines[i].lstrip().startswith("# coding") or not lines[i].strip()):
+    while i < len(lines) and (
+        lines[i].startswith("#!")
+        or lines[i].lstrip().startswith("# -*-")
+        or lines[i].lstrip().startswith("# coding")
+        or not lines[i].strip()
+    ):
         prefix_lines.append(lines[i])
         i += 1
 
     rest = "".join(lines[i:])
-
     # If Python and first non-prefix is a multi-line module docstring, inject metadata inside it
     if ext == ".py":
         # detect triple-quoted docstring
         stripped = rest.lstrip()
         if stripped.startswith('"""') or stripped.startswith("'''"):
             quote = '"""' if stripped.startswith('"""') else "'''"
-            # find end of docstring
-            end_idx = rest.find(quote, rest.find(quote) + len(quote))
-            if end_idx != -1 and end_idx != rest.find(quote):
-                # closing quote exists; determine if single-line (open and close on same line)
-                open_pos = rest.find(quote)
-                close_pos = rest.find(quote, open_pos + len(quote))
-                # if close quote on same line as open, avoid modifying single-line docstrings
+            # find opening position, then closing position after that
+            open_pos = rest.find(quote)
+            close_pos = rest.find(quote, open_pos + len(quote))
+            if open_pos != -1 and close_pos != -1:
+                # determine if multi-line docstring by checking newline positions
                 open_line = rest.count("\n", 0, open_pos)
                 close_line = rest.count("\n", 0, close_pos)
                 if close_line > open_line:
                     # multi-line docstring — insert metadata after opening quote line
-                    # split docstring into lines
                     rest_lines = rest.splitlines(True)
-                    # find index in rest_lines of the opening quote line
-                    cur = 0
                     open_line_idx = None
                     for idx, ln in enumerate(rest_lines):
                         if quote in ln:
@@ -143,8 +141,8 @@ def append_header(path: Path, author_line: str, updated_line: str):
                     if open_line_idx is not None:
                         insert_at = open_line_idx + 1
                         comment_block = [f"Author: {author_line}\n", f"Last-updated: {updated_line}\n"]
-                        # only insert if not already present
-                        doc_slice = "".join(rest_lines[open_line_idx:close_pos+1] if False else rest_lines[open_line_idx:open_line_idx+5])
+                        # only insert if not already present in the first few lines
+                        doc_slice = "".join(rest_lines[open_line_idx:open_line_idx+5])
                         if ("Author:" not in doc_slice) and ("Last-updated:" not in doc_slice):
                             for j, cb in enumerate(comment_block):
                                 rest_lines.insert(insert_at + j, cb)

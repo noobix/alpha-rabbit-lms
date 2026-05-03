@@ -1,4 +1,6 @@
-# 
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-03
+
 # Author: Kelvin Kabute
 # Last-updated: 2026-05-03
 
@@ -24,7 +26,6 @@ attempt to modify function/class bodies to avoid risky edits.
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
 from typing import Iterable, List, Tuple
 
@@ -77,8 +78,9 @@ def iter_targets(paths: Iterable[Path]) -> Iterable[Path]:
                 if f.suffix.lower() in CODE_EXTS:
                     yield f
         else:
-            if p.is_file() and p.suffix.lower() in CODE_EXTS and not any(part in {".venv","venv","env"} for part in p.parts):
-                yield p
+            if p.is_file() and p.suffix.lower() in CODE_EXTS:
+                if not any(part in {".venv", "venv", "env"} for part in p.parts):
+                    yield p
 
 
 def read_text(path: Path) -> str:
@@ -118,7 +120,7 @@ TODO: add module description.
         prefix.append(lines[i])
         i += 1
 
-    new_text = "".join(prefix) + '"""' + "\n" + header + '"""\n\n' + "".join(lines[i:])
+    new_text = "".join(prefix) + '"""' + "\n" + header + '"""' + "\n\n" + "".join(lines[i:])
     if apply:
         path.write_text(new_text, encoding="utf8")
     return True, new_text
@@ -127,15 +129,26 @@ TODO: add module description.
 def insert_generic_header(path: Path, text: str, apply: bool) -> Tuple[bool, str]:
     suffix = path.suffix.lower()
     comment = LINE_COMMENT.get(suffix, "//")
-    # Check first non-blank line; if it already starts with the comment and contains 'Module' or 'SUMMARY', assume present
+    # Check first non-blank line; if it already starts with the comment
+    # and contains 'Module' or 'SUMMARY', assume present
     for ln in text.splitlines():
         if not ln.strip():
             continue
-        if ln.lstrip().startswith(comment) and ("module" in ln.lower() or "summary" in ln.lower() or "todo" in ln.lower()):
+        if (
+            ln.lstrip().startswith(comment)
+            and (
+                "module" in ln.lower()
+                or "summary" in ln.lower()
+                or "todo" in ln.lower()
+            )
+        ):
             return False, text
         break
 
-    header_lines = [f"{comment} Module: {path.name} - TODO: add description", f"{comment}\n"]
+    header_lines = [
+        f"{comment} Module: {path.name} - TODO: add description",
+        f"{comment}\n",
+    ]
     new_text = "\n".join(header_lines) + "\n" + text
     if apply:
         path.write_text(new_text, encoding="utf8")
