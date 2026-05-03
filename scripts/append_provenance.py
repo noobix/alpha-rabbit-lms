@@ -3,15 +3,8 @@
 # Last-updated: 2026-05-03
 
 #!/usr/bin/env python3
-
-
-# !/usr/bin/env python3
-
-
-
 # Author: Kelvin Kabute
-# Last-updated: 2026-04-20
-
+# Last-updated: 2026-05-03
 
 """Append provenance metadata to staged files.
 
@@ -21,9 +14,9 @@ an `Author:` and `Last-updated:` header when appropriate.
 
 import subprocess
 import sys
+from pathlib import Path
 import re
 from datetime import date
-from pathlib import Path
 
 from scripts.detect_agent_provenance import detect_text
 

@@ -1,5 +1,11 @@
 ---
 Author: Kelvin Kabute
+Last-updated: 2026-05-03
+---
+
+
+---
+Author: Kelvin Kabute
 Last-updated: 2026-04-20
 ---
 
@@ -9,16 +15,16 @@ Last-updated: 2026-04-20
 Short guide to branch discipline, documentation provenance checks, and PR flow for new contributors.
 
 ## Branching workflow
-- **Feature branches**: All feature branches must follow the naming convention: `LMS-[XXX]/[title-or-description]` (e.g., `LMS-101/implement-sha256-hashing-ghana-card-id`), where `[XXX]` is the numeric ticket ID from `docs/jira/compression.md`.
-- **Pick the appropriate branch**: Always work on the feature branch that corresponds to the ticket you were assigned. Do not create unrelated changes on other branches.
-- **Before you start coding**: Sync your feature branch with `testing-main`:
-  - Fetch latest remote changes: `git fetch origin`
-  - Switch to your feature branch: `git checkout LMS-[XXX]/[title-or-description]`
-  - Merge latest `testing-main` into your branch: `git merge origin/testing-main`
-  - (Or rebase if your team prefers): `git rebase origin/testing-main`
-- **At the end of work / before pushing**:
-  - Commit locally with meaningful messages: `git add . && git commit -m "LMS-[XXX]: feat: short description"`
-  - Push your feature branch: `git push origin LMS-[XXX]/[title-or-description]`
+ - **Feature branches**: All feature branches follow the naming convention `LMS-[XXX]/[title-or-description]`, where `[XXX]` is the numeric ticket ID from `docs/jira/compression.md` and `[title-or-description]` is a kebab-case summary (e.g., `LMS-101/implement-sha256-hashing-ghana-card-id`).
+ - **Pick the appropriate branch**: Always work on the branch that corresponds to the ticket you were assigned. Do not create unrelated changes on other branches.
+ - **Before you start coding**: Sync your branch with `testing-main`:
+   - Fetch latest remote changes: `git fetch origin`
+   - Switch to your branch: `git checkout LMS-[XXX]/[title-or-description]`
+   - Merge latest `testing-main` into your branch: `git merge origin/testing-main`
+   - (Or rebase if your team prefers): `git rebase origin/testing-main`
+ - **At the end of work / before pushing**:
+   - Commit locally with meaningful messages: `git add . && git commit -m "feat: short description"`
+   - Push your branch: `git push origin LMS-[XXX]/[title-or-description]`
   - Open a pull request targeting `testing-main` (see PR guidance below).
 
 ## Pull requests and reviews
