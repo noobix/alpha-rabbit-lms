@@ -23,7 +23,8 @@ from scripts.detect_agent_provenance import detect_text
 
 EXT_COMMENT_STYLES = {
     # ext: (start, line_prefix, end)
-    ".py": ("# ", "# ", ""),
+    # For Python we prefer inline `#` lines inserted after any shebang/encoding.
+    ".py": ("", "# ", ""),
     ".md": ("---\n", "", "\n---\n"),
     ".js": ("/*\n", " * ", "\n */\n"),
     ".ts": ("/*\n", " * ", "\n */\n"),
@@ -86,29 +87,78 @@ def append_header(path: Path, author_line: str, updated_line: str):
     # Compose header block according to file type
     start, line_prefix, end = EXT_COMMENT_STYLES.get(ext, ("/*\n", " * ", "\n */\n"))
 
-    header_lines = []
-    if start:
-        header_lines.append(start.rstrip('\n'))
-    if line_prefix:
-        header_lines.append(f"{line_prefix}Author: {author_line}".rstrip())
-        header_lines.append(f"{line_prefix}Last-updated: {updated_line}".rstrip())
-    else:
-        # YAML front-matter or markdown
-        header_lines.append(f"Author: {author_line}")
-        header_lines.append(f"Last-updated: {updated_line}")
+    def make_comment_lines(prefix: str) -> List[str]:
+        if prefix:
+            return [f"{prefix}Author: {author_line}".rstrip(), f"{prefix}Last-updated: {updated_line}".rstrip()]
+        return [f"Author: {author_line}", f"Last-updated: {updated_line}"]
 
-    if end:
-        header_lines.append(end.lstrip('\n'))
+    # Preserve shebang / encoding lines at top
+    lines = content.splitlines(True)
+    i = 0
+    prefix_lines: List[str] = []
+    while i < len(lines) and (lines[i].startswith("#!") or lines[i].lstrip().startswith("# -*-") or lines[i].lstrip().startswith("# coding") or not lines[i].strip()):
+        prefix_lines.append(lines[i])
+        i += 1
 
-    header_text = "\n".join([line for line in header_lines if line is not None and line != ""]) + "\n\n"
+    rest = "".join(lines[i:])
 
-    # Insert header at top if not present
+    # If Python and first non-prefix is a multi-line module docstring, inject metadata inside it
+    if ext == ".py":
+        # detect triple-quoted docstring
+        stripped = rest.lstrip()
+        if stripped.startswith('"""') or stripped.startswith("'''"):
+            quote = '"""' if stripped.startswith('"""') else "'''"
+            # find end of docstring
+            end_idx = rest.find(quote, rest.find(quote) + len(quote))
+            if end_idx != -1 and end_idx != rest.find(quote):
+                # closing quote exists; determine if single-line (open and close on same line)
+                open_pos = rest.find(quote)
+                close_pos = rest.find(quote, open_pos + len(quote))
+                # if close quote on same line as open, avoid modifying single-line docstrings
+                open_line = rest.count("\n", 0, open_pos)
+                close_line = rest.count("\n", 0, close_pos)
+                if close_line > open_line:
+                    # multi-line docstring — insert metadata after opening quote line
+                    # split docstring into lines
+                    rest_lines = rest.splitlines(True)
+                    # find index in rest_lines of the opening quote line
+                    cur = 0
+                    open_line_idx = None
+                    for idx, ln in enumerate(rest_lines):
+                        if quote in ln:
+                            open_line_idx = idx
+                            break
+                    if open_line_idx is not None:
+                        insert_at = open_line_idx + 1
+                        comment_block = [f"Author: {author_line}\n", f"Last-updated: {updated_line}\n"]
+                        # only insert if not already present
+                        doc_slice = "".join(rest_lines[open_line_idx:close_pos+1] if False else rest_lines[open_line_idx:open_line_idx+5])
+                        if ("Author:" not in doc_slice) and ("Last-updated:" not in doc_slice):
+                            for j, cb in enumerate(comment_block):
+                                rest_lines.insert(insert_at + j, cb)
+                            new_rest = "".join(rest_lines)
+                            new_content = "".join(prefix_lines) + new_rest
+                            write_file(path, new_content)
+                            return True
+        # fallback: insert simple # comment block after prefix_lines
+        comment_lines = make_comment_lines(line_prefix)
+        header_text = "\n".join(comment_lines) + "\n\n"
+        new_content = "".join(prefix_lines) + header_text + rest
+        write_file(path, new_content)
+        return True
+
+    # Markdown front-matter: put YAML at very top (after any blank lines)
     if ext == ".md":
-        # prepend YAML front matter
+        header_lines = make_comment_lines("")
+        header_text = "---\n" + "\n".join(header_lines) + "\n---\n\n"
         new_content = header_text + content
-    else:
-        new_content = header_text + content
+        write_file(path, new_content)
+        return True
 
+    # Generic comment insertion for other languages: preserve prefix_lines then insert comment block
+    comment_lines = make_comment_lines(line_prefix)
+    header_text = "\n".join(comment_lines) + "\n\n"
+    new_content = "".join(prefix_lines) + header_text + rest
     write_file(path, new_content)
     return True
 
