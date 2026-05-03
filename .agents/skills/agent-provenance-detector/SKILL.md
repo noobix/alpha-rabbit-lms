@@ -1,12 +1,8 @@
 ---
-Author: Kelvin Kabute
-Last-updated: 2026-04-20
----
-
-
----
 name: agent-provenance-detector
 description: Detects whether code was authored or assisted by a coding agent (LLM/Copilot) and emits provenance evidence.
+Author: Kelvin Kabute
+Last-updated: 2026-04-20
 ---
 
 # Agent Provenance Detector
