@@ -1,6 +1,9 @@
 # Author: Kelvin Kabute
 # Last-updated: 2026-05-03
 
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-03
+
 # 
 # Author: Kelvin Kabute
 # Last-updated: 2026-05-03
@@ -41,6 +44,11 @@ EXT_COMMENT_STYLES.update({
     ".yml": ("# ", "# ", ""),
     ".yaml": ("# ", "# ", ""),
 })
+
+# Extensions considered safe for automatic provenance headers (code files).
+# By default we skip documentation/config files (markdown, json, txt) to avoid
+# breaking parsers. If you must enable them, change this set or add a fallback.
+SAFE_CODE_EXTS = {".py", ".js", ".ts", ".java", ".go", ".rs", ".c", ".cpp", ".h", ".cs", ".php", ".rb"}
 
 
 def get_staged_files():
@@ -191,6 +199,11 @@ def main():
     for f in files:
         p = Path(f)
         if not p.exists():
+            continue
+        # Only modify recognized code files to avoid breaking documentation/config formats
+        ext = p.suffix.lower()
+        if ext not in SAFE_CODE_EXTS:
+            # user preference: prefer not to touch markdown/json/txt; skip by default
             continue
         text = read_file(p)
         if text is None:
