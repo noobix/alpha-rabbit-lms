@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-04
+
 """Append provenance metadata to staged files.
 
 Intended for use from a pre-commit hook. Scans staged files and appends
@@ -31,6 +34,9 @@ EXT_COMMENT_STYLES.update({
     ".yml": ("# ", "# ", ""),
     ".yaml": ("# ", "# ", ""),
 })
+
+# File extensions safe to append provenance metadata to
+SAFE_CODE_EXTS = set(EXT_COMMENT_STYLES.keys())
 
 
 def get_staged_files():
