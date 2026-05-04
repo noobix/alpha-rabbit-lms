@@ -1,6 +1,5 @@
-# 
 # Author: Kelvin Kabute
-# Last-updated: 2026-04-20
+# Last-updated: 2026-05-03
 
 """Tests for the agent provenance detector."""
 
