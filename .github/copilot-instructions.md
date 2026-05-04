@@ -12,6 +12,14 @@ This file gives Copilot and contributors a clear, human-readable mapping of the 
 
 ## Usage patterns and guidance
 
+**MCP-Only Branch/PR Opt-In**
+
+- This repository supports MCP-driven branch/commit/push/PR operations controlled by `.github/gsd-config.yaml`.
+- To enable: set `enable: true` and add permitted `allowed_modes` and `admin_approvals` in `.github/gsd-config.yaml`.
+- Agents MUST check this file before performing remote actions. If `require_admin_opt_in` is true, an explicit admin confirmation is required in the repository (for example, a signed approval file or a comment from an admin team member).
+- When enabled, GSD may use MCP endpoints to create branches, push files, and open PRs. Agents must prefix branch names with the configured `branch_prefix` and prepend `pr_title_prefix` to PR titles.
+
+Security note: enabling `autonomous` mode allows automated pushes and merges and should be limited to trusted repositories and administrators.
 **Best Practices**
 
 - Purpose: Skills in this group should be used when the user asks for high-level engineering guidance, design patterns, or process-level recommendations.
@@ -131,6 +139,19 @@ This file gives Copilot and contributors a clear, human-readable mapping of the 
 - Update this document whenever a new skill is added or an existing skill's scope changes.
 - Add one-line trigger summaries at the top of new SKILL.md files to improve auto-detection.
 
+**Get Shit Done (GSD)**
+
+- Purpose: High-priority orchestration skill for multi-step execution requests that span planning, coding, testing, and pull request workflows. Use when the user asks to "get shit done", requests an ordered set of implementation tasks, or asks an agent to carry out a phase from plan→implement→verify.
+- When to call: explicit aliases (`gsd`, `get shit done`, `get-shit-done`, `gsd-autonomous`) or when the user intent contains two or more sequenced actions (e.g., "create API, add tests, open PR").
+- When NOT to call: single-step clarifications, purely advisory requests, or security/privileged operations without approvals.
+- Precedence: Give GSD high match priority for multi-step intents and explicit alias mentions. It should outrank generic planning skills for these requests but remain below dedicated security or manual-approval-only skills.
+- Modes: `assist-only` (default), `semi-autonomous` (creates draft PRs, requires approval to merge), `autonomous` (full execution; requires explicit repository opt-in).
+- Safety: Disallow destructive operations (force-push, branch deletions, CI bypass) without explicit consent. Never access secrets; surface any secret requirements to the user.
+- Subskills: GSD composes focused skills; prefer subskills in `.github/skills/gsd-*` when handling domain tasks (audit-fix, code-review, add-tests, ui-review, execute-phase).
+- Examples: "gsd: implement feature X and open a draft PR", "Get shit done: fix failing tests and prepare a mergeable PR".
+
+Note: Keep `.agents/skills/gsd/SKILL.md` up-to-date with examples and templates. The SKILL.md should be the single source of truth for aliases, heuristics, and autonomy gating.
+
 ## Appendix: Skill quick index
 
 - adapt — responsive design, breakpoints, multi-device UI.
@@ -149,3 +170,13 @@ This file gives Copilot and contributors a clear, human-readable mapping of the 
 - create-pull-request — open pull requests from branches or changes.
 
 If you want, I can also generate a short checklist for SKILL.md contributors to make skill detection more reliable.
+
+<!-- GSD Configuration — managed by get-shit-done installer -->
+# Instructions for GSD
+
+- Use the get-shit-done skill when the user asks for GSD or uses a `gsd-*` command.
+- Treat `/gsd-...` or `gsd-...` as command invocations and load the matching file from `.github/skills/gsd-*`.
+- When a command says to spawn a subagent, prefer a matching custom agent from `.github/agents`.
+- Do not apply GSD workflows unless the user explicitly asks for them.
+- After completing any `gsd-*` command (or any deliverable it triggers: feature, bug fix, tests, docs, etc.), ALWAYS: (1) offer the user the next step by prompting via `ask_user`; repeat this feedback loop until the user explicitly indicates they are done.
+<!-- /GSD Configuration -->

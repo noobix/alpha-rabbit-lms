@@ -1,0 +1,26 @@
+# GSD (Get Shit Done) repository opt-in configuration
+# Controls whether the GSD skill may perform branch/PR operations via MCP
+
+# enable: boolean - master switch to allow MCP-driven branch/PR operations
+enable: false
+
+# allowed_modes: list - which autonomy modes are permitted to run via MCP
+# possible values: assist-only, semi-autonomous, autonomous
+allowed_modes:
+  - assist-only
+  - semi-autonomous
+
+# branch_prefix: string - prefix for branches created by GSD flows
+branch_prefix: gsd/
+
+# pr_title_prefix: string - prefix applied to PR titles created by GSD
+pr_title_prefix: GSD:
+
+# require_admin_opt_in: boolean - whether an explicit admin approval file is required
+require_admin_opt_in: true
+
+# admin_approvals: list - usernames or team slugs allowed to opt-in
+admin_approvals: []
+
+# Notes: To enable semi-autonomous or autonomous runs, set `enable: true`,
+# add entries to `admin_approvals`, and change `allowed_modes` accordingly.
