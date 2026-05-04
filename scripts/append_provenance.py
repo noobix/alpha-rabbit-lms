@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # Author: Kelvin Kabute
-# Last-updated: 2026-05-03
-
-# Author: Kelvin Kabute
-# Last-updated: 2026-05-03
+# Last-updated: 2026-05-04
 
 """Append provenance metadata to staged files.
 
@@ -38,10 +35,8 @@ EXT_COMMENT_STYLES.update({
     ".yaml": ("# ", "# ", ""),
 })
 
-# Extensions considered safe for automatic provenance headers (code files).
-# By default we skip documentation/config files (markdown, json, txt) to avoid
-# breaking parsers. If you must enable them, change this set or add a fallback.
-SAFE_CODE_EXTS = {".py", ".js", ".ts", ".java", ".go", ".rs", ".c", ".cpp", ".h", ".cs", ".php", ".rb"}
+# File extensions safe to append provenance metadata to
+SAFE_CODE_EXTS = set(EXT_COMMENT_STYLES.keys())
 
 
 def get_staged_files():
