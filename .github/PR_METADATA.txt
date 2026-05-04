@@ -1,0 +1,4 @@
+Title: WIP: Preserve local changes from failed sync
+
+Body:
+This PR was created by an automated Copilot agent to preserve local work after a failed upstream sync. It contains provenance detection tooling, CI helpers, and docs updates. Please review and run CI.
