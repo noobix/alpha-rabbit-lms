@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-05-05
+---
+
 # Copilot Agent Skill Usage Guide
 
 ## Purpose
@@ -9,6 +14,14 @@ This file gives Copilot and contributors a clear, human-readable mapping of the 
 - Each section groups skills by domain (Best Practices, UI, GitHub, Search, etc.).
 - For each skill we list: a short description, when to call it, trigger phrases or cues, and example prompts.
 - Keep SKILL.md files under `.agents/skills/<skill>/SKILL.md` up-to-date; Copilot can inspect those files for technical details.
+
+## GSD Planning Integration
+
+At the start of any planning session — when the user asks you to plan a feature, a phase, a milestone, or any multi-step implementation task — read `.github/gsd-flat-directory/README.md` first. That directory is the single entry point for all GSD skills and agents in this repository, organized into six lifecycle stages. It tells you which resources are available during planning (Research, Planning, and Orchestration stages) and which are locked until after the handoff protocol is satisfied (Coding, Testing, and Deployment stages).
+
+After reading the README, read `.github/gsd-flat-directory/copilot-integration.md` for the access rules that govern which stage documents you may use at any given point in the session. When you are ready to hand off to an execution agent, follow the protocol in `.github/gsd-flat-directory/HANDOFF.md`.
+
+Do not invoke any GSD execution skill (`gsd-execute-phase`, `gsd-fast`, `gsd-quick`) or any testing or deployment skill during a planning session. All skill and agent dispatch during planning is mediated through the stage documents in `.github/gsd-flat-directory/stages/`.
 
 ## Usage patterns and guidance
 
@@ -172,6 +185,7 @@ Note: Keep `.agents/skills/gsd/SKILL.md` up-to-date with examples and templates.
 If you want, I can also generate a short checklist for SKILL.md contributors to make skill detection more reliable.
 
 <!-- GSD Configuration — managed by get-shit-done installer -->
+
 # Instructions for GSD
 
 - Use the get-shit-done skill when the user asks for GSD or uses a `gsd-*` command.
