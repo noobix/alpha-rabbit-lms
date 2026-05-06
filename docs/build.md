@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-05-06
+---
+
 # Alpha Rabbit LMS Build Prompt (Compression-Aligned v1.2)
 
 <!-- markdownlint-disable MD032 MD060 -->
@@ -865,13 +870,13 @@ A ticket is complete only if all conditions are true:
 
 ---
 
-## 5) Git Branching & Commit Workflow
+## 5) 🚀 Development & Release Workflow: Branching, Commits, PRs & Build Tags
 
-### Overview
+### 🧭 Overview
 
-All feature development follows a branch-per-ticket model anchored to ticket IDs from `docs/jira/compression.md`. The `testing-main` branch is the integration target for all feature work. Pull requests are the only merge path into `testing-main`.
+All feature development follows a branch-per-ticket model anchored to ticket IDs from `docs/jira/compression.md`. The `testing-main` branch is the integration target for all feature work. Pull requests are the only merge path into `testing-main`. Every merge commit is tagged with a lightweight build number; every completed sprint receives an annotated tag aggregating all builds from that sprint.
 
-### Branch Naming Convention
+### 🌿 Branch Naming Convention
 
 ```text
 LMS-[XXX]/[title-or-description]
@@ -889,9 +894,9 @@ LMS-[XXX]/[title-or-description]
 | LMS-801    | `LMS-801/create-bulk-book-requests-rotation-cycles` |
 | LMS-NA-001 | `LMS-NA-001/power-outage-resilience-validation`     |
 
-### Workflow Steps (Using GitHub MCP Tools)
+### 🛠️ Workflow Steps (Using GitHub MCP Tools)
 
-#### Step 1: Create Feature Branch from `testing-main`
+#### Step 1: 🌱 Create Feature Branch from `testing-main`
 
 Use the GitHub MCP `create_branch` tool to create the branch on the remote, branching off `testing-main`:
 
@@ -903,7 +908,7 @@ Tool: mcp_io_github_git_create_branch
   from_branch: testing-main
 ```
 
-#### Step 2: Sync with `testing-main`
+#### Step 2: 🔄 Sync with `testing-main`
 
 If a PR already exists for the branch and `testing-main` has moved ahead, use the MCP `update_pull_request_branch` tool to pull the latest base branch changes into the feature branch:
 
@@ -916,7 +921,7 @@ Tool: mcp_io_github_git_update_pull_request_branch
 
 This merges the latest `testing-main` into the feature branch on the remote — no local pull needed.
 
-#### Step 3: Implement the Feature
+#### Step 3: 💻 Implement the Feature
 
 Work on the ticket. Every commit message must paint a clear picture of what was built and why. Use the acceptance criteria from `compression.md` as context to inform what you write — don't copy them verbatim, describe the work you actually did.
 
@@ -946,7 +951,7 @@ from backups and debug output. The masked format function is shared with
 the vendor Ghana Card display for reuse in LMS-301.
 ```
 
-#### Step 4: Commit and Push Feature Branch
+#### Step 4: 📤 Commit and Push Feature Branch
 
 Use the GitHub MCP `push_files` tool to commit and push all changed files to the feature branch in a single operation. Use `get_file_contents` to read current file contents from the branch if needed.
 
@@ -977,7 +982,49 @@ Tool: mcp_io_github_git_get_file_contents
   ref: "refs/heads/LMS-[XXX]/[title-or-description]"
 ```
 
-#### Step 5: Create Pull Request to `testing-main`
+#### Step 5: 🏷️ Tag the Commit with a Build Number
+
+Before opening the PR, tag the current commit on the feature branch with a lightweight build number tag. Each commit receives exactly one build number. Build numbers are the primary traceability unit linking a commit to its delivered work.
+
+**Build number format:**
+
+```text
+[YY###]
+```
+
+- `YY` = two-digit year (2026 → `26`)
+- `###` = sequential counter starting at `1` for the year, incrementing by one per merged PR
+- 2026 range: `[261]` through `[26999]`
+- Build numbers are year-scoped, never reset mid-year, and never appear in the semantic version string
+
+**Reading the next build number from `.build_counter`:**
+
+The repo tracks the next build number to use in a plain text file at the root:
+
+```bash
+cat .build_counter   # e.g. outputs: 261
+```
+
+Read this file before tagging. The value it contains is the number you apply to your commit. After tagging, increment and write it back so the next developer gets the correct number:
+
+```bash
+# 1. Read current counter
+BUILD=$(cat .build_counter)
+
+# 2. Tag the commit
+git tag "[$BUILD]"
+git push origin "[$BUILD]"
+
+# 3. Increment and commit the counter back to testing-main
+echo $(( BUILD + 1 )) > .build_counter
+git add .build_counter
+git commit -m "chore: increment build counter to $(( BUILD + 1 ))"
+git push origin testing-main
+```
+
+> **Race condition note:** If two PRs are being tagged concurrently, both may read the same counter value. In practice, serialise this step manually (one tag operation at a time) or rely on the CI automation in `docs/release.md` which handles this atomically.
+
+#### Step 6: 🔀 Create Pull Request to `testing-main`
 
 Use the GitHub MCP `create_pull_request` tool:
 
@@ -993,7 +1040,10 @@ Tool: mcp_io_github_git_create_pull_request
     **LMS-[XXX]**: <ticket title>
 
     ## Changes
-    - <summary of what was implemented>
+    - Write this section as a paraphrase of the ticket's acceptance criteria, phrased as completed implementation behavior rather than a checklist.
+    - Describe what the code now does, how it behaves, and why it satisfies the ticket, without copying the acceptance criteria verbatim.
+    - You may reference the commit message for context, but do not lift its wording directly.
+    - This section will be reused in annotated tags, so keep it clear, factual, and implementation-focused.
 
     ## Acceptance Criteria (from compression.md)
     - [ ] <AC 1>
@@ -1008,7 +1058,70 @@ Tool: mcp_io_github_git_create_pull_request
     - [ ] Manager/Enterprise impact recorded
 ```
 
-### Sprint Branch Mapping (from compression.md)
+---
+
+#### Step 7: 📦 Create Sprint Annotated Tag
+
+When every ticket in a sprint is merged into `testing-main`, create a single annotated tag covering the entire sprint. The annotated tag is the durable, human-readable record of everything delivered in the sprint; its body feeds release notes and audit records. The semantic version increments the MINOR component at sprint completion.
+
+**Annotated tag body format:**
+
+```text
+Build #[261]
+Changes:
+- <Paraphrased description of what was delivered — drawn from the PR ## Changes section, not copied verbatim>
+- <Additional delivered behavior expressed as what the system now does as a result of this build>
+
+Build #[262]
+Changes:
+- <Paraphrased description of what was delivered>
+- <Additional delivered behavior>
+
+[Full PR description for each build, appended in chronological order]
+```
+
+**Rules:**
+
+- Open each build entry with `Build #[YY###]`.
+- `Changes:` items are paraphrased from the PR `## Changes` section. Describe what the system now does as a result of the build — implementation behavior, not requirements. Do not copy from the acceptance criteria list or lift wording from the commit message verbatim.
+- Order entries chronologically by merge date.
+- After all build entries, append the full PR description body for each build in the same order. This is the reference appendix used by `docs/release.md` and for audit purposes.
+- The tag body must be entirely self-contained — readable without accessing GitHub.
+
+**Command:**
+
+```bash
+git tag -a v1.1.0 -F sprint-tag-body.txt
+git push origin v1.1.0
+```
+
+Write the tag body to a temporary file to handle multi-line content reliably; remove the file after tagging. Automation details live in `docs/release.md`.
+
+**Example (Sprint 1, v1.1.0):**
+
+```text
+Build #[261]
+Changes:
+- Ghana Card IDs submitted at any form boundary are validated against the GHA-000000000-0 format, then hashed and salted exclusively in the Electron main process before reaching the database — plaintext values never appear in storage, logs, or the renderer.
+- All UI surfaces render the masked format GHA-123***89-0; the masking function is shared with the vendor identity form.
+
+Build #[262]
+Changes:
+- The backup scheduler fires daily at 8 PM, produces an incremental snapshot capped at 5% of database size, and resumes automatically from the last checkpoint after a power interruption.
+- A WhatsApp export path compresses the output below 10 MB; a retention job prunes backups older than 30 days on schedule.
+
+Build #[263]
+Changes:
+- Active transaction drafts are persisted to a local snapshot every 30 seconds and stamped with a checksum; on restart after an outage the app locates the last clean snapshot, verifies its integrity, and displays the exact timestamp of the recovered state to the user.
+
+[Full PR description for Build #[261] — LMS-101]
+[Full PR description for Build #[262] — LMS-102]
+[Full PR description for Build #[263] — LMS-103]
+```
+
+---
+
+### 🗺️ Sprint Branch Mapping (from compression.md)
 
 | Sprint   | Tickets                                                      | Branch Names                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | -------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1021,12 +1134,14 @@ Tool: mcp_io_github_git_create_pull_request
 | Sprint 7 | LMS-105, LMS-801, LMS-802, LMS-803, LMS-812, LMS-813         | `LMS-105/department-security-objects`<br>`LMS-801/create-bulk-book-requests-rotation-cycles`<br>`LMS-802/rotation-cycle-management-ges-calendar`<br>`LMS-803/school-delivery-tracking-mobile-van`<br>`LMS-812/extension-lending-cross-department-sync`<br>`LMS-813/extension-schedule-corridor-safety`                                                                                                                                                                                                                                   |
 | Sprint 8 | LMS-804, LMS-805, LMS-810, LMS-811, LMS-NA-001 to LMS-NA-007 | `LMS-804/qr-learner-checkout-return-android`<br>`LMS-805/dagbani-sms-templates-northern-region`<br>`LMS-810/android-offline-transaction-app`<br>`LMS-811/qr-learner-identification-smart-tag`<br>`LMS-NA-001/power-outage-resilience-validation`<br>`LMS-NA-002/battery-drain-profiling`<br>`LMS-NA-003/translate-critical-screens-twi-dagbani`<br>`LMS-NA-004/language-toggle-settings`<br>`LMS-NA-005/anonymized-patron-heartbeat`<br>`LMS-NA-006/qa-tooling-patron-simulation`<br>`LMS-NA-007/validate-extension-bulk-allocation-e2e` |
 
-### Quick Reference: MCP Tool Sequence
+### ⚡ Quick Reference: MCP Tool Sequence
 
 ```text
-1. mcp_io_github_git_create_branch         → Create feature branch from testing-main
+1. mcp_io_github_git_create_branch              → Create feature branch from testing-main
 2. mcp_io_github_git_update_pull_request_branch → Sync feature branch with testing-main
-3. mcp_io_github_git_get_file_contents      → Read existing files before editing
-4. mcp_io_github_git_push_files             → Commit and push all changes
-5. mcp_io_github_git_create_pull_request    → Open PR to testing-main
+3. mcp_io_github_git_get_file_contents           → Read existing files before editing
+4. mcp_io_github_git_push_files                  → Commit and push all changes
+5. git tag [YY###] <commit-hash>                 → Lightweight build number tag per commit (Step 5)
+6. mcp_io_github_git_create_pull_request         → Open PR to testing-main
+7. git tag -a v<M.m.0> -F sprint-tag-body.txt   → Annotated sprint tag on sprint completion (Step 7)
 ```
