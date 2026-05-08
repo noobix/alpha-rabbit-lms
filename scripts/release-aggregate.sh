@@ -31,7 +31,7 @@ echo "Found $COUNT merged PR(s) since last tag"
 
 > sprint-tag-body.txt
 
-for i in $(jq -r '.[].number' pr_pluck.json); do
+for i in $(jq -r '.[].number' pr_pluck.json | tr -d '\r'); do
   echo "Processing PR #$i"
   PR_BODY=$(gh pr view $i --json body,title,mergeCommit,headRefOid --jq '.body')
   PR_TITLE=$(gh pr view $i --json body,title --jq '.title')
@@ -65,19 +65,10 @@ for i in $(jq -r '.[].number' pr_pluck.json); do
   echo "" >> sprint-tag-body.txt
 done
 
-# Append full PR descriptions as appendix
-echo "\n---\n\nAppendix: Full PR descriptions" >> sprint-tag-body.txt
-for i in $(jq -r '.[].number' pr_pluck.json); do
-  PR_BODY=$(gh pr view $i --json body,title --jq '.body')
-  echo "[Full PR description for Build #[${i}] — PR#$i]" >> sprint-tag-body.txt
-  echo "$PR_BODY" >> sprint-tag-body.txt
-  echo "" >> sprint-tag-body.txt
-done
-
 # --- Contributors aggregation (adds @handle (Name) list) ---
 echo "Contributors:" >> sprint-tag-body.txt
 TMP_CONTRIB="$(mktemp)"
-for i in $(jq -r '.[].number' pr_pluck.json); do
+for i in $(jq -r '.[].number' pr_pluck.json | tr -d '\r'); do
   # PR author (may be null for external contributions)
   gh pr view "$i" --json author --jq '.author.login' 2>/dev/null | sed '/^$/d' >> "$TMP_CONTRIB" || true
 
@@ -89,9 +80,7 @@ done
 sort -u "$TMP_CONTRIB" > "${TMP_CONTRIB}.sorted" || true
 
 while read -r handle; do
-  if [ -z "$handle" ]; then
-    continue
-  fi
+  [ -z "$handle" ] && continue
   # Try to get display name; fall back to handle only
   NAME=$(gh user view "$handle" --json name --jq '.name' 2>/dev/null || echo "")
   if [ -n "$NAME" ] && [ "$NAME" != "null" ]; then
@@ -103,9 +92,13 @@ done < "${TMP_CONTRIB}.sorted"
 
 rm -f "$TMP_CONTRIB" "${TMP_CONTRIB}.sorted" || true
 
-echo "" >> sprint-tag-body.txt
-echo "---" >> sprint-tag-body.txt
-echo "" >> sprint-tag-body.txt
-echo "Appendix: Full PR descriptions" >> sprint-tag-body.txt
+# Appendix: full PR descriptions
+printf '\n---\n\nAppendix: Full PR descriptions\n' >> sprint-tag-body.txt
+for i in $(jq -r '.[].number' pr_pluck.json | tr -d '\r'); do
+  PR_BODY=$(gh pr view $i --json body,title --jq '.body')
+  echo "[Full PR description for Build #[${i}] — PR#$i]" >> sprint-tag-body.txt
+  echo "$PR_BODY" >> sprint-tag-body.txt
+  echo "" >> sprint-tag-body.txt
+done
 
 echo "Wrote sprint-tag-body.txt"
