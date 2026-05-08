@@ -1,11 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-05-07
----
-
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-06
+Last-updated: 2026-05-08
 ---
 
 # Alpha Rabbit LMS Build Prompt (Compression-Aligned v1.2)
@@ -1082,6 +1077,13 @@ Changes:
 - <Paraphrased description of what was delivered>
 - <Additional delivered behavior>
 
+Contributors:
+@github-handle (Display Name)
+@github-handle-2 (Display Name)
+
+---
+
+Appendix: Full PR descriptions
 [Full PR description for each build, appended in chronological order]
 ```
 
@@ -1090,7 +1092,8 @@ Changes:
 - Open each build entry with `Build #[YY###]`.
 - `Changes:` items are paraphrased from the PR `## Changes` section. Describe what the system now does as a result of the build — implementation behavior, not requirements. Do not copy from the acceptance criteria list or lift wording from the commit message verbatim.
 - Order entries chronologically by merge date.
-- After all build entries, append the full PR description body for each build in the same order. This is the reference appendix used by `docs/release.md` and for audit purposes.
+- After all build entries, include a `Contributors:` section listing every GitHub handle (and display name where available) that authored a PR or commit merged in this sprint. Format each line as `@handle (Display Name)` — or `@handle` alone when no display name is set. Deduplicate and sort alphabetically. This section is generated automatically by `scripts/release-aggregate.sh`.
+- After the contributors section, append a `---` separator followed by `Appendix: Full PR descriptions`, then the full PR description body for each build in chronological order. This appendix is the reference used by `docs/release.md` and for audit purposes.
 - The tag body must be entirely self-contained — readable without accessing GitHub.
 
 **Command:**
@@ -1119,6 +1122,12 @@ Build #[263]
 Changes:
 - Active transaction drafts are persisted to a local snapshot every 30 seconds and stamped with a checksum; on restart after an outage the app locates the last clean snapshot, verifies its integrity, and displays the exact timestamp of the recovered state to the user.
 
+Contributors:
+@noobix (Kelvin Kabute)
+
+---
+
+Appendix: Full PR descriptions
 [Full PR description for Build #[261] — LMS-101]
 [Full PR description for Build #[262] — LMS-102]
 [Full PR description for Build #[263] — LMS-103]
