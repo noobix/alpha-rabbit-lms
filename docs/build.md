@@ -3,11 +3,6 @@ Author: Kelvin Kabute
 Last-updated: 2026-05-08
 ---
 
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-06
----
-
 # Alpha Rabbit LMS Build Prompt (Compression-Aligned v1.2)
 
 <!-- markdownlint-disable MD032 MD060 -->
