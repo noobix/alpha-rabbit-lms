@@ -74,4 +74,38 @@ for i in $(jq -r '.[].number' pr_pluck.json); do
   echo "" >> sprint-tag-body.txt
 done
 
+# --- Contributors aggregation (adds @handle (Name) list) ---
+echo "Contributors:" >> sprint-tag-body.txt
+TMP_CONTRIB="$(mktemp)"
+for i in $(jq -r '.[].number' pr_pluck.json); do
+  # PR author (may be null for external contributions)
+  gh pr view "$i" --json author --jq '.author.login' 2>/dev/null | sed '/^$/d' >> "$TMP_CONTRIB" || true
+
+  # Commit authors from the PR (may include multiple commit authors)
+  gh pr view "$i" --json commits --jq '.commits[].author.login' 2>/dev/null | sed '/^$/d' >> "$TMP_CONTRIB" || true
+done
+
+# Deduplicate and sort
+sort -u "$TMP_CONTRIB" > "${TMP_CONTRIB}.sorted" || true
+
+while read -r handle; do
+  if [ -z "$handle" ]; then
+    continue
+  fi
+  # Try to get display name; fall back to handle only
+  NAME=$(gh user view "$handle" --json name --jq '.name' 2>/dev/null || echo "")
+  if [ -n "$NAME" ] && [ "$NAME" != "null" ]; then
+    echo "@$handle ($NAME)" >> sprint-tag-body.txt
+  else
+    echo "@$handle" >> sprint-tag-body.txt
+  fi
+done < "${TMP_CONTRIB}.sorted"
+
+rm -f "$TMP_CONTRIB" "${TMP_CONTRIB}.sorted" || true
+
+echo "" >> sprint-tag-body.txt
+echo "---" >> sprint-tag-body.txt
+echo "" >> sprint-tag-body.txt
+echo "Appendix: Full PR descriptions" >> sprint-tag-body.txt
+
 echo "Wrote sprint-tag-body.txt"
