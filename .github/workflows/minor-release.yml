@@ -69,9 +69,7 @@ jobs:
       - name: Configure GPG signing (optional)
         if: steps.gpg_check.outputs.has_gpg == 'true'
         run: |
-          if [ -n "${{ secrets.GPG_KEY_ID }}" ]; then
-            git config user.signingkey "${{ secrets.GPG_KEY_ID }}"
-          fi
+          # ghaction-import-gpg already sets user.signingkey; just enable commit signing.
           git config commit.gpgsign true
 
       - name: Compute new version
