@@ -3,6 +3,9 @@
 # Last-updated: 2026-05-10
 
 # Author: Kelvin Kabute
+# Last-updated: 2026-05-10
+
+# Author: Kelvin Kabute
 # Last-updated: 2026-05-04
 
 """Append provenance metadata to staged files.
@@ -56,6 +59,21 @@ SKIP_EXTENSIONS = {
 
 # Commentable source extensions the appender is allowed to touch
 SAFE_CODE_EXTS = set(EXT_COMMENT_STYLES.keys())
+
+# Specific filenames (case-insensitive basename) that must never receive a
+# provenance header, regardless of extension.  Covers generated changelogs,
+# canonical license/notice files, and other root-level files whose first
+# line carries structural meaning consumed by tooling.
+SKIP_FILENAMES = {
+    "changelog.md",
+    "license",
+    "license.md",
+    "license.txt",
+    "notice",
+    "notice.md",
+    "authors",
+    "authors.md",
+}
 
 
 def get_staged_files():
@@ -214,6 +232,8 @@ def main():
         # SAFE_CODE_EXTS is the implicit allow-list derived from EXT_COMMENT_STYLES.
         ext = p.suffix.lower()
         if ext in SKIP_EXTENSIONS or ext not in SAFE_CODE_EXTS:
+            continue
+        if p.name.lower() in SKIP_FILENAMES:
             continue
         text = read_file(p)
         if text is None:
