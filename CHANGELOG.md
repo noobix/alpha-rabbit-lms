@@ -11,5 +11,3 @@ delivered in that sprint, the contributors acknowledged in the annotated
 tag, and (for major releases) any breaking changes requiring migration steps.
 
 ---
-
-

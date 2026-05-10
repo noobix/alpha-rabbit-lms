@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # Author: Kelvin Kabute
+# Last-updated: 2026-05-10
+
+# Author: Kelvin Kabute
 # Last-updated: 2026-05-04
 
 """Append provenance metadata to staged files.
@@ -26,16 +29,32 @@ EXT_COMMENT_STYLES = {
     ".js": ("/*\n", " * ", "\n */\n"),
     ".ts": ("/*\n", " * ", "\n */\n"),
     ".css": ("/*\n", " * ", "\n */\n"),
-    ".json": ("/*\n", " * ", "\n */\n"),
 }
 
-# Treat YAML files as hash/comment style; default to hash for unknown extensions
-EXT_COMMENT_STYLES.update({
-    ".yml": ("# ", "# ", ""),
-    ".yaml": ("# ", "# ", ""),
-})
+# Parsed / structured / config formats that must never receive a provenance
+# header — injecting any comment-like text into these files breaks the parser
+# or tool that consumes them.  Any extension NOT in EXT_COMMENT_STYLES above
+# is also skipped implicitly by the SAFE_CODE_EXTS guard in main().
+SKIP_EXTENSIONS = {
+    # JSON variants — comments are invalid JSON/JSONC
+    ".json", ".jsonc",
+    # YAML — CI configs, Docker Compose, GH Actions; strict multi-doc parsers
+    ".yaml", ".yml",
+    # TOML — pyproject.toml, Cargo.toml, electron-builder configs
+    ".toml",
+    # XML / HTML / SVG — DOCTYPE or root element must be first byte
+    ".xml", ".html", ".htm", ".svg",
+    # Plain-text files consumed directly by tools (pip, dotenv, etc.)
+    ".txt", ".env", ".ini", ".cfg", ".conf",
+    # Lock / generated — auto-overwritten, never hand-edited
+    ".lock",
+    # Data formats — first line is a header record to parsers
+    ".csv", ".tsv",
+    # Named Dockerfile variants (bare Dockerfile has no ext — already skipped)
+    ".dockerfile",
+}
 
-# File extensions safe to append provenance metadata to
+# Commentable source extensions the appender is allowed to touch
 SAFE_CODE_EXTS = set(EXT_COMMENT_STYLES.keys())
 
 
@@ -66,6 +85,9 @@ def detect_agent_for_text(text: str):
 
 def append_header(path: Path, author_line: str, updated_line: str):
     ext = path.suffix.lower()
+    # Refuse to touch parsed/config formats even when called directly.
+    if ext in SKIP_EXTENSIONS or ext not in SAFE_CODE_EXTS:
+        return False
     content = read_file(path)
     if content is None:
         return False
@@ -187,10 +209,11 @@ def main():
         p = Path(f)
         if not p.exists():
             continue
-        # Only modify recognized code files to avoid breaking documentation/config formats
+        # Only modify recognized commentable source files.
+        # SKIP_EXTENSIONS is an explicit deny-list for parsed/config formats.
+        # SAFE_CODE_EXTS is the implicit allow-list derived from EXT_COMMENT_STYLES.
         ext = p.suffix.lower()
-        if ext not in SAFE_CODE_EXTS:
-            # user preference: prefer not to touch markdown/json/txt; skip by default
+        if ext in SKIP_EXTENSIONS or ext not in SAFE_CODE_EXTS:
             continue
         text = read_file(p)
         if text is None:
