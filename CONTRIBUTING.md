@@ -1,4 +1,4 @@
-Contributing
+# Contributing
 
 This project uses the Developer Certificate of Origin (DCO) to record
 contributors' agreement to the project's contribution terms.
@@ -17,7 +17,7 @@ git commit -s -m "fix: description of change"
 
 - Manual (if needed): Add the following line to the end of your commit message:
 
-```
+```text
 Signed-off-by: Your Name <your.email@example.com>
 ```
 
@@ -34,5 +34,5 @@ contributions — we can add a CLA later.
 DCO enforcement (recommended CI step)
 
 - Add a simple CI check that fails the build if commits are missing the
-  Signed-off-by line. See https://github.com/probot/dco for an example
+  Signed-off-by line. See <https://github.com/probot/dco> for an example
   GitHub App integration.

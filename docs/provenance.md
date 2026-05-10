@@ -3,12 +3,8 @@ Author: Kelvin Kabute
 Last-updated: 2026-05-10
 ---
 
----
-Author: Kelvin Kabute
-Last-updated: 2026-04-20
----
-
-**Per-file Provenance & Implementation Notes**
+Per-file Provenance & Implementation Notes
+=========================================
 
 This document describes the per-file header template and how the repository detects and appends author/provenance metadata.
 
@@ -16,11 +12,11 @@ Template (recommended): place a short header at the top of each source file. Use
 
 Example (Python):
 
+```python
 # Purpose: Brief intent of the module
-
 # Author: github-copilot
-
 # Last-updated: 2026-04-19
+```
 
 Example (Markdown YAML front-matter):
 
@@ -39,7 +35,8 @@ Rules enforced by the repository tools
 - `Author` entries are append-only: the hook will never remove existing `Author` lines; it will append another `Author` line when new contributors or agents are detected.
 - If `Last-updated` already equals today's date, the hook assumes an agent already appended the author; otherwise it appends the git user name.
 
-### ⛔ Skipped extensions
+Skipped extensions
+------------------
 
 The following extensions are **never touched** by the appender. Injecting any comment-like text into these files breaks the parser or tool that consumes them.
 
@@ -60,7 +57,7 @@ Any extension **not** in `EXT_COMMENT_STYLES` inside `scripts/append_provenance.
 
 How to run locally
 
-```
+```bash
 python scripts/detect_agent_provenance.py path/to/file
 python scripts/append_provenance.py   # runs against staged files
 python scripts/check_provenance.py    # CI checker
