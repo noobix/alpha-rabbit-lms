@@ -140,6 +140,10 @@ else
   mv "$TMPFILE" "$CHANGELOG"
 fi
 
+# Also expose the formatted entry for the GitHub Release notes
+cp changelog_entry.tmp release-entry.md
+
 rm -f changelog_entry.tmp
 
 echo "CHANGELOG.md updated for $TAG"
+echo "release-entry.md written for GitHub Release notes"

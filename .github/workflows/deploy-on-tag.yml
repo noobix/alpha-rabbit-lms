@@ -72,14 +72,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT || secrets.GITHUB_TOKEN }}
         run: |
           TAG=${GITHUB_REF_NAME}
-          # Source release notes from the annotated tag body (authoritative; no file dependency)
-          git for-each-ref "refs/tags/${TAG}" --format='%(contents)' > release-notes.txt
-          if [ ! -s release-notes.txt ]; then
-            echo "Release ${TAG}" > release-notes.txt
+          # Use the formatted changelog entry produced by generate-changelog.sh
+          # so the GitHub Release page shows the same structured notes as CHANGELOG.md
+          if [ -f release-entry.md ] && [ -s release-entry.md ]; then
+            NOTES_FILE=release-entry.md
+          else
+            # Fallback: raw tag body
+            git for-each-ref "refs/tags/${TAG}" --format='%(contents)' > release-notes-raw.txt
+            NOTES_FILE=release-notes-raw.txt
           fi
           gh auth login --with-token <<< "${GITHUB_TOKEN}"
-          gh release create "$TAG" --notes-file release-notes.txt || gh release view "$TAG"
-          rm -f release-notes.txt
+          gh release create "$TAG" --notes-file "$NOTES_FILE" || gh release view "$TAG"
+          rm -f release-entry.md release-notes-raw.txt
           # Upload any files in dist/ or out/; adjust path as your build outputs
           if [ -d dist ]; then
             for f in dist/*; do gh release upload "$TAG" "$f" || true; done
