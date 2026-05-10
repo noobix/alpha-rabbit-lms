@@ -1,5 +1,10 @@
 ---
 Author: Kelvin Kabute
+Last-updated: 2026-05-10
+---
+
+---
+Author: Kelvin Kabute
 Last-updated: 2026-05-06
 ---
 
@@ -188,30 +193,31 @@ jobs:
 
 ### Required Repository Files
 
-1. **`.build_counter`** (tracked in repo):
+#### `.build_counter` (tracked in repo)
 
-   ```
-   261
-   ```
+```text
+261
+```
 
-2. **`package.json`** (version tracking):
+#### `package.json` (version tracking)
 
-   ```json
-   {
-     "name": "alpha-rabbit-lms",
-     "version": "1.0.0",
-     "scripts": {
-       "release:patch": "node scripts/release-patch.js",
-       "release:minor": "node scripts/release-minor.js"
-     }
-   }
-   ```
+```json
+{
+  "name": "alpha-rabbit-lms",
+  "version": "1.0.0",
+  "scripts": {
+    "release:patch": "node scripts/release-patch.js",
+    "release:minor": "node scripts/release-minor.js"
+  }
+}
+```
 
-3. **`scripts/release-patch.js`** (local dev helper):
-   ```javascript
-   // Automates patch release process for local development
-   // Reads .build_counter, creates tags, updates counter
-   ```
+#### `scripts/release-patch.js` (local dev helper)
+
+```javascript
+// Automates patch release process for local development
+// Reads .build_counter, creates tags, updates counter
+```
 
 ---
 

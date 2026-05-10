@@ -3,11 +3,6 @@ Author: Kelvin Kabute
 Last-updated: 2026-05-10
 ---
 
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-05
----
-
 # Branch protection setup
 
 This document explains how to run the branch-protection workflow added at `.github/workflows/enable-branch-protection.yml`.
