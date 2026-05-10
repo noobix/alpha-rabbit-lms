@@ -1,4 +1,7 @@
 # Author: Kelvin Kabute
+# Last-updated: 2026-05-10
+
+# Author: Kelvin Kabute
 # Last-updated: 2026-05-06
 
 # Author: Kelvin Kabute
@@ -14,7 +17,7 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: read
     steps:
       - name: Checkout
@@ -38,19 +41,45 @@ jobs:
       - name: Build
         run: pnpm run build || echo "No build script; replace with your app build command"
 
+      - name: Generate CHANGELOG.md
+        run: |
+          chmod +x ./scripts/generate-changelog.sh
+          ./scripts/generate-changelog.sh
+
+      - name: Commit and push CHANGELOG.md
+        env:
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG=${GITHUB_REF_NAME}
+          git config user.name "CI Bot"
+          git config user.email "ci@alpharabbit.dev"
+          # Switch to testing-main to commit the changelog update
+          git fetch origin testing-main
+          git checkout testing-main
+          git add CHANGELOG.md
+          if git diff --cached --quiet; then
+            echo "CHANGELOG.md unchanged; nothing to commit"
+          else
+            git commit -m "chore(changelog): update for ${TAG}"
+            PAT="${RELEASE_PAT:-${GITHUB_TOKEN}}"
+            git remote set-url origin https://x-access-token:${PAT}@github.com/${{ github.repository }}
+            git push origin testing-main
+          fi
+
       - name: Create GitHub Release and upload artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT || secrets.GITHUB_TOKEN }}
         run: |
-          TAG=${GITHUB_REF##refs/tags/}
-          BODY_FILE=sprint-tag-body.txt
-          if [ ! -f "$BODY_FILE" ]; then
-            echo "No sprint-tag-body.txt present; creating minimal body";
-            echo "Release $TAG" > release-body.txt
-            BODY_FILE=release-body.txt
+          TAG=${GITHUB_REF_NAME}
+          # Source release notes from the annotated tag body (authoritative; no file dependency)
+          git for-each-ref "refs/tags/${TAG}" --format='%(contents)' > release-notes.txt
+          if [ ! -s release-notes.txt ]; then
+            echo "Release ${TAG}" > release-notes.txt
           fi
           gh auth login --with-token <<< "${GITHUB_TOKEN}"
-          gh release create "$TAG" --notes-file "$BODY_FILE" || gh release view "$TAG"
+          gh release create "$TAG" --notes-file release-notes.txt || gh release view "$TAG"
+          rm -f release-notes.txt
           # Upload any files in dist/ or out/; adjust path as your build outputs
           if [ -d dist ]; then
             for f in dist/*; do gh release upload "$TAG" "$f" || true; done

@@ -1,5 +1,10 @@
 ---
 Author: Kelvin Kabute
+Last-updated: 2026-05-10
+---
+
+---
+Author: Kelvin Kabute
 Last-updated: 2026-05-06
 ---
 
@@ -187,7 +192,70 @@ jobs:
           echo "Deploying ${GITHUB_REF} to production"
 ```
 
-## 🛠️ Operational notes
+## � Changelog
+
+`CHANGELOG.md` at the repo root is the cumulative human-readable record of every release. It is generated automatically by `scripts/generate-changelog.sh` and committed back to `testing-main` as part of the `deploy-on-tag` workflow — meaning the changelog is only updated when the build passes.
+
+### How it works
+
+1. The `deploy-on-tag` workflow fires when a `v*.*.*` tag is pushed.
+2. After the **Build** step succeeds, `generate-changelog.sh` runs.
+3. The script reads the annotated tag body directly from git (`git for-each-ref refs/tags/$TAG --format='%(contents)'`) — no dependency on transient files like `sprint-tag-body.txt`.
+4. It splits the tag body into three blocks using the delimiters already produced by `release-aggregate.sh`:
+   - **Sprint Builds** — build number entries before the `---` separator
+   - **Contributors** — the `Contributors:` block
+   - **Appendix** — full PR description bodies (not written to changelog; used for Breaking Changes extraction only)
+5. It prepends a new versioned entry to `CHANGELOG.md` in the format below.
+6. The updated `CHANGELOG.md` is committed as `chore(changelog): update for vX.Y.Z` and pushed to `testing-main` via `RELEASE_PAT`.
+
+### Changelog entry format
+
+```text
+## [v0.1.0] — 2026-05-10
+
+### Sprint Builds
+
+Build #[261]
+Changes:
+- …
+
+Build #[262]
+Changes:
+- …
+
+### Contributors
+
+@noobix (Kelvin Kabute)
+
+---
+```
+
+### Major releases (`v1.0.0`, `v2.0.0`, …)
+
+When the MINOR and PATCH components are both `0`, the script adds a **Breaking Changes** section after Contributors. It scans each PR body in the appendix for a `## Breaking Changes` heading and extracts the content. If none is found, a placeholder is inserted to prompt a manual update before the release notes are published.
+
+```text
+### ⚠️ Breaking Changes
+
+_No breaking changes were documented in PR bodies. Update this section before publishing the release notes._
+```
+
+### Secrets required
+
+No additional secrets beyond `RELEASE_PAT` (already required by `minor-release.yml`). The changelog commit uses the same PAT-authenticated remote URL pattern.
+
+### Manual run
+
+To regenerate the changelog locally for a specific tag:
+
+```bash
+export PATH="$HOME/bin:$PATH"   # ensure jq is on PATH if needed
+GITHUB_REF_NAME=v0.1.0 bash scripts/generate-changelog.sh
+```
+
+---
+
+## �🛠️ Operational notes
 
 - Keep `.build_counter` tracked in repo root and ensure atomic increments (CI updates after tagging).
 - Use `gh` CLI to fetch PR bodies and build the annotated tag body programmatically.
