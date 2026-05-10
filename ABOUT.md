@@ -1,8 +1,3 @@
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-08
----
-
 alpha_rabbit-LMS
 
 Copyright (C) 2026 noobix

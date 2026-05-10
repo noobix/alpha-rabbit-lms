@@ -6,6 +6,9 @@
 # Last-updated: 2026-05-10
 
 # Author: Kelvin Kabute
+# Last-updated: 2026-05-10
+
+# Author: Kelvin Kabute
 # Last-updated: 2026-05-04
 
 """Append provenance metadata to staged files.
@@ -66,6 +69,8 @@ SAFE_CODE_EXTS = set(EXT_COMMENT_STYLES.keys())
 # line carries structural meaning consumed by tooling.
 SKIP_FILENAMES = {
     "changelog.md",
+    "about.md",
+    "contributing.md",
     "license",
     "license.md",
     "license.txt",

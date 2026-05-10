@@ -1,8 +1,3 @@
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-08
----
-
 Contributing
 
 This project uses the Developer Certificate of Origin (DCO) to record
