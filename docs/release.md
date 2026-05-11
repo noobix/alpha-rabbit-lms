@@ -1,11 +1,11 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-05-10
+Last-updated: 2026-05-11
 ---
 
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-05-06
+Last-updated: 2026-05-10
 ---
 
 # 🚀 Release Automation: Policy & Implementation
@@ -72,7 +72,7 @@ Add or maintain a `package.json` at the repository root with a baseline version 
   - Gathers all lightweight build tags included since the last minor release (via `git tag --list '\[2*' --sort=taggerdate` and filtering by taggerdate or taggername range), and builds the annotated tag body using PR `## Changes` sections.
   - Writes the annotated tag body to a temp file (e.g. `sprint-tag-body.txt`) and creates an annotated tag:
 
-```
+```bash
 git tag -a v${NEW_MINOR_VERSION} -F sprint-tag-body.txt
 git push origin v${NEW_MINOR_VERSION}
 ```
@@ -269,18 +269,15 @@ GITHUB_REF_NAME=v0.1.0 bash scripts/generate-changelog.sh
 ## 🔐 Secrets: creation and storage
 
 1. Create a Personal Access Token (PAT) for CI tag/commit pushes:
-
-- Scopes: `repo` (full control of private repos), `workflow` (update GitHub Actions workflows), `write:packages` (if publishing packages).
-- Save the token as repository secret `RELEASE_PAT` in GitHub Settings → Secrets → Actions.
+   - Scopes: `repo` (full control of private repos), `workflow` (update GitHub Actions workflows), `write:packages` (if publishing packages).
+   - Save the token as repository secret `RELEASE_PAT` in GitHub Settings → Secrets → Actions.
 
 2. (Optional) Create a GPG key for signing tags:
-
-- Locally: `gpg --full-generate-key` then export `gpg --armor --export-secret-keys YOUR_KEY_ID > gpg-secret.asc`.
-- Store the contents of `gpg-secret.asc` as `GPG_PRIVATE_KEY` and the passphrase as `GPG_PASSPHRASE` in repository secrets.
+   - Locally: `gpg --full-generate-key` then export `gpg --armor --export-secret-keys YOUR_KEY_ID > gpg-secret.asc`.
+   - Store the contents of `gpg-secret.asc` as `GPG_PRIVATE_KEY` and the passphrase as `GPG_PASSPHRASE` in repository secrets.
 
 3. (Optional) Deployment tokens (Vercel/Netlify):
-
-- Add `DEPLOY_TOKEN` or provider-specific secrets for automatic deployment.
+   - Add `DEPLOY_TOKEN` or provider-specific secrets for automatic deployment.
 
 ## 🏠 Where to keep secrets for runtime use in the application
 
