@@ -3,11 +3,6 @@ Author: Kelvin Kabute
 Last-updated: 2026-05-11
 ---
 
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-10
----
-
 # 🚀 Release Automation: Policy & Implementation
 
 This document defines the automated release workflow for Alpha Rabbit LMS. It assumes the build/tag conventions in `docs/build.md` and `docs/semver_report.md` (lightweight build tags like `[261]` and semantic annotated tags `v<M.m.0`).

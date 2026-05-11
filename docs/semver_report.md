@@ -3,11 +3,6 @@ Author: Kelvin Kabute
 Last-updated: 2026-05-11
 ---
 
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-10
----
-
 # Semantic Versioning Release Workflow Specification
 
 _Based on `build.md` requirements for Alpha Rabbit LMS_

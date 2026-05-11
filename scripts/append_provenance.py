@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # Author: Kelvin Kabute
+# Last-updated: 2026-05-11
+
+# Author: Kelvin Kabute
 # Last-updated: 2026-05-10
 
 # Author: Kelvin Kabute
@@ -78,6 +81,12 @@ SKIP_FILENAMES = {
     "notice.md",
     "authors",
     "authors.md",
+}
+
+# Files matched by their full repo-relative POSIX path (forward slashes, no leading slash).
+SKIP_PATHS = {
+    "docs/release.md",
+    "docs/semver_report.md",
 }
 
 
@@ -239,6 +248,8 @@ def main():
         if ext in SKIP_EXTENSIONS or ext not in SAFE_CODE_EXTS:
             continue
         if p.name.lower() in SKIP_FILENAMES:
+            continue
+        if p.as_posix() in SKIP_PATHS:
             continue
         text = read_file(p)
         if text is None:
