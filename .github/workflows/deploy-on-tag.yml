@@ -1,12 +1,6 @@
 # Author: Kelvin Kabute
 # Last-updated: 2026-05-10
 
-# Author: Kelvin Kabute
-# Last-updated: 2026-05-06
-
-# Author: Kelvin Kabute
-# Last-updated: 2026-05-06
-
 name: Deploy on Tag
 on:
   push:

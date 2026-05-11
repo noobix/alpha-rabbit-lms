@@ -1,9 +1,6 @@
 # Author: Kelvin Kabute
 # Last-updated: 2026-05-06
 
-# Author: Kelvin Kabute
-# Last-updated: 2026-05-06
-
 name: Minor Release
 on:
   workflow_dispatch: {}
@@ -61,7 +58,7 @@ jobs:
 
       - name: Import GPG key (for signed tags)
         if: steps.gpg_check.outputs.has_gpg == 'true'
-        uses: crazy-max/ghaction-import-gpg@v4
+        uses: crazy-max/ghaction-import-gpg@v6
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
