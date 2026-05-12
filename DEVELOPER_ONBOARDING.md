@@ -190,8 +190,8 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 - **One PR per ticket** — do not bundle unrelated changes.
 - **PR body** must follow the template in `docs/build.md` Section 5 Step 6: `## Ticket`, `## Changes`, `## Acceptance Criteria`, `## Completion Gate Checklist`.
 - **Merging rules**:
-  - Developers require at least 1 approval from the repository owner before merging.
-  - The repository owner can merge their own PRs directly using the **Owner Merge PRs** workflow (see CI section below).
+  - The repository owner (`noobix`) is the sole developer and merges all PRs directly — no external reviewer required.
+  - CI (`CI` status check) must be green before any PR can merge.
   - CI (`CI` status check) must be green.
 
 ---
@@ -265,9 +265,9 @@ Applies branch protection rules to the comma-separated list of branches provided
 Rules applied:
 
 - Required status check: `CI` (strict mode)
-- Required approving review count: 1
-- Stale review dismissal: enabled
-- `enforce_admins: false` — the repository owner is exempt and can merge their own PRs
+- Required approving review count: 0 — the repository owner is the sole developer and merges their own PRs
+- Stale review dismissal: disabled
+- `enforce_admins: false` — the repository owner is exempt from branch protection rules
 
 **Secrets required:** `ADMIN_TOKEN` (PAT with `repo` + `admin:repo_hook` scopes).
 
