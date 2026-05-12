@@ -3,6 +3,12 @@
 # Last-updated: 2026-05-12
 
 # Author: Kelvin Kabute
+# Last-updated: 2026-05-12
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-12
+
+# Author: Kelvin Kabute
 # Last-updated: 2026-05-11
 
 # Author: Kelvin Kabute
@@ -85,6 +91,7 @@ SKIP_FILENAMES = {
     "authors",
     "authors.md",
 }
+
 
 def get_staged_files():
     p = subprocess.run(["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"], capture_output=True, text=True)
