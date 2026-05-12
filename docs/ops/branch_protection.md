@@ -1,11 +1,22 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-05-10
+Last-updated: 2026-05-12
 ---
 
 # Branch protection setup
 
 This document explains how to run the branch-protection workflow added at `.github/workflows/enable-branch-protection.yml`.
+
+## Solo-owner policy
+
+`noobix` is the sole developer and repository owner. The protection rules reflect this:
+
+- **Required approving reviews: 0** — the owner merges their own PRs directly; no second reviewer exists or is required.
+- **enforce_admins: false** — the owner is exempt from protection rules and can merge without restriction.
+- **Required status checks: CI (strict)** — all PRs must pass CI before merging.
+- **PRs required** — all changes to `testing-main` must go through a pull request; direct push is blocked.
+
+Do **not** raise `required_approving_review_count` above `0` unless additional developers with write access join the project.
 
 1. Create an admin token
    - Generate a personal access token (PAT) with `repo` and `admin:repo_hook` or repository administration permissions. Store it as a repository secret named `ADMIN_TOKEN`:
