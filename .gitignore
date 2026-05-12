@@ -55,3 +55,4 @@ coverage/
 
 # GPG keys
 .gpg/
+*.asc
