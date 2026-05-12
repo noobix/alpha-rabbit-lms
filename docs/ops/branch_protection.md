@@ -1,11 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-05-05
----
-
----
-Author: Kelvin Kabute
-Last-updated: 2026-04-20
+Last-updated: 2026-05-10
 ---
 
 # Branch protection setup

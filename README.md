@@ -3,11 +3,24 @@ Author: Kelvin Kabute
 Last-updated: 2026-05-12
 ---
 
-# 🐇 Developer Onboarding
+# 🐇 Alpha Rabbit LMS
 
-## 🎯 Purpose
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
 
-Complete reference for new contributors: project departments, environment setup, coding-agent tracking, pre-commit hook, CI pipelines, and documentation structure.
+Alpha Rabbit LMS is an open-source, offline-first Library Management System built for Ghanaian libraries. It ships in two editions:
+
+- **Manager** — single-library, offline desktop app (Electron + PouchDB + SQLite).
+- **Enterprise** — multi-department, multi-site edition with CouchDB server sync.
+
+---
+
+## License
+
+Released under the GNU General Public License v3.0 (GPL-3.0). See the `LICENSE` file for full details.
+
+## Attribution
+
+This project was initiated by `noobix` (2026). Please keep the `LICENSE` and `ABOUT.md` files intact in derivative works to preserve attribution.
 
 ---
 
@@ -247,12 +260,12 @@ This is the check that must be green before any PR can merge.
 | Checkout              | Full clone with all history                                                                                                  |
 | Setup Node + pnpm     | Node 18, latest pnpm via corepack                                                                                            |
 | Install dependencies  | `pnpm install --frozen-lockfile`                                                                                             |
-| Build                 | `pnpm run build` (replace with real app build command)                                                                       |
+| Build                 | `pnpm run build`                                                                                                             |
 | Generate CHANGELOG.md | Runs `scripts/generate-changelog.sh` — reads annotated tag body, prepends entry to `CHANGELOG.md`, writes `release-entry.md` |
 | Commit changelog      | Checks out `testing-main`, commits `CHANGELOG.md` update, pushes via `RELEASE_PAT`                                           |
 | Create GitHub Release | `gh release create` using `release-entry.md` as release notes; uploads `dist/` / `out/` artifacts                            |
 
-**Secrets required:** `RELEASE_PAT` (for changelog commit push and release creation).
+**Secrets required:** `RELEASE_PAT`.
 
 ---
 
@@ -340,7 +353,7 @@ Allows the repository owner to merge one or more PRs by number, bypassing branch
 Re-run the installer: `bash scripts/install_hook.sh` (Unix) or `scripts\install_hook.bat` (Windows).
 
 **Duplicate front-matter appearing in a markdown file?**
-The hook found no existing front-matter and prepended one. If the file had non-standard delimiters, add a `--- … ---` block manually and re-commit — the hook will update it in place from that point on.
+Add a `--- … ---` block manually and re-commit — the hook will update it in place from that point on.
 
 **`check_provenance.py` failing in CI?**
 Add or update the file header:

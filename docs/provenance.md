@@ -1,9 +1,10 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-04-20
+Last-updated: 2026-05-10
 ---
 
-**Per-file Provenance & Implementation Notes**
+Per-file Provenance & Implementation Notes
+=========================================
 
 This document describes the per-file header template and how the repository detects and appends author/provenance metadata.
 
@@ -11,11 +12,11 @@ Template (recommended): place a short header at the top of each source file. Use
 
 Example (Python):
 
+```python
 # Purpose: Brief intent of the module
-
 # Author: github-copilot
-
 # Last-updated: 2026-04-19
+```
 
 Example (Markdown YAML front-matter):
 
@@ -34,9 +35,29 @@ Rules enforced by the repository tools
 - `Author` entries are append-only: the hook will never remove existing `Author` lines; it will append another `Author` line when new contributors or agents are detected.
 - If `Last-updated` already equals today's date, the hook assumes an agent already appended the author; otherwise it appends the git user name.
 
+Skipped extensions
+------------------
+
+The following extensions are **never touched** by the appender. Injecting any comment-like text into these files breaks the parser or tool that consumes them.
+
+| Group | Extensions | Reason |
+|---|---|---|
+| JSON / JSONC | `.json`, `.jsonc` | Comments are invalid JSON; breaks markdownlint, eslint, tsconfig, package.json parsers |
+| YAML | `.yaml`, `.yml` | CI configs, Docker Compose, GH Actions — some parsers reject unexpected leading lines |
+| TOML | `.toml` | `pyproject.toml`, `Cargo.toml`, Electron builder configs |
+| XML / HTML / SVG | `.xml`, `.html`, `.htm`, `.svg` | Strict parsers; DOCTYPE or root element must appear first |
+| Plain text / tool config | `.txt`, `.env`, `.ini`, `.cfg`, `.conf` | Consumed verbatim by pip, dotenv, configparser, nginx |
+| Lock / generated | `.lock` | Auto-generated and always overwritten; headers would be lost anyway |
+| Data | `.csv`, `.tsv` | First line is a header record to data parsers |
+| Docker | `.dockerfile` | Named `*.dockerfile`; bare `Dockerfile` has no extension and is already skipped |
+
+Any extension **not** in `EXT_COMMENT_STYLES` inside `scripts/append_provenance.py` is also skipped implicitly, so files with no extension (`Dockerfile`, `Makefile`, `.gitignore`, `hooks/pre-commit`) are safe without needing an explicit entry.
+
+> **Regression guard:** `tests/test_append_provenance.py` asserts that `SKIP_EXTENSIONS` and `SAFE_CODE_EXTS` have zero overlap and that `.json`/`.yml`/`.yaml` are never added to the commentable-file allow-list by mistake.
+
 How to run locally
 
-```
+```bash
 python scripts/detect_agent_provenance.py path/to/file
 python scripts/append_provenance.py   # runs against staged files
 python scripts/check_provenance.py    # CI checker

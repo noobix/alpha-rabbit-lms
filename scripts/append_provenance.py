@@ -1,5 +1,26 @@
 #!/usr/bin/env python3
 # Author: Kelvin Kabute
+# Last-updated: 2026-05-12
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-12
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-12
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-11
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-10
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-10
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-10
+
+# Author: Kelvin Kabute
 # Last-updated: 2026-05-04
 
 """Append provenance metadata to staged files.
@@ -26,17 +47,50 @@ EXT_COMMENT_STYLES = {
     ".js": ("/*\n", " * ", "\n */\n"),
     ".ts": ("/*\n", " * ", "\n */\n"),
     ".css": ("/*\n", " * ", "\n */\n"),
-    ".json": ("/*\n", " * ", "\n */\n"),
 }
 
-# Treat YAML files as hash/comment style; default to hash for unknown extensions
-EXT_COMMENT_STYLES.update({
-    ".yml": ("# ", "# ", ""),
-    ".yaml": ("# ", "# ", ""),
-})
+# Parsed / structured / config formats that must never receive a provenance
+# header — injecting any comment-like text into these files breaks the parser
+# or tool that consumes them.  Any extension NOT in EXT_COMMENT_STYLES above
+# is also skipped implicitly by the SAFE_CODE_EXTS guard in main().
+SKIP_EXTENSIONS = {
+    # JSON variants — comments are invalid JSON/JSONC
+    ".json", ".jsonc",
+    # YAML — CI configs, Docker Compose, GH Actions; strict multi-doc parsers
+    ".yaml", ".yml",
+    # TOML — pyproject.toml, Cargo.toml, electron-builder configs
+    ".toml",
+    # XML / HTML / SVG — DOCTYPE or root element must be first byte
+    ".xml", ".html", ".htm", ".svg",
+    # Plain-text files consumed directly by tools (pip, dotenv, etc.)
+    ".txt", ".env", ".ini", ".cfg", ".conf",
+    # Lock / generated — auto-overwritten, never hand-edited
+    ".lock",
+    # Data formats — first line is a header record to parsers
+    ".csv", ".tsv",
+    # Named Dockerfile variants (bare Dockerfile has no ext — already skipped)
+    ".dockerfile",
+}
 
-# File extensions safe to append provenance metadata to
+# Commentable source extensions the appender is allowed to touch
 SAFE_CODE_EXTS = set(EXT_COMMENT_STYLES.keys())
+
+# Specific filenames (case-insensitive basename) that must never receive a
+# provenance header, regardless of extension.  Covers generated changelogs,
+# canonical license/notice files, and other root-level files whose first
+# line carries structural meaning consumed by tooling.
+SKIP_FILENAMES = {
+    "changelog.md",
+    "about.md",
+    "contributing.md",
+    "license",
+    "license.md",
+    "license.txt",
+    "notice",
+    "notice.md",
+    "authors",
+    "authors.md",
+}
 
 
 def get_staged_files():
@@ -66,6 +120,9 @@ def detect_agent_for_text(text: str):
 
 def append_header(path: Path, author_line: str, updated_line: str):
     ext = path.suffix.lower()
+    # Refuse to touch parsed/config formats even when called directly.
+    if ext in SKIP_EXTENSIONS or ext not in SAFE_CODE_EXTS:
+        return False
     content = read_file(path)
     if content is None:
         return False
@@ -146,13 +203,34 @@ def append_header(path: Path, author_line: str, updated_line: str):
         write_file(path, new_content)
         return True
 
-    # Markdown front-matter: put YAML at very top (after any blank lines)
+    # Markdown: update existing YAML frontmatter in-place; prepend a new block only when none exists.
     if ext == ".md":
-        header_lines = make_comment_lines("")
-        header_text = "---\n" + "\n".join(header_lines) + "\n---\n\n"
-        new_content = header_text + content
-        write_file(path, new_content)
-        return True
+        fm_re = re.compile(r'^---\r?\n(.*?\n)---[ \t]*\r?\n', re.DOTALL)
+        fm_match = fm_re.match(content)
+        if fm_match:
+            fm_body = fm_match.group(1)
+            # Update Last-updated in-place
+            lu_re_inner = re.compile(r'^Last-updated:.*$', re.M | re.I)
+            if lu_re_inner.search(fm_body):
+                new_fm_body = lu_re_inner.sub(f'Last-updated: {updated_line}', fm_body)
+            else:
+                new_fm_body = fm_body.rstrip('\n') + f'\nLast-updated: {updated_line}\n'
+            # Update Author in-place (or add it if missing)
+            au_re_inner = re.compile(r'^Author:.*$', re.M | re.I)
+            if au_re_inner.search(new_fm_body):
+                new_fm_body = au_re_inner.sub(f'Author: {author_line}', new_fm_body)
+            else:
+                new_fm_body = f'Author: {author_line}\n' + new_fm_body
+            new_content = f'---\n{new_fm_body}---\n' + content[fm_match.end():]
+            if new_content == content:
+                return False
+            write_file(path, new_content)
+            return True
+        else:
+            # No frontmatter block found — prepend a new one
+            new_content = f'---\nAuthor: {author_line}\nLast-updated: {updated_line}\n---\n\n' + content
+            write_file(path, new_content)
+            return True
 
     # Generic comment insertion for other languages: preserve prefix_lines then insert comment block
     comment_lines = make_comment_lines(line_prefix)
@@ -187,10 +265,13 @@ def main():
         p = Path(f)
         if not p.exists():
             continue
-        # Only modify recognized code files to avoid breaking documentation/config formats
+        # Only modify recognized commentable source files.
+        # SKIP_EXTENSIONS is an explicit deny-list for parsed/config formats.
+        # SAFE_CODE_EXTS is the implicit allow-list derived from EXT_COMMENT_STYLES.
         ext = p.suffix.lower()
-        if ext not in SAFE_CODE_EXTS:
-            # user preference: prefer not to touch markdown/json/txt; skip by default
+        if ext in SKIP_EXTENSIONS or ext not in SAFE_CODE_EXTS:
+            continue
+        if p.name.lower() in SKIP_FILENAMES:
             continue
         text = read_file(p)
         if text is None:
