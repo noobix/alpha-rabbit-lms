@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # Author: Kelvin Kabute
+# Last-updated: 2026-05-12
+
+# Author: Kelvin Kabute
 # Last-updated: 2026-05-11
 
 # Author: Kelvin Kabute
@@ -82,13 +85,6 @@ SKIP_FILENAMES = {
     "authors",
     "authors.md",
 }
-
-# Files matched by their full repo-relative POSIX path (forward slashes, no leading slash).
-SKIP_PATHS = {
-    "docs/release.md",
-    "docs/semver_report.md",
-}
-
 
 def get_staged_files():
     p = subprocess.run(["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"], capture_output=True, text=True)
@@ -200,13 +196,34 @@ def append_header(path: Path, author_line: str, updated_line: str):
         write_file(path, new_content)
         return True
 
-    # Markdown front-matter: put YAML at very top (after any blank lines)
+    # Markdown: update existing YAML frontmatter in-place; prepend a new block only when none exists.
     if ext == ".md":
-        header_lines = make_comment_lines("")
-        header_text = "---\n" + "\n".join(header_lines) + "\n---\n\n"
-        new_content = header_text + content
-        write_file(path, new_content)
-        return True
+        fm_re = re.compile(r'^---\r?\n(.*?\n)---[ \t]*\r?\n', re.DOTALL)
+        fm_match = fm_re.match(content)
+        if fm_match:
+            fm_body = fm_match.group(1)
+            # Update Last-updated in-place
+            lu_re_inner = re.compile(r'^Last-updated:.*$', re.M | re.I)
+            if lu_re_inner.search(fm_body):
+                new_fm_body = lu_re_inner.sub(f'Last-updated: {updated_line}', fm_body)
+            else:
+                new_fm_body = fm_body.rstrip('\n') + f'\nLast-updated: {updated_line}\n'
+            # Update Author in-place (or add it if missing)
+            au_re_inner = re.compile(r'^Author:.*$', re.M | re.I)
+            if au_re_inner.search(new_fm_body):
+                new_fm_body = au_re_inner.sub(f'Author: {author_line}', new_fm_body)
+            else:
+                new_fm_body = f'Author: {author_line}\n' + new_fm_body
+            new_content = f'---\n{new_fm_body}---\n' + content[fm_match.end():]
+            if new_content == content:
+                return False
+            write_file(path, new_content)
+            return True
+        else:
+            # No frontmatter block found — prepend a new one
+            new_content = f'---\nAuthor: {author_line}\nLast-updated: {updated_line}\n---\n\n' + content
+            write_file(path, new_content)
+            return True
 
     # Generic comment insertion for other languages: preserve prefix_lines then insert comment block
     comment_lines = make_comment_lines(line_prefix)
@@ -248,8 +265,6 @@ def main():
         if ext in SKIP_EXTENSIONS or ext not in SAFE_CODE_EXTS:
             continue
         if p.name.lower() in SKIP_FILENAMES:
-            continue
-        if p.as_posix() in SKIP_PATHS:
             continue
         text = read_file(p)
         if text is None:

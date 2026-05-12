@@ -1,11 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-05-05
----
-
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-04
+Last-updated: 2026-05-12
 ---
 
 # 🐇 Developer Onboarding
@@ -62,10 +57,10 @@ Short guide to branch discipline, documentation provenance checks, and PR flow f
 
 ### 📜 Project Scripts
 
-| Script | Purpose |
-|--------|---------|
+| Script                               | Purpose                                                                                                                 |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
 | `scripts/detect_agent_provenance.py` | Heuristic detector — scans files/directories and outputs JSON-lines with `path`, `agent`, `confidence`, and `evidence`. |
-| `scripts/check_provenance.py` | CI/local checker — fails if tracked source files are missing `Author:` or `Last-updated:` metadata. |
+| `scripts/check_provenance.py`        | CI/local checker — fails if tracked source files are missing `Author:` or `Last-updated:` metadata.                     |
 
 ### 💻 Local Setup
 
@@ -112,10 +107,10 @@ python scripts/check_provenance.py
 
 The repository ships a pre-commit hook in `hooks/pre-commit` with platform installers:
 
-| Platform | Installer |
-|----------|-----------|
+| Platform                | Installer                      |
+| ----------------------- | ------------------------------ |
 | Unix / macOS / Git Bash | `bash scripts/install_hook.sh` |
-| Windows (cmd.exe) | `scripts\install_hook.bat` |
+| Windows (cmd.exe)       | `scripts\install_hook.bat`     |
 
 Run the installer once — the hook will auto-append and validate provenance on every commit.
 
