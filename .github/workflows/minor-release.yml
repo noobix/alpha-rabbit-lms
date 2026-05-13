@@ -56,6 +56,7 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git_user_signingkey: true
 
       - name: Configure GPG signing (optional)
         if: steps.gpg_check.outputs.has_gpg == 'true'
