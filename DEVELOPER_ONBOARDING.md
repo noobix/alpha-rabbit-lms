@@ -4,12 +4,6 @@ Last-updated: 2026-05-14
 Provenance-Evidence: comment-density:0.08, long-comment-block
 ---
 
-
----
-Author: Kelvin Kabute
-Last-updated: 2026-04-20
----
-
 # Developer Onboarding
 
 ## Purpose
@@ -71,6 +65,7 @@ Short guide to branch discipline, documentation provenance checks, and PR flow f
     ```
   - Interpret output: each line is JSON with `path`, `agent`, `confidence`, `evidence`.
 - How to run provenance checker:
+
   ```bash
   python scripts/check_provenance.py
   ```
