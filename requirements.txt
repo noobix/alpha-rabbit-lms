@@ -1,0 +1,23 @@
+/*
+ * Author: Kelvin Kabute
+ * Last-updated: 2026-05-14
+ * Provenance-Evidence: comment-density:0.24
+ */
+
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
+# Author: Kelvin Kabute
+# Last-updated: 2026-04-20
+
+pytest==9.0.3
+flake8==7.3.0
+Pygments==2.20.0
+pyflakes==3.4.0
+pycodestyle==2.14.0
+iniconfig==2.3.0
+packaging==26.1
+mccabe==0.7.0
+pluggy==1.6.0
+colorama==0.4.6

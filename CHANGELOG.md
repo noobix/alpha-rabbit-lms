@@ -1,0 +1,15 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-05-14
+Provenance-Evidence: comment-density:0.11, long-comment-block
+---
+
+
+# Changelog
+
+All notable changes to Alpha Rabbit LMS are documented here.
+Each entry maps to a semantic version tag and includes the build numbers
+delivered in that sprint, the contributors acknowledged in the annotated
+tag, and (for major releases) any breaking changes requiring migration steps.
+
+---

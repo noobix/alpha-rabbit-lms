@@ -1,5 +1,12 @@
 ---
 Author: Kelvin Kabute
+Last-updated: 2026-05-14
+Provenance-Evidence: comment-density:0.08, long-comment-block
+---
+
+
+---
+Author: Kelvin Kabute
 Last-updated: 2026-04-20
 ---
 
@@ -25,7 +32,7 @@ Short guide to branch discipline, documentation provenance checks, and PR flow f
 
 ## Pull requests and reviews
 
-- **PR target**: All PRs must target `develop` (or `testing-main` where applicable).
+- **PR target**: All PRs must target `develop`.
 - **When to open a PR**: After finishing a logical change set and pushing your branch. One PR per feature/issue.
 - **Checks before merge**:
   - Ensure CI passes (`CI` status check).

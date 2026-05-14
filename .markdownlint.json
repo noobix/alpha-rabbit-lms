@@ -1,0 +1,15 @@
+/*
+ * Author: Kelvin Kabute
+ * Last-updated: 2026-05-14
+ */
+
+
+{
+  "MD013": false,
+  "MD029": { "style": "ordered" },
+  "MD033": {
+    "allowed_elements": ["br"]
+  },
+  "MD036": false,
+  "MD060": false
+}
