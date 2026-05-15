@@ -1,10 +1,3 @@
-/*
- * Author: Kelvin Kabute
- * Last-updated: 2026-05-14
- * Provenance-Evidence: low-lexical-uniqueness:0.36, comment-density:0.05, code-tokens:1, long-comment-block
- */
-
-
 # Author: Kelvin Kabute
 # Last-updated: 2026-05-12
 
@@ -14,6 +7,11 @@ on:
   pull_request:
     types: [closed]
     branches: [testing-main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.agents/**'
+      - '.github/copilot-instructions.md'
 
 jobs:
   minor_release:
