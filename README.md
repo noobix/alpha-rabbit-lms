@@ -1,11 +1,3 @@
----
-Author: openai
-Last-updated: 2026-05-14
-Provenance-Agent: openai
-Provenance-Confidence: 1.00
-Provenance-Evidence: explicit marker: github copilot, explicit marker: copilot, explicit marker: openai, explicit marker: gpt-, low-lexical-uniqueness:0.36, comment-density:0.13, code-tokens:1, long-comment-block
----
-
 # 🐇 Alpha Rabbit LMS
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
