@@ -31,6 +31,12 @@
       "sourceType": "github",
       "computedHash": "746432275018adb16be89276afa95cd6f868a38598cf7075294973ce0e757919"
     },
+    "native-feel-cross-platform-desktop": {
+      "source": "yetone/native-feel-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "f5a8f414443d82066cc6f251dcd8fdec9a3eac9afaa0ce16101a7aaf0b6fb8f0"
+    },
     "uncodixfy": {
       "source": "cyxzdev/Uncodixfy",
       "sourceType": "github",
