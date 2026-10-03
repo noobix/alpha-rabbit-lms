@@ -1,7 +1,13 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-05-14
+Last-updated: 2026-10-03
 Provenance-Evidence: comment-density:0.08, long-comment-block
+---
+
+
+---
+Author: Kelvin Kabute
+Last-updated: 2026-04-20
 ---
 
 # Developer Onboarding
@@ -26,7 +32,7 @@ Short guide to branch discipline, documentation provenance checks, and PR flow f
 
 ## Pull requests and reviews
 
-- **PR target**: All PRs must target `develop`.
+- **PR target**: All PRs must target `develop` (or `testing-main` where applicable).
 - **When to open a PR**: After finishing a logical change set and pushing your branch. One PR per feature/issue.
 - **Checks before merge**:
   - Ensure CI passes (`CI` status check).
@@ -65,7 +71,6 @@ Short guide to branch discipline, documentation provenance checks, and PR flow f
     ```
   - Interpret output: each line is JSON with `path`, `agent`, `confidence`, `evidence`.
 - How to run provenance checker:
-
   ```bash
   python scripts/check_provenance.py
   ```

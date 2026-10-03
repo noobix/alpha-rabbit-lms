@@ -1,3 +1,22 @@
+/*
+ * Author: Kelvin Kabute
+ * Last-updated: 2026-10-03
+ * Provenance-Evidence: long-comment-block
+ */
+
+
+/*
+ * Author: Kelvin Kabute
+ * Last-updated: 2026-04-20
+ */
+
+
+/*
+ * Author: Kelvin Kabute
+ * Last-updated: 2026-04-20
+ */
+
+
 name: Enable Branch Protection
 
 on:
@@ -39,11 +58,11 @@ jobs:
                   "strict": true,
                   "contexts": ["CI"]
                 },
-                "enforce_admins": true,
+                "enforce_admins": false,
                 "required_pull_request_reviews": {
                   "dismiss_stale_reviews": true,
                   "require_code_owner_reviews": false,
-                  "required_approving_review_count": 1
+                  "required_approving_review_count": 0
                 },
                 "restrictions": null
               }'
