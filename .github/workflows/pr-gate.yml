@@ -1,0 +1,36 @@
+name: PR Gate
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  promotion:
+    name: PR Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate promotion into main
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REPO: ${{ github.repository }}
+          IS_DRAFT: ${{ github.event.pull_request.draft }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          fail=0
+          err() { echo "::error::$1"; fail=1; }
+
+          [ "$HEAD_REPO" = "$BASE_REPO" ] || err "PRs from forks are not accepted into main."
+          [ "$HEAD_REF" = "testing-main" ] || err "main only accepts promotions from testing-main (this PR is from '$HEAD_REF')."
+          [ "$IS_DRAFT" = "false" ] || err "Draft PRs cannot target main."
+
+          for section in "Tickets" "Summary" "Acceptance criteria" "Known gaps" "Verification"; do
+            printf '%s\n' "$PR_BODY" | grep -qiE "^#{1,6}[[:space:]]+${section}" || err "PR body needs a '## ${section}' heading."
+          done
+
+          exit "$fail"

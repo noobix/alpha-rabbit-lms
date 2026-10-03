@@ -9,46 +9,193 @@ on:
     branches: [main, testing-main]
   pull_request:
     branches: [main, testing-main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  COVERAGE_FLOOR: "10"
+  COMPLEXITY_CEILING: "22"
 
 jobs:
-  test:
-    # Use GitHub-hosted Ubuntu runners
+  detect:
+    name: Detect stack
     runs-on: ubuntu-latest
-    # Opt into Node.js 24 for JavaScript actions to avoid deprecation warnings
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    strategy:
-      fail-fast: true
-      matrix:
-        python-version: ["3.10", "3.11"]
+    timeout-minutes: 5
+    outputs:
+      node: ${{ steps.stack.outputs.node }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Cache pip
-        uses: actions/cache@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          path: |
-            ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          persist-credentials: false
+      - id: stack
+        run: |
+          if [ -f package.json ]; then
+            echo "node=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "node=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+  policy:
+    name: Repository policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Forbid non-pnpm lockfiles and committed env files
+        run: |
+          bad=$(git ls-files | grep -E '(^|/)(package-lock\.json|npm-shrinkwrap\.json|yarn\.lock|bun\.lockb?|\.env|\.env\..+)$' | grep -vE '\.env\.(example|sample|template)$' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Forbidden files (pnpm only, no committed env files):"
+            echo "$bad"
+            exit 1
+          fi
+
+      - name: Require packageManager to be pnpm
+        run: |
+          [ -f package.json ] || exit 0
+          pm=$(node -e "console.log(require('./package.json').packageManager || '')")
+          case "$pm" in
+            pnpm@*) ;;
+            *) echo "::error::package.json must set packageManager to pnpm@<version>"; exit 1 ;;
+          esac
+
+      - name: Require every action to be pinned to a commit SHA
+        run: |
+          bad=$(grep -rnE '^\s*(-\s+)?uses:\s+[A-Za-z0-9_.-]+/[A-Za-z0-9_./-]+@' .github/workflows | grep -vE '@[0-9a-f]{40}(\s|$)' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Actions must be pinned to a full commit SHA:"
+            echo "$bad"
+            exit 1
+          fi
+
+  workflow-lint:
+    name: Workflow lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install actionlint-py==1.7.12.25
+      - run: actionlint -color
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: flake8 --max-line-length=120 --max-complexity="$COMPLEXITY_CEILING" --exclude=.venv,.git
+
+  test:
+    name: Test (${{ matrix.os }}, py${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - name: Run tests with branch coverage
+        run: pytest --cov=scripts --cov-branch --cov-report=term --cov-report=xml --cov-fail-under="$COVERAGE_FLOOR" --junitxml=junit.xml
+      - name: Upload test reports
+        if: always() && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: test-reports
+          path: |
+            coverage.xml
+            junit.xml
+          retention-days: 14
 
-      - name: Install dependencies
+  node:
+    name: Node (${{ matrix.os }})
+    needs: detect
+    if: needs.detect.outputs.node == 'true'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Require quality scripts
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          node -e "const s = require('./package.json').scripts || {}; const m = ['lint', 'typecheck', 'test', 'build'].filter((k) => !s[k]); if (m.length) { console.error('::error::package.json is missing required scripts: ' + m.join(', ')); process.exit(1); }"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run typecheck
+      - run: pnpm run test
+      - run: pnpm run build
 
-      - name: Run flake8
-        run: |
-          # Exclude virtualenvs
-          flake8 --max-line-length=120 --exclude=.venv
+  advisory:
+    name: Advisory checks (non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Markdown lint
+        continue-on-error: true
+        run: npx --yes markdownlint-cli2@0.23.3 "docs/**/*.md" "*.md"
+      - name: Shell lint
+        continue-on-error: true
+        run: shellcheck scripts/*.sh hooks/pre-commit
 
-      - name: Run tests
+  ci-gate:
+    name: CI Gate
+    if: always()
+    needs: [detect, policy, workflow-lint, lint, test, node]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require every blocking job to pass
+        env:
+          NEEDS: ${{ toJSON(needs) }}
         run: |
-          PYTHONPATH="$PWD" pytest -q
+          echo "$NEEDS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+          echo "$NEEDS" | jq -e '[to_entries[] | select(.key != "node") | .value.result] | all(. == "success")' > /dev/null
+          echo "$NEEDS" | jq -e '.node.result == "success" or .node.result == "skipped"' > /dev/null
