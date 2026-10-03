@@ -11,14 +11,14 @@ This document explains how to run the branch-protection workflow at `.github/wor
 
 `noobix` is the sole developer and repository owner. Two profiles are applied by the workflow:
 
-| Rule | `main` | `testing-main` |
-| --- | --- | --- |
-| Pull request required | yes | yes |
-| Required approving reviews | 1 (dismissed on new pushes, last pusher cannot approve) | 0 |
-| Required checks (strict, branch must be up to date) | `CI Gate`, `Security Gate`, `PR Gate` | `CI Gate`, `Security Gate` |
-| Conversation resolution required | yes | yes |
-| Force pushes / deletions | blocked | blocked |
-| `enforce_admins` | false | false |
+| Rule                                                | `main`                                                  | `testing-main`             |
+| --------------------------------------------------- | ------------------------------------------------------- | -------------------------- |
+| Pull request required                               | yes                                                     | yes                        |
+| Required approving reviews                          | 1 (dismissed on new pushes, last pusher cannot approve) | 0                          |
+| Required checks (strict, branch must be up to date) | `CI Gate`, `Security Gate`, `PR Gate`                   | `CI Gate`, `Security Gate` |
+| Conversation resolution required                    | yes                                                     | yes                        |
+| Force pushes / deletions                            | blocked                                                 | blocked                    |
+| `enforce_admins`                                    | false                                                   | false                      |
 
 - **PR sources into `main`**: only `testing-main`, enforced by `PR Gate`, which also requires the PR body headings Tickets, Summary, Acceptance criteria, Known gaps and Verification.
 - **Owner bypass**: because `enforce_admins` is false and GitHub does not let an author approve their own PR, the owner merges unreviewed PRs with the `Owner Merge PRs` workflow. Set `enforce_admins` to true in the workflow to remove this bypass.

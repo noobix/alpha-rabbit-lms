@@ -1,7 +1,7 @@
 paths:
   .github/workflows/deploy-on-tag.yml:
     ignore:
-      - 'shellcheck reported issue'
+      - "shellcheck reported issue"
   .github/workflows/minor-release.yml:
     ignore:
-      - 'shellcheck reported issue'
+      - "shellcheck reported issue"

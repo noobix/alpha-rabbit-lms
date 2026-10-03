@@ -150,7 +150,16 @@ jobs:
   security-gate:
     name: Security Gate
     if: always()
-    needs: [detect, codeql, codeql-node, python-security, node-security, secrets, dependency-review]
+    needs:
+      [
+        detect,
+        codeql,
+        codeql-node,
+        python-security,
+        node-security,
+        secrets,
+        dependency-review,
+      ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
