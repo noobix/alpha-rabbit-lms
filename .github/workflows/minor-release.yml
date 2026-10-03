@@ -64,21 +64,37 @@ jobs:
           # ghaction-import-gpg already sets user.signingkey; just enable commit signing.
           git config commit.gpgsign true
 
-      - name: Compute new version
+      - name: Compute next version
         id: version
         run: |
-          if [ -f package.json ]; then
-            CURRENT=$(jq -r '.version' package.json)
+          # Derive the next MINOR version from existing semantic tags so the
+          # workflow is idempotent and does not depend on package.json existing.
+          LAST_TAG=$(git tag --list "v*.*.*" --sort=-v:refname | head -n1 || true)
+          if [ -n "$LAST_TAG" ]; then
+            CURRENT="${LAST_TAG#v}"
+            MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+            MINOR=$(echo "$CURRENT" | cut -d. -f2)
+            PATCH=$(echo "$CURRENT" | cut -d. -f3)
+            NEW_MINOR=$((MINOR + 1))
+            CANDIDATE="$MAJOR.$NEW_MINOR.0"
           else
-            CURRENT="0.0.0"
+            MAJOR=0
+            NEW_MINOR=1
+            CANDIDATE="0.1.0"
+            PATCH=0
           fi
-          MAJOR=$(echo "$CURRENT" | cut -d. -f1)
-          MINOR=$(echo "$CURRENT" | cut -d. -f2)
-          NEW_MINOR=$((MINOR + 1))
-          NEW_VERSION="$MAJOR.$NEW_MINOR.0"
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+          # If the candidate tag already exists (re-run), bump PATCH until free.
+          while git rev-parse "v${CANDIDATE}" >/dev/null 2>&1; do
+            PATCH=$((PATCH + 1))
+            CANDIDATE="$MAJOR.$NEW_MINOR.$PATCH"
+          done
+
+          echo "Computed next version: ${CANDIDATE}"
+          echo "new_version=$CANDIDATE" >> $GITHUB_OUTPUT
 
       - name: Create annotated (and optionally signed) tag and push
+        id: tag
         env:
           NEW_VERSION: ${{ steps.version.outputs.new_version }}
           RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
@@ -86,7 +102,8 @@ jobs:
         run: |
           TAG_MSG_FILE=sprint-tag-body.txt
           if [ ! -f "$TAG_MSG_FILE" ]; then
-            echo "No sprint-tag-body.txt found; aborting"; exit 1;
+            echo "::error::No sprint-tag-body.txt found; aborting"
+            exit 1
           fi
           git config user.name "CI Bot"
           git config user.email "ci@alpharabbit.dev"
@@ -107,32 +124,34 @@ jobs:
         env:
           RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
         run: |
-          if [ -f .build_counter ]; then
-            CUR=$(cat .build_counter)
-            NEXT=$((CUR + 1))
-            echo $NEXT > .build_counter
-            git add .build_counter
-            git commit -m "chore: increment build counter to ${NEXT}" || echo "no changes"
-            if [ -n "$RELEASE_PAT" ]; then
-              git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
-            fi
-            git push origin testing-main || echo "push failed"
-          else
-            echo "No .build_counter file present; skipping"
+          if [ ! -f .build_counter ]; then
+            echo "::error::.build_counter file missing; aborting"
+            exit 1
           fi
+          CUR=$(cat .build_counter)
+          NEXT=$((CUR + 1))
+          echo $NEXT > .build_counter
+          git add .build_counter
+          git commit -m "chore: increment build counter to ${NEXT}"
+          if [ -n "$RELEASE_PAT" ]; then
+            git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
+          fi
+          git push origin testing-main
 
-      - name: Optionally update package.json version
+      - name: Update package.json version
         if: ${{ always() }}
+        env:
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
         run: |
-          if [ -f package.json ]; then
-            NEW=${{ steps.version.outputs.new_version }}
-            npm pkg set version "$NEW"
-            git add package.json
-            git commit -m "chore(release): bump version to ${NEW}" || echo "no changes"
-            if [ -n "${{ secrets.RELEASE_PAT }}" ]; then
-              git remote set-url origin https://x-access-token:${{ secrets.RELEASE_PAT }}@github.com/${{ github.repository }}
-            fi
-            git push origin testing-main || echo "push failed"
-          else
+          if [ ! -f package.json ]; then
             echo "package.json not present; skipping"
+            exit 0
           fi
+          NEW=${{ steps.version.outputs.new_version }}
+          node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('package.json','utf8')); p.version=process.env.NEW; fs.writeFileSync('package.json', JSON.stringify(p, null, 2)+'\n');"
+          git add package.json
+          git commit -m "chore(release): bump version to ${NEW}" || echo "no changes"
+          if [ -n "$RELEASE_PAT" ]; then
+            git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
+          fi
+          git push origin testing-main
