@@ -52,3 +52,7 @@ coverage/
 *.bak
 *.orig
 *.rej
+
+# GPG keys
+.gpg/
+*.asc
