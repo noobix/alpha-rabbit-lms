@@ -1,19 +1,18 @@
 ---
-Author: openai
-Last-updated: 2026-05-14
-Provenance-Agent: openai
-Provenance-Confidence: 1.00
-Provenance-Evidence: explicit marker: github copilot, explicit marker: copilot, explicit marker: openai, explicit marker: gpt-, low-lexical-uniqueness:0.36, comment-density:0.13, code-tokens:1, long-comment-block
+Author: Kelvin Kabute
+Last-updated: 2026-10-03
 ---
 
 # 🐇 Alpha Rabbit LMS
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
 
-Alpha Rabbit LMS is an open-source, offline-first Library Management System built for Ghanaian libraries. It ships in two editions:
+Alpha Rabbit LMS is an open-source, offline-first Library Management System designed for real-world African library operations: school libraries, public libraries, mobile/community outreach, rural distribution, and multi-branch institutional workflows. It ships in two editions:
 
-- **Manager** — single-library, offline desktop app (Electron + PouchDB + SQLite).
-- **Enterprise** — multi-department, multi-site edition with CouchDB server sync.
+- **Manager** — single-library, offline desktop app for low-connectivity environments (Electron + PouchDB + SQLite).
+- **Enterprise** — multi-department, multi-site edition with CouchDB server sync, centralized controls, and role-based operations.
+
+The platform is intentionally built to handle different national policies without forcing a single jurisdiction model. Country and institutional rules such as curriculum tags, academic calendars, promotion windows, expiry dates, and identity validation are driven by a saved `country_profile` and optional custom profile overrides rather than hard-coded assumptions.
 
 ---
 
@@ -31,16 +30,24 @@ This project was initiated by `noobix` (2026). Please keep the `LICENSE` and `AB
 
 Alpha Rabbit LMS is organised into six departments. Each has a dedicated spec under `docs/research_dmp/`. Tickets in `docs/jira/compression.md` carry a department prefix so you can find the owning module quickly.
 
-| Department             | Synopsis                                                                                                                                                                                                                                                                                              | Spec                                          |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| **Acquisitions**       | Bibliographic data entry, Ghana Curriculum Tag assignment, vendor management, and offline-first book intake for both Manager and Enterprise versions.                                                                                                                                                 | `docs/research_dmp/aquisisions_module.md`     |
-| **Processing**         | Physical inspection, condition scoring, PDF417 barcode generation, Extension Services routing flag, and Ghana climate durability thresholds.                                                                                                                                                          | `docs/research_dmp/processing_module.md`      |
-| **Distribution**       | Section routing, batch-aware packing slips, rural delivery mode for the Tamale-Bolgatanga corridor, and Extension Services depot delivery with rotation-cycle metadata.                                                                                                                               | `docs/research_dmp/distribution_module.md`    |
-| **Library Operations** | Day-to-day circulation across Children's, Adult, Reference, and Lending sections; patron degradation engine; Adinkra badge awards; GES batch promotion.                                                                                                                                               | `docs/research_dmp/library_sections_pi_sg.md` |
-| **Extension Services** | Mobile library van and designated-room service for underserved schools. Operates as a top-level peer department — borrows books from the Lending section via bulk allocation, tracks learners with QR smart tags only (no Ghana Card ID, no condition scoring), and syncs via an offline Android app. | `docs/research_dmp/extension_module.md`       |
-| **Deployment**         | Field validation, installer packaging, Ghana Library Authority compliance, Enterprise CouchDB pilot setup, and UAT checklist.                                                                                                                                                                         | `docs/research_dmp/deploy_doc.md`             |
+| Department             | Synopsis                                                                                                                                                                                                                                                                                                                   | Spec                                          |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| **Acquisitions**       | Bibliographic data entry, curriculum tagging, vendor management, budget-aware ordering, and offline-first book intake for both Manager and Enterprise editions.                                                                                                                                                            | `docs/research_dmp/aquisisions_module.md`     |
+| **Processing**         | Physical inspection, condition scoring, barcode generation, classification, and policy-aware intake flows for curriculum and local durability rules.                                                                                                                                                                       | `docs/research_dmp/processing_module.md`      |
+| **Distribution**       | Section routing, batch-aware packing slips, delivery confirmation, rural/community distribution planning, and bulk allocation tracking across libraries and outreach sites.                                                                                                                                                | `docs/research_dmp/distribution_module.md`    |
+| **Library Operations** | Day-to-day circulation across Children's, Adult, Reference, and Lending sections; patron intelligence; degradation rules; program participation; and lifecycle tracking for issue/return, promotion, and expiry windows.                                                                                                   | `docs/research_dmp/library_sections_pi_sg.md` |
+| **Extension Services** | Mobile library vans, community leaders, outreach hubs, and designated-room service for underserved populations. It operates as a top-level peer department: it borrows books from Lending in bulk, preserves rotation-cycle history, and continues to serve remote learners without forcing fixed national identity rules. | `docs/research_dmp/extension_module.md`       |
+| **Deployment**         | Field validation, installer packaging, environment rollout, enterprise sync deployment, and operational UAT across mixed library environments.                                                                                                                                                                             | `docs/research_dmp/deploy_doc.md`             |
 
-> **Critical boundary:** Extension Services is NOT a library section. It is a full department peer to Acquisitions, Processing, and Distribution. Extension learners carry `extension_service: true` and are never given degradation scores.
+> **Critical boundary:** Extension Services is not a general library section. It is a full department peer to Acquisitions, Processing, and Distribution. It keeps community and mobile outreach flows distinct from core lending, while still preserving the historical linkage of books as they rotate through extension cycles.
+
+### Core operating assumptions
+
+- **Offline-first operations** are the default, with deferred sync and local safety for low-connectivity environments.
+- **Country policy is configurable** through the selected `country_profile` and optional custom institutional overrides.
+- **Bulk borrowing and book rotation** are first-class patterns, especially for Extension Services and outreach inventory movement.
+- **Curriculum and academic rules** are not hard-coded to a single country; they follow the active policy profile.
+- **Identity handling** supports national IDs or equivalent formal identifiers only when the active policy requires them, and stores hashes rather than plaintext values.
 
 ---
 
@@ -177,7 +184,7 @@ Examples: `LMS-101/implement-sha256-hashing-ghana-card-id`, `LMS-502/extension-q
 # 1. Sync with integration branch
 git fetch origin
 git checkout LMS-[XXX]/[title-or-description]
-git merge origin/develop
+git merge origin/testing-main
 
 # 2. Work, then commit
 git add .
@@ -202,7 +209,7 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 
 ## 📬 Pull Requests
 
-- **Target branch** — always `develop`.
+- **Target branch** — always `testing-main`.
 - **One PR per ticket** — do not bundle unrelated changes.
 - **PR body** must follow the template in `docs/build.md` Section 5 Step 6: `## Ticket`, `## Changes`, `## Acceptance Criteria`, `## Completion Gate Checklist`.
 - **Merging rules**:

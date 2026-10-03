@@ -1,7 +1,7 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-05-15
-Provenance-Evidence: comment-density:0.17, long-comment-block
+Last-updated: 2026-10-03
+Provenance-Evidence: comment-density:0.16, long-comment-block
 ---
 
 
@@ -64,3 +64,25 @@ description: React and Next.js performance guidance and optimizations.
 - `npx skills add vercel-labs/agent-skills@vercel-react-best-practices`
 
 ## Fallback
+
+- If the skill cannot be installed or doesn't match exactly, the assistant should still provide best-effort guidance and offer to scaffold tests or commands.
+
+## Contributor notes
+
+- Keep examples concise and concrete.
+- Favor specific keywords over very generic terms (e.g., `nextjs` instead of `web`).
+- Update `keywords` when you add significant sub-features so searches improve.
+
+## Maintenance
+
+- Update the `description` and `trigger phrases` when the skill's scope changes.
+- Add compatibility notes if the skill depends on particular runtimes or CLIs.
+
+## Why this matters
+
+Search and automatic skill matching rely on short, accurate signals: name, description, example prompts, and keywords. A well-formed `SKILL.md` significantly improves discoverability and reduces false positives.
+
+If you want, I can:
+
+- Expand this template into a repository-level CONTRIBUTING doc.
+- Copy this checklist into each existing skill folder.
