@@ -1,10 +1,3 @@
-/*
- * Author: Kelvin Kabute
- * Last-updated: 2026-10-03
- * Provenance-Evidence: explanatory phrases: 1, low-lexical-uniqueness:0.34, comment-density:0.11, code-tokens:3, long-comment-block
- */
-
-
 #!/usr/bin/env node
 /**
  * Cleans up deprecated Impeccable skill files, symlinks, and

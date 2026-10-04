@@ -1,21 +1,6 @@
-/*
- * Author: Kelvin Kabute
- * Last-updated: 2026-10-03
- * Provenance-Evidence: long-comment-block
- */
-
-
-/*
- * Author: Kelvin Kabute
- * Last-updated: 2026-04-20
- */
-
-
-/*
- * Author: Kelvin Kabute
- * Last-updated: 2026-04-20
- */
-
+# 
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-12
 
 name: Enable Branch Protection
 
@@ -23,13 +8,12 @@ on:
   workflow_dispatch:
     inputs:
       branches:
-        description: 'Comma-separated branches to protect'
+        description: "Comma-separated branches to protect"
         required: false
-        default: 'main,testing-main'
+        default: "main,testing-main"
 
 permissions:
   contents: read
-  administration: write
 
 jobs:
   protect:
@@ -60,7 +44,7 @@ jobs:
                 },
                 "enforce_admins": false,
                 "required_pull_request_reviews": {
-                  "dismiss_stale_reviews": true,
+                  "dismiss_stale_reviews": false,
                   "require_code_owner_reviews": false,
                   "required_approving_review_count": 0
                 },

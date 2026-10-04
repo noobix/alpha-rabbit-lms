@@ -1,10 +1,3 @@
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-14
-Provenance-Evidence: comment-density:0.10
----
-
-
 # alpha_rabbit-LMS
 
 Copyright (C) 2026 noobix

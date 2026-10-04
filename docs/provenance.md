@@ -1,15 +1,6 @@
 ---
-Author: copilot
-Last-updated: 2026-10-03
-Provenance-Agent: copilot
-Provenance-Confidence: 0.86
-Provenance-Evidence: explicit marker: copilot, explanatory phrases: 1, long-comment-block
----
-
-
----
 Author: Kelvin Kabute
-Last-updated: 2026-05-10
+Last-updated: 2026-10-04
 ---
 
 Per-file Provenance & Implementation Notes

@@ -1,16 +1,11 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-03
-Provenance-Evidence: comment-density:0.10, long-comment-block
----
-
-
----
 name: layout
 description: Improve layout, spacing, and visual rhythm. Fixes monotonous grids, inconsistent spacing, and weak visual hierarchy. Use when the user mentions layout feeling off, spacing issues, visual hierarchy, crowded UI, alignment problems, or wanting better composition.
 version: 2.1.1
 user-invocable: true
 argument-hint: "[target]"
+Last-updated: 2026-10-04
 ---
 
 Assess and improve layout and spacing that feels monotonous, crowded, or structurally weak — turning generic arrangements into intentional, rhythmic compositions.

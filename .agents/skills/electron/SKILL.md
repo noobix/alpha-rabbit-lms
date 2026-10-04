@@ -1,11 +1,5 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-03
-Provenance-Evidence: low-lexical-uniqueness:0.29, comment-density:0.14, code-tokens:3, long-comment-block
----
-
-
----
 name: electron
 description: >
   Electron patterns for building cross-platform desktop applications.
@@ -13,6 +7,7 @@ description: >
 metadata:
   author: gentleman-programming
   version: "1.0"
+Last-updated: 2026-10-04
 ---
 
 ## When to Use

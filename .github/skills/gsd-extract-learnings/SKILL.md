@@ -1,0 +1,18 @@
+---
+Author: Kelvin Kabute
+name: gsd-extract-learnings
+description: "Extract decisions, lessons, patterns, and surprises from completed phase artifacts"
+argument-hint: "<phase-number>"
+allowed-tools: Read, Write, Bash, Grep, Glob, Agent
+Last-updated: 2026-10-04
+---
+
+<objective>
+Extract structured learnings from completed phase artifacts (PLAN.md, SUMMARY.md, VERIFICATION.md, UAT.md, STATE.md) into a LEARNINGS.md file that captures decisions, lessons learned, patterns discovered, and surprises encountered.
+</objective>
+
+<execution_context>
+@.github/get-shit-done/workflows/extract_learnings.md
+</execution_context>
+
+Execute the extract-learnings workflow from @.github/get-shit-done/workflows/extract_learnings.md end-to-end.

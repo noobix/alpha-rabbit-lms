@@ -1,10 +1,3 @@
----
-Author: Kelvin Kabute
-Last-updated: 2026-05-14
-Provenance-Evidence: comment-density:0.11, long-comment-block
----
-
-
 # Changelog
 
 All notable changes to Alpha Rabbit LMS are documented here.
