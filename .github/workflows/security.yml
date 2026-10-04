@@ -147,6 +147,27 @@ jobs:
         with:
           fail-on-severity: high
 
+  codeql-gate:
+    name: CodeQL alert gate
+    needs: [codeql, codeql-node]
+    if: always() && (needs.codeql.result == 'success' || needs.codeql.result == 'skipped') && (needs.codeql-node.result == 'success' || needs.codeql-node.result == 'skipped')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      security-events: read
+      contents: read
+    steps:
+      - name: Check for high/critical CodeQL alerts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REF: ${{ github.ref }}
+        run: |
+          ALERTS=$(gh api "repos/${{ github.repository }}/code-scanning/alerts?ref=$REF&state=open&severity=high,critical" --jq '. | length')
+          if [ "$ALERTS" -gt 0 ]; then
+            echo "::error::$ALERTS open high/critical CodeQL alert(s) on $REF"
+            exit 1
+          fi
+
   security-gate:
     name: Security Gate
     if: always()
@@ -155,6 +176,7 @@ jobs:
         detect,
         codeql,
         codeql-node,
+        codeql-gate,
         python-security,
         node-security,
         secrets,

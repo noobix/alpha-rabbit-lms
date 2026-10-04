@@ -48,7 +48,6 @@ jobs:
           TAG=${GITHUB_REF_NAME}
           git config user.name "CI Bot"
           git config user.email "ci@alpharabbit.dev"
-          # Switch to testing-main to commit the changelog update
           git fetch origin testing-main
           git checkout testing-main
           git add CHANGELOG.md
@@ -58,29 +57,27 @@ jobs:
             git commit -m "chore(changelog): update for ${TAG}"
             PAT="${RELEASE_PAT:-${GITHUB_TOKEN}}"
             git remote set-url origin https://x-access-token:${PAT}@github.com/${{ github.repository }}
-            git push origin testing-main
+            git push origin testing-main || { echo "::error::Changelog push failed"; exit 1; }
           fi
 
       - name: Create GitHub Release and upload artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT || secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
         run: |
           TAG=${GITHUB_REF_NAME}
-          # Use the formatted changelog entry produced by generate-changelog.sh
-          # so the GitHub Release page shows the same structured notes as CHANGELOG.md
           if [ -f release-entry.md ] && [ -s release-entry.md ]; then
             NOTES_FILE=release-entry.md
           else
-            # Fallback: raw tag body
             git for-each-ref "refs/tags/${TAG}" --format='%(contents)' > release-notes-raw.txt
             NOTES_FILE=release-notes-raw.txt
           fi
-          gh auth login --with-token <<< "${GITHUB_TOKEN}"
-          gh release create "$TAG" --notes-file "$NOTES_FILE" || gh release view "$TAG"
+          gh release create "$TAG" --notes-file "$NOTES_FILE" --repo "$REPO" || gh release view "$TAG" --repo "$REPO"
+          gh release view "$TAG" --repo "$REPO" > /dev/null || { echo "::error::Release not found after creation"; exit 1; }
           rm -f release-entry.md release-notes-raw.txt
-          # Upload any files in dist/ or out/; adjust path as your build outputs
           if [ -d dist ]; then
-            for f in dist/*; do gh release upload "$TAG" "$f" || true; done
+            for f in dist/*; do gh release upload "$TAG" "$f" --repo "$REPO" || true; done
           fi
           if [ -d out ]; then
-            for f in out/*; do gh release upload "$TAG" "$f" || true; done
+            for f in out/*; do gh release upload "$TAG" "$f" --repo "$REPO" || true; done
+          fi

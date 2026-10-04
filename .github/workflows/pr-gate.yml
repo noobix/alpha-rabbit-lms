@@ -33,4 +33,11 @@ jobs:
             printf '%s\n' "$PR_BODY" | grep -qiE "^#{1,6}[[:space:]]+${section}" || err "PR body needs a '## ${section}' heading."
           done
 
+          IS_MAIN="${{ github.base_ref == 'main' }}"
+          if [ "$IS_MAIN" = "true" ]; then
+            if ! printf '%s\n' "$PR_BODY" | grep -qiE 'coverage:\s*[0-9]+%'; then
+              err "PRs into main must declare test coverage (e.g. 'Coverage: 85%')"
+            fi
+          fi
+
           exit "$fail"

@@ -93,6 +93,41 @@ jobs:
           echo "Computed next version: ${CANDIDATE}"
           echo "new_version=$CANDIDATE" >> $GITHUB_OUTPUT
 
+      - name: Increment build counter (before tag)
+        env:
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+        run: |
+          if [ ! -f .build_counter ]; then
+            echo "::error::.build_counter file missing; aborting"
+            exit 1
+          fi
+          CUR=$(cat .build_counter)
+          NEXT=$((CUR + 1))
+          echo $NEXT > .build_counter
+          git add .build_counter
+          git commit -m "chore: increment build counter to ${NEXT}"
+          if [ -n "$RELEASE_PAT" ]; then
+            git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
+          fi
+          git push origin testing-main || { echo "::error::Failed to push build counter"; exit 1; }
+
+      - name: Update package.json version (before tag)
+        env:
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
+        run: |
+          if [ ! -f package.json ]; then
+            echo "package.json not present; skipping"
+            exit 0
+          fi
+          node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('package.json','utf8')); p.version=process.env.NEW_VERSION; fs.writeFileSync('package.json', JSON.stringify(p, null, 2)+'\n');"
+          git add package.json
+          git commit -m "chore(release): bump version to ${NEW_VERSION}" || echo "no changes"
+          if [ -n "$RELEASE_PAT" ]; then
+            git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
+          fi
+          git push origin testing-main || { echo "::error::Failed to push version bump"; exit 1; }
+
       - name: Create annotated (and optionally signed) tag and push
         id: tag
         env:
@@ -114,44 +149,9 @@ jobs:
             echo "Creating annotated tag v${NEW_VERSION}"
             git tag -a "v${NEW_VERSION}" -F "$TAG_MSG_FILE"
           fi
-          # use PAT to push the tag back
           if [ -n "$RELEASE_PAT" ]; then
             git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
           fi
-          git push origin "v${NEW_VERSION}"
-
-      - name: Update .build_counter (increment)
-        env:
-          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
-        run: |
-          if [ ! -f .build_counter ]; then
-            echo "::error::.build_counter file missing; aborting"
-            exit 1
-          fi
-          CUR=$(cat .build_counter)
-          NEXT=$((CUR + 1))
-          echo $NEXT > .build_counter
-          git add .build_counter
-          git commit -m "chore: increment build counter to ${NEXT}"
-          if [ -n "$RELEASE_PAT" ]; then
-            git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
-          fi
-          git push origin testing-main
-
-      - name: Update package.json version
-        if: ${{ always() }}
-        env:
-          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
-        run: |
-          if [ ! -f package.json ]; then
-            echo "package.json not present; skipping"
-            exit 0
-          fi
-          NEW=${{ steps.version.outputs.new_version }}
-          node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('package.json','utf8')); p.version=process.env.NEW; fs.writeFileSync('package.json', JSON.stringify(p, null, 2)+'\n');"
-          git add package.json
-          git commit -m "chore(release): bump version to ${NEW}" || echo "no changes"
-          if [ -n "$RELEASE_PAT" ]; then
-            git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
-          fi
-          git push origin testing-main
+          git push origin "v${NEW_VERSION}" || { echo "::error::Tag push failed"; exit 1; }
+          git fetch origin "v${NEW_VERSION}" || { echo "::error::Tag not found after push"; exit 1; }
+          echo "Tag v${NEW_VERSION} created and verified"
