@@ -1,13 +1,8 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-03
-Provenance-Evidence: comment-density:0.16, long-comment-block
----
-
-
----
 name: skill-name
 description: Short one-line summary of what the skill does.
+Last-updated: 2026-10-04
 ---
 
 # Skill SKILL.md Template / Contributor Checklist

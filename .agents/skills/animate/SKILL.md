@@ -1,16 +1,11 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-03
-Provenance-Evidence: comment-density:0.15, long-comment-block
----
-
-
----
 name: animate
 description: Review a feature and enhance it with purposeful animations, micro-interactions, and motion effects that improve usability and delight. Use when the user mentions adding animation, transitions, micro-interactions, motion design, hover effects, or making the UI feel more alive.
 version: 2.1.1
 user-invocable: true
 argument-hint: "[target]"
+Last-updated: 2026-10-04
 ---
 
 Analyze a feature and strategically add animations and micro-interactions that enhance understanding, provide feedback, and create delight.

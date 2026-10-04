@@ -1,16 +1,9 @@
 ---
-Author: copilot
-Last-updated: 2026-10-03
-Provenance-Agent: copilot
-Provenance-Confidence: 0.76
-Provenance-Evidence: explicit marker: copilot, long-comment-block
----
-
-
----
+Author: Kelvin Kabute
 name: get shit done
 aliases: [gsd, get-shit-done, get_it_done, gsd-autonomous]
 short_description: High-level orchestration and autonomous execution skill for multi-step engineering tasks (plan → implement → test → verify → document).
+Last-updated: 2026-10-04
 ---
 
 Purpose

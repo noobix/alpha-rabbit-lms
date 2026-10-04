@@ -1,13 +1,8 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-03
-Provenance-Evidence: long-comment-block
----
-
-
----
 name: uncodixfy
 description: Prevents generic AI/Codex UI patterns when generating frontend code. Use this skill whenever generating HTML, CSS, React, Vue, Svelte, or any frontend UI code to enforce clean, human-designed aesthetics inspired by Linear, Raycast, Stripe, and GitHub instead of typical AI-generated UI.
+Last-updated: 2026-10-04
 ---
 
 # Uncodixify
