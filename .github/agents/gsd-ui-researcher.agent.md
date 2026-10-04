@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ui-researcher
 description: "Produces UI-SPEC.md design contract for frontend phases. Reads upstream artifacts, detects design system state, asks only unanswered questions. Spawned by /gsd-ui-phase orchestrator."
 tools: ['read', 'edit', 'execute', 'search', 'web', 'io.github.upstash/context7/*', 'mcp__firecrawl__*', 'mcp__exa__*']
 color: #E879F9
+Last-updated: 2026-10-04
 ---
 
 

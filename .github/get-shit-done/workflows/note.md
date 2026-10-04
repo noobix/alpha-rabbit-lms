@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Zero-friction idea capture. One Write call, one confirmation line. No questions, no prompts.
 

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Uncodixify
 
 This document exists to teach you how to act as non-Codex as possible when building UI.

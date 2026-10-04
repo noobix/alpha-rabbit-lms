@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-help
 description: "Show available GSD commands and usage guide"
 allowed-tools: Read
+Last-updated: 2026-10-04
 ---
 
 <objective>

@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ns-manage
 description: "config workspace | workstreams thread update ship inbox"
 allowed-tools: Read, Skill
+Last-updated: 2026-10-04
 ---
 
 

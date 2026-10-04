@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Triage and review all open GitHub issues and PRs against project contribution templates.
 Produces a structured report showing compliance status for each item, flags missing

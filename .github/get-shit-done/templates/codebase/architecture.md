@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Architecture Template
 
 Template for `.planning/codebase/ARCHITECTURE.md` - captures conceptual code organization.

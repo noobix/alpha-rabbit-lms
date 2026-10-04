@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-autonomous
 description: "Run all remaining phases autonomously — discuss→plan→execute per phase"
 argument-hint: "[--from N] [--to N] [--only N] [--interactive]"
 allowed-tools: Read, Write, Bash, Glob, Grep, AskUserQuestion, Task, Agent
+Last-updated: 2026-10-04
 ---
 
 <objective>

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Gate Prompt Patterns
 
 Reusable prompt patterns for structured gate checks in workflows and agents.

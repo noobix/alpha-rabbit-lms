@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Milestone Summary Workflow
 
 Generate a comprehensive, human-friendly project summary from completed milestone artifacts.

@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-import
 description: "Ingest external plans with conflict detection against project decisions before writing anything."
 argument-hint: "--from <filepath>"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Task
+Last-updated: 2026-10-04
 ---
 
 

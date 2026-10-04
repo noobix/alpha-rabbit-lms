@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-inbox
 description: "Triage and review open GitHub issues and PRs against project templates and contribution guidelines."
 argument-hint: "[--issues] [--prs] [--label] [--close-incomplete] [--repo owner/repo]"
 allowed-tools: Read, Bash, Write, Grep, Glob, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Curate sketch design findings and package them into a persistent project skill for future
 UI implementation. Reads from `.planning/sketches/`, writes skill to `./.github/skills/sketch-findings-[project]/`

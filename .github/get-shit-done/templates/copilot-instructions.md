@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Instructions for GSD
 
 - Use the get-shit-done skill when the user asks for GSD or uses a `gsd-*` command.

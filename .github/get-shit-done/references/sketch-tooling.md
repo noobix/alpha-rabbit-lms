@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Sketch Toolbar
 
 Include a small floating toolbar in every sketch. It provides utilities without competing with the actual design.

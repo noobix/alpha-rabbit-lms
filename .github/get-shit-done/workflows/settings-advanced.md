@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Interactive configuration of GSD power-user knobs — plan bounce, node repair, subagent timeouts,
 inline plan threshold, cross-AI execution, base branch, branch templates, response language,

@@ -1,11 +1,24 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Alpha Rabbit LMS - Development Prompt
 
-You are building **Alpha Rabbit**, a Ghana-ready Library Management System with one codebase and two deployment modes:
+You are building **Alpha Rabbit**, an Africa-ready Library Management System with one codebase and two deployment modes:
 
 1. **Manager (Standalone):** Fully offline desktop app for a single library.
 2. **Enterprise (Multi-tier):** Desktop client with local PouchDB and sync to CouchDB for multi-department and multi-branch operations.
 
-Prioritize offline reliability, incremental backups, role-based workflows, and simple UI for low-literacy staff.
+Prioritize offline reliability, incremental backups, role-based workflows, and simple UI for low-literacy staff. The system must work across mixed public-library, school-library, community-library, and mobile-outreach operations without assuming one national policy model.
+
+## File Context
+
+**Purpose:** This file is the agent-facing operational brief. It defines the project mission, required structure, and feature boundaries for all implementation work.
+
+**Why this matters:** Library workflows in Africa differ by country, school calendar, language, and infrastructure. Agents should treat this file as the baseline for building adaptable workflows, not a Ghana-only specification.
+
+**How agents use it:** Use this document to decide how domain features should be represented, which modules are required, and where generic rules must be configurable by jurisdiction or institution.
 
 ## Mission
 
@@ -20,6 +33,10 @@ Deliver a dependable, offline-first platform that supports the full lifecycle of
 - Zero native modules; use pure JavaScript dependencies.
 - Must run well on low-spec hardware and unstable power/internet conditions.
 - Data durability, auditability, and backup safety are mandatory.
+- Database modeling is a first-class implementation requirement. Split logical data by domain and enforce a shared `BaseDocument` contract across all persistent records.
+- Every record must be typed, versioned, and validated before persistence. Schema drift is not allowed without a version bump and migration note.
+- Required indexes must be planned for the real query paths used by books, patrons, loans, extension loans, departments, audit logs, and config data.
+- Conflict handling must preserve record history and visible sync issues instead of silently overwriting local edits.
 
 ## Required Project Structure
 
@@ -113,21 +130,22 @@ alpha_rabbit-LMS/
 - Incremental backups (Manager) and resumable backups.
 - Enterprise replication with conflict handling and retry.
 - Security controls: authentication, audit logs, role checks.
-- Ghana Data Protection compliance (hashing, encryption, retention rules).
+- National data-protection and privacy compliance (hashing, encryption, retention rules) that can be configured per country or institution.
+- Jurisdiction-aware configuration for identity rules, academic calendars, language labels, and legal retention periods.
 
 ### 2) External Workflow Modules
 
 #### Acquisitions Module
 
-- Vendor management with Ghana Card validation (stored hashed).
-- Order creation with ISBN lookup, curriculum tags, and budget codes.
+- Vendor management with national ID validation when required by the selected country policy, with hashed storage and configurable local formats.
+- Order creation with ISBN lookup, curriculum tags, and budget codes from the selected `country_profile`.
 - Shipment tracking and delivery status capture.
 - Enterprise additions: approval workflows, vendor integrations, auto-suggestions.
 
 #### Processing Module
 
 - Physical inspection scoring (spine, cover, pages, edges).
-- Cataloging/classification with Ghana curriculum tags + Dewey support.
+- Cataloging/classification with curriculum tags + Dewey support driven by the active country profile.
 - Barcode generation and print flow.
 - Enterprise additions: RFID, QC chain, batch processing, language detection.
 
@@ -178,18 +196,20 @@ alpha_rabbit-LMS/
 ### 5) Staff Governance and Access
 
 - Department hierarchy with role-specific permissions.
-- Staff profile requirements including Ghana Card ID hashing.
+- Staff profile requirements including hashed national ID or equivalent document verification when the selected country policy requires it.
 - Supervisor-linked activation and accountability controls.
 - Manager: role switching in one installation.
 - Enterprise: strict role enforcement via CouchDB security.
 
-### 6) Ghana-Specific Adaptations
+### 6) Country-Configurable Adaptations
 
-- Ghana curriculum tagging in core workflows.
-- Batch lifecycle aligned to academic year (promotion and expiry windows).
+- Curriculum tagging in core workflows, configurable by national curriculum or institutional policy.
+- Batch lifecycle aligned to academic year, school term, or community delivery cycle through a saved `country_profile` and optional custom overrides.
 - Local language support and culturally relevant badge semantics.
 - Rural operation mode (reduced GPS dependency, offline emphasis).
-- SMS queue behavior for offline-to-online delivery.
+- SMS or WhatsApp queue behavior for offline-to-online delivery.
+- Regional support for mobile van service, school outreach, community reading hubs, and branch-based library operations.
+- Academic rules such as term length, promotion windows, expiry dates, and learner progression must be derived from the selected country profile or a custom institutional profile rather than hard-coded to one nation.
 
 ### 7) Analytics, Reporting, and Quality Gates
 
@@ -211,7 +231,7 @@ alpha_rabbit-LMS/
 
 #### Acquisitions (Manager + Enterprise)
 
-- Vendor records with Ghana Card format validation and hashed storage.
+- Vendor records with national ID or business-registration validation based on the selected country policy, stored in hashed form when required.
 - Budget-aware ordering with curriculum tag enforcement.
 - ISBN-assisted order entry and offline curriculum-tag cache.
 - Shipment tracking with manual mode offline and integrated updates online.
@@ -220,7 +240,7 @@ alpha_rabbit-LMS/
 
 - Multi-component condition inspection: spine, cover, pages, edges (1-5).
 - Health score calculation from condition components.
-- Classification with Ghana curriculum tags and Dewey suggestion.
+- Classification with curriculum tags and Dewey suggestion driven by the active country policy.
 - Barcode generation (PDF417) and enterprise RFID-ready pathways.
 
 #### Distribution (Manager + Enterprise)
@@ -251,14 +271,14 @@ alpha_rabbit-LMS/
 ### E) Governance and Compliance Features
 
 - Staff hierarchy with supervisor-linked accountability.
-- Required staff profile controls: Ghana Card ID, service number, department, emergency contact.
+- Required staff profile controls: national ID or approved document hash, service number, department, emergency contact.
 - Role-based access boundaries per department/section.
-- Ghana Data Protection controls: hashing, encryption at rest, and retention policy handling.
+- Jurisdiction-aware data protection controls: hashing, encryption at rest, and retention policy handling.
 
-### F) Ghana Context Features
+### F) Country Policy Features
 
-- Ghana Education Service curriculum tag alignment.
-- Academic-year batch lifecycle (promotion, expiry, rollover).
+- National or institutional curriculum tag alignment from the selected `country_profile`.
+- Academic-year batch lifecycle (promotion, expiry, rollover) driven by an active country or custom profile.
 - Rural-friendly operation modes (offline-first, reduced GPS dependency where applicable).
 - SMS queue and delayed send behavior for low-connectivity environments.
 
@@ -363,24 +383,24 @@ Use the following implementation-level workflow instructions as the source of tr
 
 #### Acquisitions Purpose
 
-- Capture complete bibliographic and vendor/order data with Ghana-compliant validation.
+- Capture complete bibliographic and vendor/order data with jurisdiction-aware validation.
 - Ensure every acquisition is development-ready for Processing without manual data reconstruction.
 
 #### Acquisitions Data Contracts
 
 - `BookMetadata` must include:
-  - required: `title`, `contributors[]`, `publisher`, `publicationYear`, `ghanaCurriculumTag`, `createdAt`, `createdBy`, `status`
-  - crucial Ghana fields: `ghanaCurriculumTag`, `localLanguage`, `culturalContext`, `ghanaAuthors`
+  - required: `title`, `contributors[]`, `publisher`, `publicationYear`, `countryProfileId`, `curriculumTag`, `createdAt`, `createdBy`, `status`
+  - crucial country fields: `curriculumTag`, `localLanguage`, `culturalContext`, `schoolLevel`
 - `AcquisitionOrder` must include:
   - `vendor`, `items[]`, `budget`, `workflow`, `status`, timestamps
-- `Vendor` must store `ghanaCardId` in hashed form only.
+- `Vendor` must store national ID or equivalent business identifier in hashed form only when the selected policy requires formal identity capture.
 
 #### Critical Validation Rules
 
-- Ghana Card format validation before hashing: `GHA-000000000-0`.
+- Country-specific document format validation before hashing; examples such as `GHA-000000000-0` or `KE-#######` are accepted only when the active `country_profile` declares them.
 - Reject save if required acquisition fields are missing.
 - Enforce at least one contributor with valid role + name.
-- Enforce Ghana Curriculum Tag as non-optional for all books.
+- Enforce curriculum tag as non-optional for books when local curriculum rules are active.
 - Validate publication year range (1800 to current year + 1).
 
 #### Acquisitions Offline and Reliability Requirements
@@ -400,9 +420,9 @@ Use the following implementation-level workflow instructions as the source of tr
 flowchart TD
     A[Create Acquisition Draft] --> B[Enter Bibliographic Metadata]
     B --> C[Add Contributors and Roles]
-    C --> D[Select Ghana Curriculum Tag]
-    D --> E[Validate Vendor Ghana Card Format]
-    E --> F[Hash Ghana Card ID]
+    C --> D[Select Curriculum Tag from Country Profile]
+    D --> E[Validate Vendor National ID Format]
+    E --> F[Hash National ID]
     F --> G[Assign Budget Code and Quantities]
     G --> H{Offline?}
     H -->|Yes| I[Save Locally as Draft/Order]
@@ -473,7 +493,7 @@ flowchart TD
 #### Distribution Data Contracts
 
 - `DistributionRecord` must include:
-  - `processedBookIds`, `books[]`, `routing`, `logistics`, `ghanaContext`, `_syncStatus`
+  - `processedBookIds`, `books[]`, `routing`, `logistics`, `countryContext`, `_syncStatus`
 - `PackingSlip` must include:
   - school identity, batch groups, totals, QR, PDF417, dispatch metadata
 
@@ -512,7 +532,7 @@ flowchart TD
 
 - Acquisitions output must be directly consumable by Processing.
 - Processing output must be directly consumable by Distribution.
-- `ghanaCurriculumTag`, `batchAssignment`, and `barcode` are mandatory continuity fields across module boundaries.
+- `curriculumTag`, `batchAssignment`, and `barcode` are mandatory continuity fields across module boundaries.
 - All three modules must remain operational when offline, with eventual sync and audit-safe event history.
 
 ## Additional Development Guidance (Expanded Specs)
@@ -529,7 +549,7 @@ Implement a unified patron model that supports lifecycle intelligence and interv
   - `programParticipation`: attendance and appraisal records.
   - `badges`: awarded badge IDs, dates, and criteria trace.
 - Privacy controls:
-  - Ghana Card IDs hashed at rest.
+  - National IDs or equivalent identity fields hashed at rest when the active policy requires them.
   - Reading history access must be role-limited and auditable.
 
 ### 2) Degradation Engine Rules (Must Be Deterministic)
@@ -557,8 +577,8 @@ Implement a unified patron model that supports lifecycle intelligence and interv
 - Appraisal object should store:
   - `attendanceRate`, `completionRate`, `engagementLevel`, `readingImprovement`,
   - `staffNotes`, `nextSteps`, `dateAppraised`, `appraisedBy`.
-- Ghana alignment:
-  - Include GES-aligned program templates (e.g., literacy challenge windows).
+- Country policy alignment:
+  - Include curriculum-aligned program templates and communication windows derived from the active `country_profile`.
   - Support parent-facing communication cues for minors.
 
 ### 4) Automated Badge Engine Requirements
@@ -577,7 +597,7 @@ Implement a unified patron model that supports lifecycle intelligence and interv
 
 - Staff model should include:
   - role, department, supervisor ID, service number, appointment date, active status,
-  - Ghana Card hash, emergency contact, and login metadata.
+  - hashed national ID or equivalent identity record, emergency contact, and login metadata.
 - Role hierarchy baseline:
   - super admin,
   - department head,
@@ -590,8 +610,8 @@ Implement a unified patron model that supports lifecycle intelligence and interv
 
 ### 6) Batch Promotion and Academic Calendar Automation
 
-- Batch lifecycle must align with Ghana academic cycle (September-August).
-- Expiry default for active school batches: August 31 of academic year end.
+- Batch lifecycle must align with the selected country or institutional academic calendar.
+- Expiry default for active school batches should be derived from the active `country_profile` rather than hard-coded to a single nation.
 - Promotion workflow requirements:
   - pre-promotion report generation,
   - batch promotion action,
@@ -610,7 +630,7 @@ Before moving a module to production readiness, verify:
   - audit event creation for sensitive actions.
 - Data gates:
   - schema conformance and migration compatibility,
-  - no plaintext Ghana Card persistence,
+  - no plaintext national ID persistence,
   - continuity fields preserved across handoffs.
 - Workflow gates:
   - Acquisitions -> Processing handoff succeeds,

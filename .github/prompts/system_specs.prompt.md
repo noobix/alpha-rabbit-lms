@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Library Management System: Manager vs Enterprise – Setup Comparison
 
 _Clear differentiation of requirements, packages, and environments for both versions_

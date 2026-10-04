@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Debugger Philosophy
 
 Evergreen debugging disciplines — applies across every bug, every language, every system. Loaded by `gsd-debugger` via `@file` include.

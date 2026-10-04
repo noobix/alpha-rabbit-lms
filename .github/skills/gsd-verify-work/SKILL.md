@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-verify-work
 description: "Validate built features through conversational UAT"
 argument-hint: "[phase number, e.g., '4']"
 allowed-tools: Read, Bash, Glob, Grep, Edit, Write, Task
+Last-updated: 2026-10-04
 ---
 
 <objective>

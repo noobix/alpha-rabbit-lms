@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Advisor mode — research-backed comparison tables
 
 > **Lazy-loaded and gated.** The parent `workflows/discuss-phase.md` Reads

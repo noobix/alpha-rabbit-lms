@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # --power mode — bulk question generation, async answering
 
 > **Lazy-loaded.** Read this file from `workflows/discuss-phase.md` when

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Extract implementation decisions that downstream agents need — using codebase-first analysis
 and assumption surfacing instead of interview-style questioning.

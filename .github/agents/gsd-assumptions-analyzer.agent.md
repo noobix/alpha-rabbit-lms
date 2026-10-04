@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-assumptions-analyzer
 description: "Deeply analyzes codebase for a phase and returns structured assumptions with evidence. Spawned by discuss-phase assumptions mode."
 tools: ['read', 'execute', 'search']
 color: cyan
+Last-updated: 2026-10-04
 ---
 
 

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Codebase Concerns Template
 
 Template for `.planning/codebase/CONCERNS.md` - captures known issues and areas requiring care.

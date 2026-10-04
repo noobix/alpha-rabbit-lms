@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-intel-updater
 description: "Analyzes codebase and writes structured intel files to .planning/intel/."
 tools: ['read', 'edit', 'execute', 'search']
 color: cyan
+Last-updated: 2026-10-04
 ---
 
 

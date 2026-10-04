@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Interactive configuration of third-party integrations for GSD — search API keys
 (Brave / Firecrawl / Exa), code-review CLI routing (`review.models.<cli>`), and

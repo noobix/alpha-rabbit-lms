@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Autonomous audit-to-fix pipeline. Runs an audit, parses findings, classifies each as
 auto-fixable vs manual-only, spawns executor agents for fixable issues, runs tests

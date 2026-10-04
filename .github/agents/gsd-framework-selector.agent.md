@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-framework-selector
 description: "Presents an interactive decision matrix to surface the right AI/LLM framework for the user's specific use case. Produces a scored recommendation with rationale. Spawned by /gsd-ai-integration-phase and /gsd-select-framework orchestrators."
 tools: ['read', 'execute', 'search', 'web', 'ask_user']
 color: #38BDF8
+Last-updated: 2026-10-04
 ---
 
 

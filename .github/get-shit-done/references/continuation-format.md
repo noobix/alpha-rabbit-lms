@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Continuation Format
 
 Standard format for presenting next steps after completing a command or workflow.

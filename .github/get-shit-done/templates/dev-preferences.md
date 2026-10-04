@@ -1,5 +1,7 @@
 ---
+Author: Kelvin Kabute
 description: Load developer preferences into this session
+Last-updated: 2026-10-04
 ---
 
 # Developer Preferences

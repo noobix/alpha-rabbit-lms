@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Spike an idea through experiential exploration — build focused experiments to feel the pieces
 of a future app, validate feasibility, and produce verified knowledge for the real build.

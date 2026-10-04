@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-settings
 description: "Configure GSD workflow toggles and model profile"
 allowed-tools: Read, Write, Bash, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

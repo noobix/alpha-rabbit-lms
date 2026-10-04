@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 📚 Library Management System: Extension Services Department Module Specification
 
 _Mobile library services for underserved schools with QR-based learner tracking and offline Android application_

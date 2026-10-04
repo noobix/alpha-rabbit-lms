@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Coding Conventions Template
 
 Template for `.planning/codebase/CONVENTIONS.md` - captures coding style and patterns.

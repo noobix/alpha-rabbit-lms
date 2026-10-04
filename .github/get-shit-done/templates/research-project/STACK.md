@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Stack Research Template
 
 Template for `.planning/research/STACK.md` — recommended technologies for the project domain.

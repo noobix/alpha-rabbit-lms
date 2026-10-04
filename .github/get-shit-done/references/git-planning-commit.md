@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Git Planning Commit
 
 Commit planning artifacts via `gsd-sdk query commit`, which checks `commit_docs` config and gitignore status (same behavior as legacy `gsd-tools.cjs commit`).

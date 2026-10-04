@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Pitfalls Research Template
 
 Template for `.planning/research/PITFALLS.md` — common mistakes to avoid in the project domain.

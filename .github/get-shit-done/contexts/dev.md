@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Dev Context Profile
 
 Agent output guidance for dev mode. Loaded when `context: dev` is set in config.json.

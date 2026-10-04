@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-progress
 description: "Check progress, advance workflow, or dispatch freeform intent — the unified GSD situational command"
 argument-hint: "[--forensic | --next | --do \\\"task description\\\"]"
 allowed-tools: Read, Bash, Grep, Glob, SlashCommand, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

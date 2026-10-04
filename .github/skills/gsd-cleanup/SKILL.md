@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-cleanup
 description: "Archive accumulated phase directories from completed milestones"
 allowed-tools: Read, Write, Bash, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

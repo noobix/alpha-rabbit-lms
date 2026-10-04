@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-doc-verifier
 description: "Verifies factual claims in generated docs against the live codebase. Returns structured JSON per doc."
 tools: ['read', 'edit', 'execute', 'search']
 color: orange
+Last-updated: 2026-10-04
 ---
 
 

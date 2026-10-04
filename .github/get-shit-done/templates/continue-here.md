@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Continue-Here Template
 
 Copy and fill this structure for `.planning/phases/XX-name/.continue-here.md`:

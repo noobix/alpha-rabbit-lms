@@ -1,4 +1,5 @@
 ---
+Author: Kelvin Kabute
 phase: XX-name
 plan: YY
 subsystem: [primary category]
@@ -21,6 +22,7 @@ patterns-established:
   - "Pattern 1: description"
 duration: Xmin
 completed: YYYY-MM-DD
+Last-updated: 2026-10-04
 ---
 
 # Phase [X]: [Name] Summary (Complex)

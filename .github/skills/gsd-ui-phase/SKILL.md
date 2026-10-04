@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ui-phase
 description: "Generate UI design contract (UI-SPEC.md) for frontend phases"
 argument-hint: "[phase]"
 allowed-tools: Read, Write, Bash, Glob, Grep, Task, WebFetch, AskUserQuestion, mcp__context7__*
+Last-updated: 2026-10-04
 ---
 
 <objective>

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Thinking Models: Planning Cluster
 
 Structured reasoning models for the **planner** and **roadmapper** agents. Apply these at decision points during plan creation, not continuously. Each model counters a specific documented failure mode.

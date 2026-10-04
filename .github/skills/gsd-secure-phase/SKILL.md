@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-secure-phase
 description: "Retroactively verify threat mitigations for a completed phase"
 argument-hint: "[phase number]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

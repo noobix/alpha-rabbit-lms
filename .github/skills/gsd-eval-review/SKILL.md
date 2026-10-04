@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-eval-review
 description: "Audit an executed AI phase's evaluation coverage and produce an EVAL-REVIEW.md remediation plan."
 argument-hint: "[phase number]"
 allowed-tools: Read, Write, Bash, Glob, Grep, Task, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <internal_workflow>
 
 **This is an INTERNAL workflow — NOT a user-facing command.**

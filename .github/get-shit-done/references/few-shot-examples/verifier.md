@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 component: verifier
 version: 2
 last_calibrated: 2026-03-25
 calibration_source: "Adapted from thinking-partner verification corpus"
+Last-updated: 2026-10-04
 ---
 
 # Verifier Few-Shot Examples

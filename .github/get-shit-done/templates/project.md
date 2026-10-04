@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # PROJECT.md Template
 
 Template for `.planning/PROJECT.md` — the living project context document.

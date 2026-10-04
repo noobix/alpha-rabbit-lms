@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ns-review
 description: "quality gates | code review debug audit security eval ui"
 allowed-tools: Read, Skill
+Last-updated: 2026-10-04
 ---
 
 

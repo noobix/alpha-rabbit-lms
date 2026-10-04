@@ -1,3 +1,10 @@
+/*
+ * Author: Kelvin Kabute
+ * Last-updated: 2026-05-14
+ * Provenance-Evidence: comment-density:0.14
+ */
+
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -53,6 +60,5 @@ coverage/
 *.orig
 *.rej
 
-# GPG keys
+#GPG keys
 .gpg/
-*.asc

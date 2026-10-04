@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # User Setup Template
 
 Template for `.planning/phases/XX-name/{phase}-USER-SETUP.md` - human-required configuration that the agent cannot automate.

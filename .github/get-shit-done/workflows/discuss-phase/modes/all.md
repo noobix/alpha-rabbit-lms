@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # --all mode — auto-select ALL gray areas, discuss interactively
 
 > **Lazy-loaded.** Read this file from `workflows/discuss-phase.md` when

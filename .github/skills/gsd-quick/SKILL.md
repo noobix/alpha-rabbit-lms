@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-quick
 description: "Execute a quick task with GSD guarantees (atomic commits, state tracking) but skip optional agents"
 argument-hint: "[list | status <slug> | resume <slug> | --full] [--validate] [--discuss] [--research] [task description]"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

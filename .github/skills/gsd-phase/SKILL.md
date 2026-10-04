@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-phase
 description: "CRUD for phases in ROADMAP.md — add, insert, remove, or edit phases"
 argument-hint: "[--insert | --remove | --edit] <phase-name-or-number>"
 allowed-tools: Read, Write, Bash, Glob
+Last-updated: 2026-10-04
 ---
 
 

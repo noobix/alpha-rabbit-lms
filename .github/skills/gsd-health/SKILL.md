@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-health
 description: "Diagnose planning directory health and optionally repair issues"
 argument-hint: "[--repair] [--context]"
 allowed-tools: Read, Bash, Write, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # State Template
 
 Template for `.planning/STATE.md` — the project's living memory.

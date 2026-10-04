@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-audit-uat
 description: "Cross-phase audit of all outstanding UAT and verification items"
 allowed-tools: Read, Glob, Grep, Bash
+Last-updated: 2026-10-04
 ---
 
 <objective>

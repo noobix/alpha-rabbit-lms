@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ns-project
 description: "project lifecycle | milestones audits summary"
 allowed-tools: Read, Skill
+Last-updated: 2026-10-04
 ---
 
 

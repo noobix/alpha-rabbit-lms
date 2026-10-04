@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ai-integration-phase
 description: "Generate an AI-SPEC.md design contract for phases that involve building AI systems."
 argument-hint: "[phase number]"
 allowed-tools: Read, Write, Bash, Glob, Grep, Task, WebFetch, WebSearch, AskUserQuestion, mcp__context7__*
+Last-updated: 2026-10-04
 ---
 
 <objective>

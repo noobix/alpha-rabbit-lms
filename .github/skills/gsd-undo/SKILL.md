@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-undo
 description: "Safe git revert. Roll back phase or plan commits using the phase manifest with dependency checks."
 argument-hint: "--last N | --phase NN | --plan NN-MM"
 allowed-tools: Read, Bash, Glob, Grep, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

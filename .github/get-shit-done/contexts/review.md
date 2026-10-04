@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Review Context Profile
 
 Agent output guidance for review mode. Loaded when `context: review` is set in config.json.

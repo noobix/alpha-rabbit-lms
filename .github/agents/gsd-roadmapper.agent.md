@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-roadmapper
 description: "Creates project roadmaps with phase breakdown, requirement mapping, success criteria derivation, and coverage validation. Spawned by /gsd-new-project orchestrator."
 tools: ['read', 'edit', 'execute', 'search']
 color: purple
+Last-updated: 2026-10-04
 ---
 
 

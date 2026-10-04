@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ingest-docs
 description: "Bootstrap or merge a .planning/ setup from existing ADRs, PRDs, SPECs, and docs in a repo."
 argument-hint: "[path] [--mode new|merge] [--manifest <file>] [--resolve auto|interactive]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Task
+Last-updated: 2026-10-04
 ---
 
 

@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-workspace
 description: "Manage GSD workspaces — create, list, or remove isolated workspace environments"
 argument-hint: "[--new | --list | --remove] [name]"
 allowed-tools: Read, Write, Bash, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

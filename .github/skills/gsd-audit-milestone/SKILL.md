@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-audit-milestone
 description: "Audit milestone completion against original intent before archiving"
 argument-hint: "[version]"
 allowed-tools: Read, Glob, Grep, Bash, Task, Write
+Last-updated: 2026-10-04
 ---
 
 <objective>

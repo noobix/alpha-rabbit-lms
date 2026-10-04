@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Structure Template
 
 Template for `.planning/codebase/STRUCTURE.md` - captures physical file organization.

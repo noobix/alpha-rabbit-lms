@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Planner Anti-Patterns and Specificity Examples
 
 > Reference file for gsd-planner agent. Loaded on-demand via `@` reference.

@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-code-review
 description: "Review source files changed during a phase for bugs, security issues, and code quality problems"
 argument-hint: "<phase-number> [--depth=quick|standard|deep] [--files file1,file2,...] [--fix [--all] [--auto]]"
 allowed-tools: Read, Bash, Glob, Grep, Write, Task
+Last-updated: 2026-10-04
 ---
 
 <objective>

@@ -1,9 +1,11 @@
 ---
+Author: Kelvin Kabute
 name: gsd-plan-phase
 description: "Create detailed phase plan (PLAN.md) with verification loop"
 argument-hint: "[phase] [--auto] [--research] [--skip-research] [--research-phase <N>] [--view] [--gaps] [--skip-verify] [--prd <file>] [--reviews] [--text] [--tdd] [--mvp]"
 agent: gsd-planner
 allowed-tools: Read, Write, Bash, Glob, Grep, Task, AskUserQuestion, WebFetch, mcp__context7__*
+Last-updated: 2026-10-04
 ---
 
 <objective>

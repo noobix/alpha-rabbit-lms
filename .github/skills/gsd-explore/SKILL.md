@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-explore
 description: "Socratic ideation and idea routing — think through ideas before committing to plans"
 allowed-tools: Read, Write, Bash, Grep, Glob, Task, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

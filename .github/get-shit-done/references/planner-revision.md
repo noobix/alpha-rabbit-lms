@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Revision Mode — Planner Reference
 
 Triggered when orchestrator provides `<revision_context>` with checker issues. NOT starting fresh — making targeted updates to existing plans.

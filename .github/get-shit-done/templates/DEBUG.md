@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Debug Template
 
 Template for `.planning/debug/[slug].md` — active debug session tracking.

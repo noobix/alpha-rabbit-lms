@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-plan-review-convergence
 description: "Cross-AI plan convergence loop — replan with review feedback until no HIGH concerns remain."
 argument-hint: "<phase> [--codex] [--gemini] [--claude] [--opencode] [--ollama] [--lm-studio] [--llama-cpp] [--text] [--ws <name>] [--all] [--max-cycles N]"
 allowed-tools: Read, Write, Bash, Glob, Grep, Agent, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

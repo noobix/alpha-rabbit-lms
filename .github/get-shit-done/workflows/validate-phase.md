@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Audit Nyquist validation gaps for a completed phase. Generate missing tests. Update VALIDATION.md.
 </purpose>

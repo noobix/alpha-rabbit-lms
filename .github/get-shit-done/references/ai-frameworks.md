@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # AI Framework Decision Matrix
 
 > Reference used by `gsd-framework-selector` and `gsd-ai-researcher`.

@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-update
 description: "Update GSD to latest version with changelog display"
 argument-hint: "[--sync | --reapply]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

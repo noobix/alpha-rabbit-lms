@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Research Context Profile
 
 Agent output guidance for research mode. Loaded when `context: research` is set in config.json.

@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-profile-user
 description: "Generate developer behavioral profile and create Claude-discoverable artifacts"
 argument-hint: "[--questionnaire] [--refresh]"
 allowed-tools: Read, Write, Bash, Glob, Grep, AskUserQuestion, Task
+Last-updated: 2026-10-04
 ---
 
 

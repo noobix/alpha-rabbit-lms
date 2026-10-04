@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <trigger>
 Use this workflow when:
 - Starting a new session on an existing project

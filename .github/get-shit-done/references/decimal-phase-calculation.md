@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Decimal Phase Calculation
 
 Calculate the next decimal phase number for urgent insertions.

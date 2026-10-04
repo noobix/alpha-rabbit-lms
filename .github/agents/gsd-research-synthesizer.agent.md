@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-research-synthesizer
 description: "Synthesizes research outputs from parallel researcher agents into SUMMARY.md. Spawned by /gsd-new-project after 4 researcher agents complete."
 tools: ['read', 'edit', 'execute']
 color: purple
+Last-updated: 2026-10-04
 ---
 
 

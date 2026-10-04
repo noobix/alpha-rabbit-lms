@@ -1,4 +1,5 @@
 ---
+Author: Kelvin Kabute
 name: electron
 description: >
   Electron patterns for building cross-platform desktop applications.
@@ -6,6 +7,7 @@ description: >
 metadata:
   author: gentleman-programming
   version: "1.0"
+Last-updated: 2026-10-04
 ---
 
 ## When to Use

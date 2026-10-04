@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-sketch
 description: "Sketch UI/design ideas with throwaway HTML mockups, or propose what to sketch next (frontier mode)"
 argument-hint: "[design idea to explore] [--quick] [--text] [--wrap-up] or [frontier]"
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob, AskUserQuestion, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__query-docs
+Last-updated: 2026-10-04
 ---
 
 <objective>

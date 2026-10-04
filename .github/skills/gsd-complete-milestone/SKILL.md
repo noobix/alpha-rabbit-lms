@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-complete-milestone
 description: "Archive completed milestone and prepare for next version"
 argument-hint: "<version>"
 allowed-tools: Read, Write, Bash
+Last-updated: 2026-10-04
 ---
 
 

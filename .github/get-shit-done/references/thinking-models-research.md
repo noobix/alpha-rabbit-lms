@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Thinking Models: Research Cluster
 
 Structured reasoning models for the **researcher** and **synthesizer** agents. Apply these at decision points during research and synthesis, not continuously. Each model counters a specific documented failure mode.

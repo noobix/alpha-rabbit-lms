@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Motion Design
 
 ## Duration: The 100/300/500 Rule

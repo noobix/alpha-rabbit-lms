@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Debug Subagent Prompt Template
 
 Template for spawning gsd-debugger agent. The agent contains all debugging expertise - this template provides problem context only.

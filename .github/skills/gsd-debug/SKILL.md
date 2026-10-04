@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-debug
 description: "Systematic debugging with persistent state across context resets"
 argument-hint: "[list | status <slug> | continue <slug> | --diagnose] [issue description]"
 allowed-tools: Read, Bash, Task, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

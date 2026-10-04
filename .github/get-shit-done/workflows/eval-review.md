@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Retroactive audit of an implemented AI phase's evaluation coverage. Standalone command that works on any GSD-managed AI phase. Produces a scored EVAL-REVIEW.md with gap analysis and remediation plan.
 

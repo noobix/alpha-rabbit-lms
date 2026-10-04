@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # --batch mode — grouped question batches
 
 > **Lazy-loaded overlay.** Read this file from `workflows/discuss-phase.md`

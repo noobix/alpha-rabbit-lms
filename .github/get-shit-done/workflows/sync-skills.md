@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # sync-skills — Cross-Runtime GSD Skill Sync
 
 **Command:** `/gsd-sync-skills`

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Domain-Aware Probing Patterns
 
 Shared reference for `/gsd-begin`, `/gsd-discuss-phase`, and domain exploration workflows.

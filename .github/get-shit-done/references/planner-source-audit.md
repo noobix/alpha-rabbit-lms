@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Planner Source Audit & Authority Limits
 
 Reference for `agents/gsd-planner.md` — extended rules for multi-source coverage audits and planner authority constraints.

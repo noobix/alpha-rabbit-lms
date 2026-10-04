@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 📚 Library Management System: Distribution Module Implementation (Week 3)
 
 _Offline-first routing, packing slip generation, and batch-aware delivery for Ghanaian libraries_

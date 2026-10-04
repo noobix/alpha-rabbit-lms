@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ns-context
 description: "codebase intelligence | map graphify docs learnings"
 allowed-tools: Read, Skill
+Last-updated: 2026-10-04
 ---
 
 

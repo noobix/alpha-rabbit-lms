@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Thinking Models: Debug Cluster
 
 Structured reasoning models for the **debugger** agent. Apply these at decision points during investigation, not continuously. Each model counters a specific documented failure mode.

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Execute discovery at the appropriate depth level.
 Produces DISCOVERY.md (for Level 2-3) that informs PLAN.md creation.

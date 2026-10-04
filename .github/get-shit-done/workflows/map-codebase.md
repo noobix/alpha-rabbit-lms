@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Orchestrate parallel codebase mapper agents to analyze codebase and produce structured documents in .planning/codebase/
 

@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-code-fixer
 description: "Applies fixes to code review findings from REVIEW.md. Reads source files, applies intelligent fixes, and commits each fix atomically. Spawned by /gsd-code-review --fix."
 tools: ['read', 'edit', 'execute', 'search']
 color: #10B981
+Last-updated: 2026-10-04
 ---
 
 

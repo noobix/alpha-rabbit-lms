@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Orchestrate parallel debug agents to investigate UAT gaps and find root causes.
 

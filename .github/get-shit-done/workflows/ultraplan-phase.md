@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Ultraplan Phase Workflow [BETA]
 
 Offload GSD's plan phase to Claude Code's ultraplan cloud infrastructure.

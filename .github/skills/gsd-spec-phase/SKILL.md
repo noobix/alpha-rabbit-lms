@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-spec-phase
 description: "Clarify WHAT a phase delivers with ambiguity scoring; produces a SPEC.md before discuss-phase."
 argument-hint: "<phase> [--auto] [--text]"
 allowed-tools: Read, Write, Bash, Glob, Grep, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

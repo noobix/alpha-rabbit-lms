@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Project Skills Discovery
 
 Before execution, check for project-defined skills and apply their rules.

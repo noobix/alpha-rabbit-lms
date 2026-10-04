@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-discuss-phase
 description: "Gather phase context through adaptive questioning before planning."
 argument-hint: "<phase> [--all] [--auto] [--chain] [--batch] [--analyze] [--text] [--power]"
 allowed-tools: Read, Write, Bash, Glob, Grep, AskUserQuestion, Task, mcp__context7__resolve-library-id, mcp__context7__query-docs
+Last-updated: 2026-10-04
 ---
 
 

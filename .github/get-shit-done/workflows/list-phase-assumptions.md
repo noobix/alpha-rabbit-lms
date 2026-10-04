@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Surface the agent's assumptions about a phase before planning, enabling users to correct misconceptions early.
 

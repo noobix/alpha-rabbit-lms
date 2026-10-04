@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-add-tests
 description: "Generate tests for a completed phase based on UAT criteria and implementation"
 argument-hint: "<phase> [additional instructions]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

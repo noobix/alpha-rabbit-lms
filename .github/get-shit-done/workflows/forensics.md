@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Forensics Workflow
 
 Post-mortem investigation for failed or stuck GSD workflows. Analyzes git history,

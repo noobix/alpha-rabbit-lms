@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-capture
 description: "Capture ideas, tasks, notes, and seeds to their destination"
 argument-hint: "[--note | --backlog | --seed | --list] [text]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

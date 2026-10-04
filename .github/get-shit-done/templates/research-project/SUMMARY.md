@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Research Summary Template
 
 Template for `.planning/research/SUMMARY.md` — executive summary of project research with roadmap implications.

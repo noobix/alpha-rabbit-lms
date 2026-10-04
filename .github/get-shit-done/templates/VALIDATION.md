@@ -1,10 +1,12 @@
 ---
+Author: Kelvin Kabute
 phase: {N}
 slug: {phase-slug}
 status: draft
 nyquist_compliant: false
 wave_0_complete: false
 created: {date}
+Last-updated: 2026-10-04
 ---
 
 # Phase {N} — Validation Strategy

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # iOS App Scaffold Reference
 
 Rules and patterns for scaffolding iOS applications. Apply when any plan involves creating a new iOS app target.

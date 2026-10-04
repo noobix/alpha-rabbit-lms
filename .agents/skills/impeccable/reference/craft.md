@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Craft Flow
 
 Build a feature with impeccable UX and UI quality through a structured process: shape the design, load the right references, then build and iterate visually until the result is delightful.

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Lightweight codebase assessment. Spawns a single gsd-codebase-mapper agent for one focus area,
 producing targeted documents in `.planning/codebase/`.

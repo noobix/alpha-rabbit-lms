@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Execute a trivial task inline without subagent overhead. No PLAN.md, no Task spawning,
 no research, no plan checking. Just: understand → do → commit → log.

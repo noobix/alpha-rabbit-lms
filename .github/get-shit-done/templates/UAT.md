@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # UAT Template
 
 Template for `.planning/phases/XX-name/{phase_num}-UAT.md` — persistent UAT session tracking.

@@ -1,0 +1,13 @@
+/*
+ * Author: Kelvin Kabute
+ * Last-updated: 2026-10-03
+ */
+
+
+.DS_Store
+.idea/
+.vscode/
+node_modules/
+*.log
+.env
+.env.local

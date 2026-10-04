@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Import Workflow
 
 External plan ingestion with conflict detection and agent delegation.

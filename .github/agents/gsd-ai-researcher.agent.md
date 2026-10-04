@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ai-researcher
 description: "Researches a chosen AI framework's official docs to produce implementation-ready guidance — best practices, syntax, core patterns, and pitfalls distilled for the specific use case. Writes the Framework Quick Reference and Implementation Guidance sections of AI-SPEC.md. Spawned by /gsd-ai-integration-phase orchestrator."
 tools: ['read', 'edit', 'execute', 'search', 'web', 'io.github.upstash/context7/*']
 color: #34D399
+Last-updated: 2026-10-04
 ---
 
 

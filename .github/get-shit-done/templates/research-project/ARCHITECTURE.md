@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Architecture Research Template
 
 Template for `.planning/research/ARCHITECTURE.md` — system structure patterns for the project domain.

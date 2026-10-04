@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Explore design directions through throwaway HTML mockups before committing to implementation.
 Each sketch produces 2-3 variants for comparison. Saves artifacts to `.planning/sketches/`.

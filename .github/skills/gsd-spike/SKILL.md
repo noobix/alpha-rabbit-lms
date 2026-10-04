@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-spike
 description: "Spike an idea through experiential exploration, or propose what to spike next (frontier mode)"
 argument-hint: "[idea to validate] [--quick] [--text] [--wrap-up] or [frontier]"
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob, AskUserQuestion, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__query-docs
+Last-updated: 2026-10-04
 ---
 
 <objective>

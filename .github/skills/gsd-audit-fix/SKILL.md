@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-audit-fix
 description: "Autonomous audit-to-fix pipeline — find issues, classify, fix, test, commit"
 argument-hint: "--source <audit-uat> [--severity <medium|high|all>] [--max N] [--dry-run]"
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

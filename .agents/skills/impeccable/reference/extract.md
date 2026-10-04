@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Extract Flow
 
 Identify reusable patterns, components, and design tokens, then extract and consolidate them into the design system for systematic reuse.

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Socratic ideation workflow. Guides the developer through exploring an idea via probing questions,
 offers mid-conversation research when useful, then routes crystallized outputs to GSD artifacts.

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # GSD Artifact Types
 
 This reference documents all artifact types in the GSD planning taxonomy. Each type has a defined

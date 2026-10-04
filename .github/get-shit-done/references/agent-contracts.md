@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Agent Contracts
 
 Completion markers and handoff schemas for all GSD agents. Workflows use these markers to detect agent completion and route accordingly.

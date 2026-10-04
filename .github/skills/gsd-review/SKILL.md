@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-review
 description: "Request cross-AI peer review of phase plans from external AI CLIs"
 argument-hint: "--phase N [--gemini] [--claude] [--codex] [--opencode] [--qwen] [--cursor] [--all]"
 allowed-tools: Read, Write, Bash, Glob, Grep
+Last-updated: 2026-10-04
 ---
 
 

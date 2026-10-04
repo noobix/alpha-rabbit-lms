@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-pause-work
 description: "Create context handoff when pausing work mid-phase"
 allowed-tools: Read, Write, Bash
+Last-updated: 2026-10-04
 ---
 
 

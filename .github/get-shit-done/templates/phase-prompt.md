@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Phase Prompt Template
 
 > **Note:** Planning methodology is in `agents/gsd-planner.md`.

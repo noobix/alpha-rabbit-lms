@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # PR: Merge local changes preserved from failed sync
 
 This PR contains local work preserved from autostash before synchronizing `testing-main` with remote. It includes provenance detection scripts, CI helpers, and documentation updates. Created by Copilot agent to help the repository owner review and merge.

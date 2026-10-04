@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-stats
 description: "Display project statistics — phases, plans, requirements, git metrics, and timeline"
 allowed-tools: Read, Bash
+Last-updated: 2026-10-04
 ---
 
 <objective>

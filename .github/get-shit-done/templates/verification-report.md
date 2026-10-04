@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Verification Report Template
 
 Template for `.planning/phases/XX-name/{phase_num}-VERIFICATION.md` — phase goal verification results.

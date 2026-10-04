@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Milestone Entry Template
 
 Add this entry to `.planning/MILESTONES.md` when completing a milestone:

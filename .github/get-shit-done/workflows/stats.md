@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Display comprehensive project statistics including phases, plans, requirements, git metrics, and timeline.
 </purpose>

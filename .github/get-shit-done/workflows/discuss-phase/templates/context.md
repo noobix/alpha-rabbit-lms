@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # CONTEXT.md template — for discuss-phase write_context step
 
 > **Lazy-loaded.** Read this file only inside the `write_context` step of

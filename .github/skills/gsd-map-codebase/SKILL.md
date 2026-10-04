@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-map-codebase
 description: "Analyze codebase with parallel mapper agents to produce .planning/codebase/ documents"
 argument-hint: "[--fast [--focus tech|arch|quality|concerns]] [--query <term>|status|diff|refresh] [area]"
 allowed-tools: Read, Bash, Glob, Grep, Write, Task
+Last-updated: 2026-10-04
 ---
 
 

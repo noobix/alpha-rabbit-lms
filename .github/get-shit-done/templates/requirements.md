@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Requirements Template
 
 Template for `.planning/REQUIREMENTS.md` — checkable requirements that define "done."

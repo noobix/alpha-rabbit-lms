@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <ui_patterns>
 
 Visual patterns for user-facing GSD output. Orchestrators @-reference this file.

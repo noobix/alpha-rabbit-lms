@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-docs-update
 description: "Generate or update project documentation verified against the codebase"
 argument-hint: "[--force] [--verify-only]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-eval-auditor
 description: "Retroactive audit of an implemented AI phase's evaluation coverage. Checks implementation against the AI-SPEC.md evaluation plan. Scores each eval dimension as COVERED/PARTIAL/MISSING. Produces a scored EVAL-REVIEW.md with findings, gaps, and remediation guidance. Spawned by /gsd-eval-review orchestrator."
 tools: ['read', 'edit', 'execute', 'search']
 color: #EF4444
+Last-updated: 2026-10-04
 ---
 
 

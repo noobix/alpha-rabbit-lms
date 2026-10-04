@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-fast
 description: "Execute a trivial task inline — no subagents, no planning overhead"
 argument-hint: "[task description]"
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob
+Last-updated: 2026-10-04
 ---
 
 

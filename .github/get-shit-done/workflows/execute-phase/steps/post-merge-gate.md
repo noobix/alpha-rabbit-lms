@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Step: post_merge_gate
 
 Post-merge build & test gate. Runs after all worktrees in a wave are merged

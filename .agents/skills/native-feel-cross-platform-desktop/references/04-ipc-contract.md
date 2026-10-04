@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-06-02
+Last-updated: 2026-10-04
 ---
 
 # 04 — The IPC Contract is the Spine

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Multi-Variant HTML Patterns
 
 Every sketch produces 2-3 variants in the same HTML file. The user switches between them to compare.

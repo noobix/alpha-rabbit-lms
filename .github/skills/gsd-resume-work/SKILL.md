@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-resume-work
 description: "Resume work from previous session with full context restoration"
 allowed-tools: Read, Bash, Write, AskUserQuestion, SlashCommand
+Last-updated: 2026-10-04
 ---
 
 

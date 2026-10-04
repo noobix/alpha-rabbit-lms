@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Codebase scout — map selection table
 
 > Lazy-loaded reference for the `scout_codebase` step in

@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ns-workflow
 description: "workflow | discuss plan execute verify phase progress"
 allowed-tools: Read, Skill
+Last-updated: 2026-10-04
 ---
 
 

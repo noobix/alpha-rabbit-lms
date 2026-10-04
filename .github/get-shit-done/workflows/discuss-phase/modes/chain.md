@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # --chain mode — interactive discuss, then auto-advance
 
 > **Lazy-loaded.** Read this file from `workflows/discuss-phase.md` when

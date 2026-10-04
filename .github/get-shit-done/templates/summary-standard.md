@@ -1,4 +1,5 @@
 ---
+Author: Kelvin Kabute
 phase: XX-name
 plan: YY
 subsystem: [primary category]
@@ -16,6 +17,7 @@ key-decisions:
   - "Decision 1"
 duration: Xmin
 completed: YYYY-MM-DD
+Last-updated: 2026-10-04
 ---
 
 # Phase [X]: [Name] Summary

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # AI Evaluation Reference
 
 > Reference used by `gsd-eval-planner` and `gsd-eval-auditor`.

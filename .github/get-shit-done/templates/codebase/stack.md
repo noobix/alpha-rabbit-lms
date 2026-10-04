@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Technology Stack Template
 
 Template for `.planning/codebase/STACK.md` - captures the technology foundation.

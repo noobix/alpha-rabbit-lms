@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 📚 Library Management System: Week 4 Implementation Specification
 
 _Library Sections Integration, Patron Intelligence Engine, Staff Governance & Enterprise Prep – Ghana-Ready Offline-First Desktop Application_

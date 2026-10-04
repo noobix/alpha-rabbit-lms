@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Executor Extended Examples
 
 > Reference file for gsd-executor agent. Loaded on-demand via `@` reference.

@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-config
 description: "Configure GSD settings — workflow toggles, advanced knobs, integrations, and model profile"
 argument-hint: "[--advanced | --integrations | --profile <name>]"
 allowed-tools: Read, Write, Bash, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

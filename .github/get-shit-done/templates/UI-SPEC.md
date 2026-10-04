@@ -1,10 +1,12 @@
 ---
+Author: Kelvin Kabute
 phase: {N}
 slug: {phase-slug}
 status: draft
 shadcn_initialized: false
 preset: none
 created: {date}
+Last-updated: 2026-10-04
 ---
 
 # Phase {N} — UI Design Contract

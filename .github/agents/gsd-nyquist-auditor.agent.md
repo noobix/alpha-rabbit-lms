@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-nyquist-auditor
 description: "Fills Nyquist validation gaps by generating tests and verifying coverage for phase requirements"
 tools: ['- read']
 color: #8B5CF6
+Last-updated: 2026-10-04
 ---
 
 

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 List all GSD workspaces found in ~/gsd-workspaces/ with their status.
 </purpose>

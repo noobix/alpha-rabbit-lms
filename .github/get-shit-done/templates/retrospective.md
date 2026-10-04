@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Project Retrospective
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*

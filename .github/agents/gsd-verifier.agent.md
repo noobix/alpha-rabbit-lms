@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-verifier
 description: "Verifies phase goal achievement through goal-backward analysis. Checks codebase delivers what phase promised, not just that tasks completed. Creates VERIFICATION.md report."
 tools: ['read', 'edit', 'execute', 'search']
 color: green
+Last-updated: 2026-10-04
 ---
 
 

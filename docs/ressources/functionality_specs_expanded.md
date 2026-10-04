@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 📚 Library Management System: Enhanced Functionality Specification
 
 _Comprehensive patron lifecycle management, program administration, staff governance, and automated recognition systems_

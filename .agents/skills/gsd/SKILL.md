@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: get shit done
 aliases: [gsd, get-shit-done, get_it_done, gsd-autonomous]
 short_description: High-level orchestration and autonomous execution skill for multi-step engineering tasks (plan → implement → test → verify → document).
+Last-updated: 2026-10-04
 ---
 
 Purpose

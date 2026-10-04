@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Testing Patterns Template
 
 Template for `.planning/codebase/TESTING.md` - captures test framework and patterns.

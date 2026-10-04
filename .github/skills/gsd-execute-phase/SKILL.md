@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-execute-phase
 description: "Execute all plans in a phase with wave-based parallelization"
 argument-hint: "<phase-number> [--wave N] [--gaps-only] [--interactive] [--tdd]"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task, TodoWrite, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <objective>

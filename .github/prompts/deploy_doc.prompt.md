@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 📚 Library Management System: Week 5 Implementation Documentation
 
 _Field Validation Preparation, Enterprise Pilot Setup, Compliance Finalization & User Acceptance Testing – Ghana-Ready Offline-First Desktop Application_

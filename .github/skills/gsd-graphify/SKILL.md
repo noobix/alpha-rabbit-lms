@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-graphify
 description: "Build, query, and inspect the project knowledge graph in .planning/graphs/"
 argument-hint: "[build|query <term>|status|diff]"
 allowed-tools: Read, Bash, Task
+Last-updated: 2026-10-04
 ---
 
 

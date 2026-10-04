@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 component: plan-checker
 version: 1
 last_calibrated: 2026-03-24
+Last-updated: 2026-10-04
 ---
 
 # Plan-Checker Few-Shot Examples

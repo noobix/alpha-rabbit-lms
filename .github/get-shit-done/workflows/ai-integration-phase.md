@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Generate an AI design contract (AI-SPEC.md) for phases that involve building AI systems. Orchestrates gsd-framework-selector → gsd-ai-researcher → gsd-domain-researcher → gsd-eval-planner with a validation gate. Inserts between discuss-phase and plan-phase in the GSD lifecycle.
 

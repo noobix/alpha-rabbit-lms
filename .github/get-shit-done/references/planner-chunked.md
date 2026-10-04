@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Chunked Mode Return Formats
 
 Used when `plan-phase` spawns `gsd-planner` with `CHUNKED_MODE=true` (triggered by `--chunked`

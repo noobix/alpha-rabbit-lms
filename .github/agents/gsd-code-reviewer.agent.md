@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-code-reviewer
 description: "Reviews source files for bugs, security issues, and code quality problems. Produces structured REVIEW.md with severity-classified findings. Spawned by /gsd-code-review."
 tools: ['read', 'edit', 'execute', 'search']
 color: #F59E0B
+Last-updated: 2026-10-04
 ---
 
 

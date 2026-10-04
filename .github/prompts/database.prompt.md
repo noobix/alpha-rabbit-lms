@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Alpha Rabbit LMS Database Schema Guide
 
 This document is the canonical schema reference for LLM-assisted database design.

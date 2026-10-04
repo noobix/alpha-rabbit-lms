@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 📚 Library Management System: Unified Tech Stack Specification
 
 _Two-tier architecture (Manager + Enterprise) with Ghana deployment readiness_

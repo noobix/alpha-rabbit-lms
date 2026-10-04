@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 📚 Library Management System: Processing Module Implementation (Week 2)
 
 _Offline-first physical inspection, classification, and barcode generation with Extension Services department integration_

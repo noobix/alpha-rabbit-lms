@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Context Budget Rules
 
 Standard rules for keeping orchestrator context lean. Reference this in workflows that spawn subagents or read significant content.

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Planner Subagent Prompt Template
 
 Template for spawning gsd-planner agent. The agent contains all planning expertise - this template provides planning context only.

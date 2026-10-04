@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Discovery Template
 
 Template for `.planning/phases/XX-name/DISCOVERY.md` - shallow research for library/option decisions.

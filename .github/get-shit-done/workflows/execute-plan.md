@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Execute a phase prompt (PLAN.md) and create the outcome summary (SUMMARY.md).
 </purpose>

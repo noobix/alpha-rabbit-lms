@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Model Profiles
 
 Model profiles control which the agent model each GSD agent uses. This allows balancing quality vs token spend, or inheriting the currently selected session model.

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Making Sketches Feel Alive
 
 Static mockups are barely better than screenshots. Every interactive element in a sketch must respond to interaction.

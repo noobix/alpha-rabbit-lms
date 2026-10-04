@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 <purpose>
 Detect current project state and automatically advance to the next logical GSD workflow step.
 Reads project state to determine: discuss → plan → execute → verify → complete progression.

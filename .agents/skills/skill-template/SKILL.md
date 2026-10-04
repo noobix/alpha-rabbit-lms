@@ -1,6 +1,8 @@
 ---
+Author: Kelvin Kabute
 name: skill-name
 description: Short one-line summary of what the skill does.
+Last-updated: 2026-10-04
 ---
 
 # Skill SKILL.md Template / Contributor Checklist

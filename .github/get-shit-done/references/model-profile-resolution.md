@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Model Profile Resolution
 
 Resolve model profile once at the start of orchestration, then use it for all Task spawns.

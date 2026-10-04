@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-extract-learnings
 description: "Extract decisions, lessons, patterns, and surprises from completed phase artifacts"
 argument-hint: "<phase-number>"
 allowed-tools: Read, Write, Bash, Grep, Glob, Agent
+Last-updated: 2026-10-04
 ---
 
 <objective>

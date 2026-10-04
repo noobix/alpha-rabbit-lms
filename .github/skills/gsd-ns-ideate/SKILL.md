@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-ns-ideate
 description: "exploration capture | explore sketch spike spec capture"
 allowed-tools: Read, Skill
+Last-updated: 2026-10-04
 ---
 
 

@@ -1,8 +1,10 @@
 ---
+Author: Kelvin Kabute
 name: gsd-new-project
 description: "Initialize a new project with deep context gathering and PROJECT.md"
 argument-hint: "[--auto]"
 allowed-tools: Read, Bash, Write, Task, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 <runtime_note>

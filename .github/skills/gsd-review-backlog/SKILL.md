@@ -1,7 +1,9 @@
 ---
+Author: Kelvin Kabute
 name: gsd-review-backlog
 description: "Review and promote backlog items to active milestone"
 allowed-tools: Read, Write, Bash, AskUserQuestion
+Last-updated: 2026-10-04
 ---
 
 

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Discussion Log Template
 
 Template for `.planning/phases/XX-name/{phase_num}-DISCUSSION-LOG.md` — audit trail of discuss-phase Q&A sessions.

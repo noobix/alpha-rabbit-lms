@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # --analyze mode — trade-off tables before each question
 
 > **Lazy-loaded overlay.** Read this file from `workflows/discuss-phase.md`
