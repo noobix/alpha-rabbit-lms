@@ -47,7 +47,7 @@ flowchart TD
 
 | Role | Responsibilities | Key Data Captured | Manager vs Enterprise |
 |------|------------------|-------------------|------------------------|
-| **Acquisitions Librarian** | • Selects titles based on curriculum needs<br>• Places orders with publishers/vendors<br>• Tracks budget allocation per department<br>• Manages corporate vendor information (business registration, tax ID) | • ISBN/ISSN<br>• Title, author, publisher<br>• Publication year<br>• Ghana Curriculum Tag (e.g., `BASIC-MATH-GRADE-6`)<br>• Vendor details + corporate identifiers<br>• Budget code (e.g., `CHILDREN-2024-Q1`)<br>• Expected delivery date | **Manager**: Single user handles all acquisitions<br>**Enterprise**: Dedicated role with budget approval workflows |
+| **Acquisitions Librarian** | • Selects titles based on curriculum needs<br>• Places orders with publishers/vendors<br>• Tracks budget allocation per department<br>• Manages Ghana Card ID for vendor verification | • ISBN/ISSN<br>• Title, author, publisher<br>• Publication year<br>• Ghana Curriculum Tag (e.g., `BASIC-MATH-GRADE-6`)<br>• Vendor details + Ghana Card ID<br>• Budget code (e.g., `CHILDREN-2024-Q1`)<br>• Expected delivery date | **Manager**: Single user handles all acquisitions<br>**Enterprise**: Dedicated role with budget approval workflows |
 | **Vendor Coordinator** | • Verifies vendor credentials<br>• Tracks shipment status<br>• Receives physical deliveries<br>• Logs condition on arrival | • Shipment tracking number<br>• Delivery date/time<br>• Condition on arrival (1-5 scale)<br>• Discrepancy notes | **Manager**: Combined with Acquisitions Librarian role<br>**Enterprise**: Separate role with vendor portal access |
 
 ### 2. Processing Department (External to Library)
@@ -103,7 +103,7 @@ flowchart TD
 
 | Workflow Stage | Core Functionality | Technical Implementation |
 |----------------|-------------------|--------------------------|
-| **Acquisitions** | • Manual order entry form<br>• CSV import for bulk orders<br>• Budget tracking (simple ledger)<br>• Vendor list with corporate identifiers (business registration, tax ID) | PouchDB documents:<br>`{ type: 'order', vendorBusinessRegistration: 'EA-123456', vendorTaxId: 'TIN-123456789', items: [...] }` |
+| **Acquisitions** | • Manual order entry form<br>• CSV import for bulk orders<br>• Budget tracking (simple ledger)<br>• Vendor list with Ghana Card ID storage | PouchDB documents:<br>`{ type: 'order', vendorGhanaCard: 'hashed', items: [...] }` |
 | **Processing** | • Simplified cataloging form<br>• Barcode generation (PDF417)<br>• Health scoring sliders (1-5)<br>• Batch assignment for schools | PouchDB documents:<br>`{ type: 'book', ghanaCurriculumTag: 'BASIC-MATH-GRADE-6', spineCondition: 4, ... }` |
 | **Distribution** | • Manual section assignment dropdown<br>• Packing slip PDF generator<br>• Delivery confirmation checkbox | PouchDB documents:<br>`{ type: 'distribution', destinationSection: 'children', packingSlipId: 'PS-2024-001', ... }` |
 | **Library Sections** | • Unified interface for all sections<br>• Role switcher in header<br>• Section filter toggle | Single React component with `currentSection` state |
@@ -112,7 +112,7 @@ flowchart TD
 
 | Workflow Stage | Core Functionality | Technical Implementation |
 |----------------|-------------------|--------------------------|
-| **Acquisitions** | • Budget approval workflows<br>• Vendor portal integration<br>• Automated ISBN lookup<br>• Ghana Education Service curriculum alignment checks | CouchDB design docs:<br>`_design/acquisitions` with validation functions enforcing business registration format |
+| **Acquisitions** | • Budget approval workflows<br>• Vendor portal integration<br>• Automated ISBN lookup<br>• Ghana Education Service curriculum alignment checks | CouchDB design docs:<br>`_design/acquisitions` with validation functions enforcing Ghana Card ID format |
 | **Processing** | • MARC21 import/export<br>• Auto-classification via ISBN<br>• Quality control approval chains<br>• RFID batch programming | CouchDB replication filters:<br>`processing-only` filter replicates only `type: 'book'` docs to processing clients |
 | **Distribution** | • Auto-routing rules engine<br>• Delivery scheduling calendar<br>• Mobile delivery confirmation app<br>• Section inventory threshold alerts | CouchDB update handlers:<br>Trigger `distribution-ready` event when book status changes to `approved` |
 | **Library Sections** | • Department-specific dashboards<br>• Real-time inventory sync<br>• Section head analytics<br>• Mobile scanner integration | CouchDB security objects:<br>`members: { roles: ['children_section'] }` restricts data access |
@@ -131,8 +131,7 @@ flowchart TD
   "placedAt": "2024-02-15T08:30:00Z",
   "vendor": {
     "name": "Accra Educational Publishers",
-    "businessRegistration": "EA-123456",
-    "taxId": "TIN-123456789",
+    "ghanaCardId": "GHA-123456789-0", // Stored hashed
     "contactPhone": "+233241234567"
   },
   "items": [
@@ -225,7 +224,7 @@ flowchart TD
 
 | Workflow Element | Standard Practice | Ghana Adaptation |
 |------------------|-------------------|------------------|
-| **Vendor Verification** | Business license check | Business registration validation + Education Service vendor registry cross-check |
+| **Vendor Verification** | Business license check | Ghana Card ID validation + Education Service vendor registry cross-check |
 | **Curriculum Tagging** | Dewey Decimal only | Dual classification: Dewey + Ghana Education Service syllabus tags |
 | **School Distribution** | Generic "children" section | Batch-aware routing: `GRADE-6A` at St. Peter's ≠ `GRADE-6B` at Presby School |
 | **Language Support** | English primary | Twi/Ga language flags for children's materials; section heads can filter by language |
@@ -292,9 +291,9 @@ db.find({
     if (newDoc.type === 'processed_book' && newDoc.section !== userCtx.section) {
       throw { forbidden: 'Cannot modify books outside your section' };
     }
-    // Vendor business registration must be valid
-    if (newDoc.type === 'vendor' && !newDoc.businessRegistration) {
-      throw { forbidden: 'Vendor business registration is required' };
+    // Ghana Card ID must be hashed before storage
+    if (newDoc.vendor?.ghanaCardId && !newDoc.vendor.ghanaCardId.startsWith('hashed:')) {
+      throw { forbidden: 'Ghana Card ID must be hashed' };
     }
   }"
 }
@@ -342,12 +341,9 @@ db.find({
 
    - Processing centers often have unstable internet → All cataloging must work offline with sync-on-connect
 
-2. **Vendor Corporate Information**
+2. **Ghana Card ID Handling**
 
-   - Vendors are corporate entities (businesses, publishers, distributors), not natural persons
-   - Ghana Card ID is a personal identifier and is **not collected** for vendors
-   - Collect corporate identifiers instead: business registration (Ghana Enterprises Agency), tax ID (GhRA TIN)
-   - Validate business registration format (`EA-XXXXXX`) before storage
+   - Never store plaintext Ghana Card IDs → Always hash with salt before storage
 
 3. **Batch-Aware Distribution**
 
