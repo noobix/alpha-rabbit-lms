@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 📚 Library Management System: Acquisitions Module Implementation (Week 1)
 
 _Electron.js desktop application with extensive bibliographic metadata capture, Ghana curriculum integration, and offline-first workflow_
@@ -1444,7 +1449,7 @@ ipcMain.handle("db:get-vendors", async () => {
   }
 });
 
-// Save vendor with Ghana Card ID hashing
+// Save vendor with business registration validation
 ipcMain.handle("db:save-vendor", async (event, vendor) => {
   try {
     // Hash Ghana Card ID before storage

@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # Library Management System: Workflow & Departmental Functionality Specification
 
 *End-to-end acquisition-to-distribution workflow with role-based access for Manager (standalone) and Enterprise (multi-department) versions*
@@ -42,7 +47,7 @@ flowchart TD
 
 | Role | Responsibilities | Key Data Captured | Manager vs Enterprise |
 |------|------------------|-------------------|------------------------|
-| **Acquisitions Librarian** | • Selects titles based on curriculum needs<br>• Places orders with publishers/vendors<br>• Tracks budget allocation per department<br>• Manages Ghana Card ID for vendor verification | • ISBN/ISSN<br>• Title, author, publisher<br>• Publication year<br>• Ghana Curriculum Tag (e.g., `BASIC-MATH-GRADE-6`)<br>• Vendor details + Ghana Card ID<br>• Budget code (e.g., `CHILDREN-2024-Q1`)<br>• Expected delivery date | **Manager**: Single user handles all acquisitions<br>**Enterprise**: Dedicated role with budget approval workflows |
+| **Acquisitions Librarian** | • Selects titles based on curriculum needs<br>• Places orders with publishers/vendors<br>• Tracks budget allocation per department<br>• Manages corporate vendor information (business registration, tax ID) | • ISBN/ISSN<br>• Title, author, publisher<br>• Publication year<br>• Ghana Curriculum Tag (e.g., `BASIC-MATH-GRADE-6`)<br>• Vendor details + corporate identifiers<br>• Budget code (e.g., `CHILDREN-2024-Q1`)<br>• Expected delivery date | **Manager**: Single user handles all acquisitions<br>**Enterprise**: Dedicated role with budget approval workflows |
 | **Vendor Coordinator** | • Verifies vendor credentials<br>• Tracks shipment status<br>• Receives physical deliveries<br>• Logs condition on arrival | • Shipment tracking number<br>• Delivery date/time<br>• Condition on arrival (1-5 scale)<br>• Discrepancy notes | **Manager**: Combined with Acquisitions Librarian role<br>**Enterprise**: Separate role with vendor portal access |
 
 ### 2. Processing Department (External to Library)
@@ -98,7 +103,7 @@ flowchart TD
 
 | Workflow Stage | Core Functionality | Technical Implementation |
 |----------------|-------------------|--------------------------|
-| **Acquisitions** | • Manual order entry form<br>• CSV import for bulk orders<br>• Budget tracking (simple ledger)<br>• Vendor list with Ghana Card ID storage | PouchDB documents:<br>`{ type: 'order', vendorGhanaCard: 'hashed', items: [...] }` |
+| **Acquisitions** | • Manual order entry form<br>• CSV import for bulk orders<br>• Budget tracking (simple ledger)<br>• Vendor list with corporate identifiers (business registration, tax ID) | PouchDB documents:<br>`{ type: 'order', vendorBusinessRegistration: 'EA-123456', vendorTaxId: 'TIN-123456789', items: [...] }` |
 | **Processing** | • Simplified cataloging form<br>• Barcode generation (PDF417)<br>• Health scoring sliders (1-5)<br>• Batch assignment for schools | PouchDB documents:<br>`{ type: 'book', ghanaCurriculumTag: 'BASIC-MATH-GRADE-6', spineCondition: 4, ... }` |
 | **Distribution** | • Manual section assignment dropdown<br>• Packing slip PDF generator<br>• Delivery confirmation checkbox | PouchDB documents:<br>`{ type: 'distribution', destinationSection: 'children', packingSlipId: 'PS-2024-001', ... }` |
 | **Library Sections** | • Unified interface for all sections<br>• Role switcher in header<br>• Section filter toggle | Single React component with `currentSection` state |
@@ -219,7 +224,7 @@ flowchart TD
 
 | Workflow Element | Standard Practice | Ghana Adaptation |
 |------------------|-------------------|------------------|
-| **Vendor Verification** | Business license check | Ghana Card ID validation + Education Service vendor registry cross-check |
+| **Vendor Verification** | Business license check | Business registration validation + Education Service vendor registry cross-check |
 | **Curriculum Tagging** | Dewey Decimal only | Dual classification: Dewey + Ghana Education Service syllabus tags |
 | **School Distribution** | Generic "children" section | Batch-aware routing: `GRADE-6A` at St. Peter's ≠ `GRADE-6B` at Presby School |
 | **Language Support** | English primary | Twi/Ga language flags for children's materials; section heads can filter by language |
