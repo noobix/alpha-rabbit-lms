@@ -1,9 +1,4 @@
----
-Author: Kelvin Kabute
-Last-updated: 2026-10-04
----
-
-# ÔøΩÔøΩÔøΩ Library Management System: Jira Ticket Specification (Extension Services Department Update)
+# Ì≥ö Library Management System: Jira Ticket Specification (Extension Services Department Update)
 
 *User-centric tickets separated into Features (user value) vs System Tasks (infrastructure) for achievable 2-week sprints*
 
@@ -11,7 +6,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩÔ∏è LABELING CONVENTION
+## Ìø∑Ô∏è LABELING CONVENTION
 
 | Label | Purpose | Example |
 |-------|---------|---------|
@@ -29,7 +24,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ EPIC: CORE INFRASTRUCTURE (`LMS-CORE`)
+## Ìºê EPIC: CORE INFRASTRUCTURE (`LMS-CORE`)
 
 *Foundation for offline-first operation, security, and Ghana compliance*
 
@@ -46,7 +41,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ EPIC: ACQUISITIONS MODULE (`LMS-ACQ`)
+## Ì≥¶ EPIC: ACQUISITIONS MODULE (`LMS-ACQ`)
 
 *Order books from Ghanaian vendors aligned with GES curriculum*
 
@@ -54,7 +49,7 @@ Last-updated: 2026-10-04
 
 | Ticket ID | Title | Type | Labels | Priority | Acceptance Criteria |
 |-----------|-------|------|--------|----------|---------------------|
-| **LMS-ACQ-01** | As an Acquisitions Librarian, I want to enter vendor details with corporate registration validation so that I comply with Ghana procurement regulations | Feature | `feature` `manager` `ghana-compliance` | High | **Given** I am creating a new vendor record<br>**When** I enter business registration `EA-123456`<br>**Then** the system validates the format matches `EA-XXXXXX`<br>**And** saves the validated business registration to the database<br>**And** displays a tooltip: "Business registration required per Public Procurement Act 2003 (Act 663)" |
+| **LMS-ACQ-01** | As an Acquisitions Librarian, I want to enter vendor details with Ghana Card ID validation so that I comply with Ghana procurement regulations | Feature | `feature` `manager` `ghana-compliance` | High | **Given** I am creating a new vendor record<br>**When** I enter Ghana Card ID `GHA-987654321-0`<br>**Then** the system validates the format matches `GHA-000000000-0`<br>**And** saves only the hashed value to the database<br>**And** displays a tooltip: "Ghana Card ID required per Public Procurement Act 2003 (Act 663)" |
 | **LMS-ACQ-02** | As an Acquisitions Librarian, I want to select Ghana Curriculum Tags during order creation so that books align with GES syllabus | Feature | `feature` `manager` `ghana-compliance` | High | **Given** I am placing an order for "Basic Science Grade 6"<br>**When** I reach the curriculum tag field<br>**Then** I see a searchable dropdown with 247 pre-loaded GES tags<br>**And** tags are grouped by level (Basic/JHS/SHS)<br>**And** selecting `BASIC-SCIENCE-GRADE-6` auto-fills Dewey Decimal `500` |
 | **LMS-ACQ-03** | As an Acquisitions Librarian, I want to track budget allocation per department so that I stay within quarterly spending limits | Feature | `feature` `manager` `finance` | Medium | **Given** my budget code is `CHILDREN-2024-Q1` with GHS 5,000 allocation<br>**When** I add 50 books at GHS 15 each (GHS 750)<br>**Then** the UI shows remaining budget: GHS 4,250<br>**And** changes color to amber when <20% remains<br>**And** blocks orders exceeding remaining budget |
 
@@ -67,7 +62,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ EPIC: PROCESSING MODULE (`LMS-PROC`)
+## Ì¥ç EPIC: PROCESSING MODULE (`LMS-PROC`)
 
 *Inspect, classify, and prepare books for distribution with Ghana climate adaptations and Extension Services routing*
 
@@ -90,7 +85,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ EPIC: DISTRIBUTION MODULE (`LMS-DIST`)
+## Ì≥¶ EPIC: DISTRIBUTION MODULE (`LMS-DIST`)
 
 *Route books to correct sections and Extension Services depot with batch-aware delivery for Ghana schools*
 
@@ -113,7 +108,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ EPIC: EXTENSION SERVICES DEPARTMENT (`LMS-EXT`)
+## Ìºç EPIC: EXTENSION SERVICES DEPARTMENT (`LMS-EXT`)
 
 *Top-level department (peer to Acquisitions/Processing/Distribution/Library Operations) managing mobile library services for underserved schools via rotating book sets*
 
@@ -140,7 +135,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ EPIC: LENDING SECTION (`LMS-LEND`)
+## Ì≥ö EPIC: LENDING SECTION (`LMS-LEND`)
 
 *Library section responsible for bulk allocation fulfillment to Extension Services department*
 
@@ -162,7 +157,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ EPIC: CHILDREN'S LIBRARY SECTION (`LMS-CHILD`)
+## Ì±ß EPIC: CHILDREN'S LIBRARY SECTION (`LMS-CHILD`)
 
 *Grade-specific batch management with degradation enforcement for young learners*
 
@@ -183,7 +178,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ‚ÄçÔøΩÔøΩÔøΩ EPIC: STAFF GOVERNANCE (`LMS-STAFF`)
+## Ì±®‚ÄçÌ≤º EPIC: STAFF GOVERNANCE (`LMS-STAFF`)
 
 *Department hierarchy with Ghana Card ID verification for Manager version ‚Äì updated for Extension Services as peer department*
 
@@ -203,7 +198,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ EPIC: GHANA COMPLIANCE (`LMS-GH`)
+## Ìºç EPIC: GHANA COMPLIANCE (`LMS-GH`)
 
 *Ghana-specific workflows required by law and cultural practice ‚Äì updated with Dagbani language support*
 
@@ -224,7 +219,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ SPRINT PLANNING RECOMMENDATIONS
+## Ì≥Ö SPRINT PLANNING RECOMMENDATIONS
 
 ### Sprint 1 (Weeks 1-2): Core Infrastructure + Basic Acquisitions
 

@@ -112,7 +112,7 @@ flowchart TD
 
 | Workflow Stage | Core Functionality | Technical Implementation |
 |----------------|-------------------|--------------------------|
-| **Acquisitions** | • Budget approval workflows<br>• Vendor portal integration<br>• Automated ISBN lookup<br>• Ghana Education Service curriculum alignment checks | CouchDB design docs:<br>`_design/acquisitions` with validation functions enforcing Ghana Card ID format |
+| **Acquisitions** | • Budget approval workflows<br>• Vendor portal integration<br>• Automated ISBN lookup<br>• Ghana Education Service curriculum alignment checks | CouchDB design docs:<br>`_design/acquisitions` with validation functions enforcing business registration format |
 | **Processing** | • MARC21 import/export<br>• Auto-classification via ISBN<br>• Quality control approval chains<br>• RFID batch programming | CouchDB replication filters:<br>`processing-only` filter replicates only `type: 'book'` docs to processing clients |
 | **Distribution** | • Auto-routing rules engine<br>• Delivery scheduling calendar<br>• Mobile delivery confirmation app<br>• Section inventory threshold alerts | CouchDB update handlers:<br>Trigger `distribution-ready` event when book status changes to `approved` |
 | **Library Sections** | • Department-specific dashboards<br>• Real-time inventory sync<br>• Section head analytics<br>• Mobile scanner integration | CouchDB security objects:<br>`members: { roles: ['children_section'] }` restricts data access |
@@ -131,7 +131,8 @@ flowchart TD
   "placedAt": "2024-02-15T08:30:00Z",
   "vendor": {
     "name": "Accra Educational Publishers",
-    "ghanaCardId": "GHA-123456789-0", // Stored hashed
+    "businessRegistration": "EA-123456",
+    "taxId": "TIN-123456789",
     "contactPhone": "+233241234567"
   },
   "items": [
@@ -291,9 +292,9 @@ db.find({
     if (newDoc.type === 'processed_book' && newDoc.section !== userCtx.section) {
       throw { forbidden: 'Cannot modify books outside your section' };
     }
-    // Ghana Card ID must be hashed before storage
-    if (newDoc.vendor?.ghanaCardId && !newDoc.vendor.ghanaCardId.startsWith('hashed:')) {
-      throw { forbidden: 'Ghana Card ID must be hashed' };
+    // Vendor business registration must be valid
+    if (newDoc.type === 'vendor' && !newDoc.businessRegistration) {
+      throw { forbidden: 'Vendor business registration is required' };
     }
   }"
 }
@@ -341,9 +342,12 @@ db.find({
 
    - Processing centers often have unstable internet → All cataloging must work offline with sync-on-connect
 
-2. **Ghana Card ID Handling**
+2. **Vendor Corporate Information**
 
-   - Never store plaintext Ghana Card IDs → Always hash with salt before storage
+   - Vendors are corporate entities (businesses, publishers, distributors), not natural persons
+   - Ghana Card ID is a personal identifier and is **not collected** for vendors
+   - Collect corporate identifiers instead: business registration (Ghana Enterprises Agency), tax ID (GhRA TIN)
+   - Validate business registration format (`EA-XXXXXX`) before storage
 
 3. **Batch-Aware Distribution**
 

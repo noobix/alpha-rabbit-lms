@@ -1,9 +1,4 @@
----
-Author: Kelvin Kabute
-Last-updated: 2026-10-04
----
-
-# ÔøΩÔøΩÔøΩ Library Management System: Jira Ticket Specification (Extension Services Department Update)
+# Ì≥ö Library Management System: Jira Ticket Specification (Extension Services Department Update)
 
 *User-centric tickets with Ghana context, offline resilience, and Manager/Enterprise differentiation ‚Äì PM-friendly format with technical implementation guidance*
 
@@ -11,11 +6,11 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ OVERARCHING PROJECT EPIC: `LMS-LIBRARY`
+## Ìºê OVERARCHING PROJECT EPIC: `LMS-LIBRARY`
 
 *Cross-cutting infrastructure, Ghana compliance, and offline-first foundation for library operations*
 
-### ÔøΩÔøΩÔøΩ Child Epic: `LMS-CORE-SECURITY`
+### Ì¥í Child Epic: `LMS-CORE-SECURITY`
 
 *Security backbone for patron data and staff operations*
 
@@ -29,7 +24,7 @@ Last-updated: 2026-10-04
 
 ---
 
-### ÔøΩÔøΩÔøΩ Child Epic: `LMS-GHANA-COMPLIANCE`
+### Ìºç Child Epic: `LMS-GHANA-COMPLIANCE`
 
 *Ghana-specific legal requirements and cultural adaptations*
 
@@ -42,19 +37,19 @@ Last-updated: 2026-10-04
 
 ---
 
-### ÔøΩÔøΩÔøΩ Child Epic: `LMS-ACQUISITIONS`
+### Ì≥¶ Child Epic: `LMS-ACQUISITIONS`
 
 *Book ordering workflow with Ghanaian vendor management*
 
 | Ticket ID | Title | Acceptance Criteria |
 |-----------|-------|---------------------|
-| **LMS-301** | Implement vendor management with corporate registration validation | AC: Vendor form requires business registration format `EA-XXXXXX`<br>AC: Format validation tooltip: "Business registration required per Public Procurement Act 2003"<br>AC: TIN stored; business registration validated before save<br>AC: Works offline with local vendor list sync on reconnect |
+| **LMS-301** | Implement vendor management with Ghana Card ID validation | AC: Vendor form requires Ghana Card ID format `GHA-000000000-0`<br>AC: Format validation tooltip: "Ghana Card required per Public Procurement Act 2003"<br>AC: Hashed ID stored; plaintext never persisted<br>AC: Works offline with local vendor list sync on reconnect |
 | **LMS-302** | Build budget tracking per department with GES alignment | AC: Budget codes follow Ghana format `CHILDREN-2024-Q1`<br>AC: Real-time remaining balance display during order creation<br>AC: Amber warning at <20% budget remaining<br>AC: Blocks orders exceeding remaining budget with override requiring Department Head approval |
 | **LMS-303** | Implement offline order queue with sync-on-reconnect | AC: Orders save locally with status "Pending Sync" when offline<br>AC: Sync completes within 60 seconds of internet restoration<br>AC: Conflict resolution uses timestamp-based "last write wins"<br>AC: Failed syncs retry with exponential backoff (1s ‚Üí 30s) |
 
 ---
 
-### ÔøΩÔøΩÔøΩ Child Epic: `LMS-PROCESSING`
+### Ì¥ç Child Epic: `LMS-PROCESSING`
 
 *Physical inspection and classification with Ghana climate adaptations and Extension Services routing*
 
@@ -67,7 +62,7 @@ Last-updated: 2026-10-04
 
 ---
 
-### ÔøΩÔøΩÔøΩ Child Epic: `LMS-DISTRIBUTION`
+### Ì≥¶ Child Epic: `LMS-DISTRIBUTION`
 
 *Batch-aware routing, rural delivery, and Extension Services depot workflows*
 
@@ -80,7 +75,7 @@ Last-updated: 2026-10-04
 
 ---
 
-### ÔøΩÔøΩÔøΩ Child Epic: `LMS-EXTENSION-SERVICES` (NEW)
+### Ìºç Child Epic: `LMS-EXTENSION-SERVICES` (NEW)
 
 *Top-level department managing mobile library services for underserved schools via rotating book sets borrowed from Lending Section*
 
@@ -105,7 +100,7 @@ Last-updated: 2026-10-04
 
 ---
 
-### ÔøΩÔøΩÔøΩ Child Epic: `LMS-LENDING-SECTION` (NEW)
+### Ì≥ö Child Epic: `LMS-LENDING-SECTION` (NEW)
 
 *Lending Section manages bulk allocation fulfillment to Extension Services and tracks book rotation health*
 
@@ -120,7 +115,7 @@ Last-updated: 2026-10-04
 
 ---
 
-### ÔøΩÔøΩÔøΩ Child Epic: `LMS-CHILDRENS-SECTION`
+### Ì±ß Child Epic: `LMS-CHILDRENS-SECTION`
 
 *Grade-specific batch management with degradation enforcement*
 
@@ -132,7 +127,7 @@ Last-updated: 2026-10-04
 
 ---
 
-### ÔøΩÔøΩÔøΩ‚ÄçÔøΩÔøΩÔøΩ Child Epic: `LMS-STAFF-GOVERNANCE`
+### Ì±®‚ÄçÌ≤º Child Epic: `LMS-STAFF-GOVERNANCE`
 
 *Department hierarchy with Ghana Card ID verification ‚Äì updated for Extension Services as peer department*
 
@@ -144,7 +139,7 @@ Last-updated: 2026-10-04
 
 ---
 
-### ÔøΩÔøΩÔøΩ NEXT ACTIONS (Pilot Launch Priorities)
+### Ì∫Ä NEXT ACTIONS (Pilot Launch Priorities)
 
 | Epic | Ticket ID | Title | Acceptance Criteria |
 |------|-----------|-------|---------------------|
@@ -158,7 +153,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩ SPRINT PLANNING RECOMMENDATIONS
+## Ì≥ä SPRINT PLANNING RECOMMENDATIONS
 
 | Sprint | Focus Area | Key Deliverables | Success Metrics |
 |--------|------------|------------------|-----------------|
@@ -173,7 +168,7 @@ Last-updated: 2026-10-04
 
 ---
 
-## ÔøΩÔøΩÔøΩÔ∏è LABELING CONVENTION FOR JIRA
+## Ìø∑Ô∏è LABELING CONVENTION FOR JIRA
 
 | Label | Purpose | Example |
 |-------|---------|---------|

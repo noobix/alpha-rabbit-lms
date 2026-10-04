@@ -113,14 +113,24 @@ Every document should include:
 
 ## 5.4 Vendor (`vendor`)
 
-- `name`: string
-- `ghanaCardIdHash`: string
-- `businessRegistration`: optional string
-- `contactPerson`, `phone`, `email`, `address`
-- `city`, `region`, `country`
-- `specialties`: string[]
-- `contractStartDate`, `contractExpiryDate`
+> **Note:** Vendors are corporate entities (businesses, publishers, distributors), not natural persons. Ghana Card ID is a personal identifier and is **not collected** for vendors. Instead, corporate-relevant identifiers are used.
+
+- `name`: string (business/legal name)
+- `businessRegistration`: string (Ghana Enterprises Agency registration number, e.g., `EA-123456`)
+- `taxId`: string (Ghana Revenue Authority TIN, e.g., `TIN-123456789`)
+- `businessType`: `company | sole_protrader | partnership | ngo | government`
+- `registrationAuthority`: string (e.g., "Ghana Enterprises Agency", "Registrar General")
+- `incorporationDate`: ISO date
+- `contactPerson`: string (primary contact name)
+- `contactPersonTitle`: string (e.g., "Managing Director", "Sales Manager")
+- `phone`, `businessPhone`: string (E.164 format)
+- `email`, `businessEmail`: string
+- `website`: optional string
+- `address`, `city`, `region`, `country`
+- `specialties`: string[] (e.g., ["Children's books", "Textbooks", "Ghanaian literature"])
+- `contractStartDate`, `contractExpiryDate`: ISO date
 - `status`: `active | inactive | suspended`
+- `notes`: optional string
 
 ## 5.5 AcquisitionOrder (`acquisition_order`)
 

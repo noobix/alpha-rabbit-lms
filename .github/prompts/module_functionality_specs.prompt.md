@@ -60,7 +60,7 @@ _Critical correction: Extension Services is a full external department (not libr
 | **Vendor Management** | • Manual entry of vendor details<br>• Corporate identifiers (business registration, tax ID)<br>• Vendor list searchable by name | • Vendor portal integration<br>• Auto-verify against MoE vendor registry<br>• Contract expiry alerts | Works fully offline; syncs vendor updates when online |
 | **Order Creation**    | • Form with ISBN lookup (offline cache)<br>• Ghana Curriculum Tag dropdown<br>• Budget code selection                   | • Budget approval workflow<br>• Auto-suggest titles based on curriculum gaps<br>• Bulk order from MoE recommended lists | Order saved locally; syncs to server when online      |
 | **Shipment Tracking** | • Manual entry of tracking numbers<br>• Delivery date prediction                                                        | • SMS integration with Ghana Post<br>• Auto-update from vendor APIs                                                     | Manual entry only when offline                        |
-| **Ghana Adaptation**  | • Curriculum tags: `BASIC-MATH-GRADE-6`<br>• Budget codes: `CHILDREN-2024-Q1`<br>• Vendor Ghana Card validation tooltip | • MoE curriculum alignment dashboard<br>• Automatic tag suggestions based on ISBN                                       | Curriculum tag database cached for offline use        |
+| **Ghana Adaptation**  | • Curriculum tags: `BASIC-MATH-GRADE-6`<br>• Budget codes: `CHILDREN-2024-Q1`<br>• Vendor business registration validation tooltip | • MoE curriculum alignment dashboard<br>• Automatic tag suggestions based on ISBN | Curriculum tag database cached for offline use |
 
 #### Acquisitions Acceptance Criteria
 

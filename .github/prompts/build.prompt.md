@@ -237,7 +237,7 @@ Acceptance criteria (from compression):
 
 ## Child Epic: LMS-ACQUISITIONS
 
-### LMS-301 — Implement vendor management with corporate registration validation
+### LMS-301 — Implement vendor management with Ghana Card ID validation
 
 Build focus:
 
@@ -943,11 +943,12 @@ Where `<type>` is one of: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 LMS-101: feat: implement SHA-256 hashing pipeline for Ghana Card ID storage
 
 Built the hashing service in the Electron main process to ensure plaintext
-Corporate vendor identifiers never reach the renderer unvalidated. Business
-registration numbers are validated against the EA-XXXXXX format at the form
-boundary, and TINs are validated against TIN-XXXXXXXXX before persistence.
-The masked format function is shared with the vendor corporate display for
-reuse in LMS-301.
+Ghana Card IDs never reach the renderer. IDs are validated against the
+GHA-000000000-0 format at the form boundary, salted and hashed with SHA-256
+before persistence, and displayed as masked values (GHA-123***89-0) across
+all UI surfaces. Log sanitization strips any accidental plaintext leakage
+from backups and debug output. The masked format function is shared with
+the vendor Ghana Card display for reuse in LMS-301.
 ```
 
 #### Step 4: 📤 Commit and Push Feature Branch
