@@ -35,7 +35,7 @@ jobs:
             [[ "$br" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "::error::Invalid branch name: $br"; exit 1; }
 
             if [ "$br" = "main" ]; then
-              contexts='["CI Gate","Security Gate","PR Gate","Coverage Ratchet","CodeQL Gate"]'; approvals=1
+              contexts='["Continuation Gate","CI Gate","Security Gate","PR Gate","Coverage Ratchet","CodeQL Gate"]'; approvals=1
             else
               contexts='["CI Gate","Security Gate"]'; approvals=0
             fi
