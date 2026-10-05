@@ -1,23 +1,23 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-04
+Last-updated: 2026-10-05
 ---
 
 # 📚 Library Management System: Enhanced Functionality Specification
 
-_Comprehensive patron lifecycle management, program administration, staff governance, and automated recognition systems_
+_Comprehensive patron lifecycle management, program administration, staff governance, and automated recognition systems — designed for African library operations across multiple jurisdictions_
 
 ---
 
 ## 🌟 CORE ENHANCEMENTS OVERVIEW
 
-| Enhancement                   | Purpose                                                                 | Ghana Context Integration                                       |
-| ----------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **Patron Lifecycle Tracking** | Holistic view of reading behavior, book care, and program participation | Batch promotion aligned with Ghana academic calendar (Sept–Aug) |
-| **Automated Badge System**    | Motivate reading without manual admin intervention                      | Culturally relevant badges (Adinkra symbols, local proverbs)    |
-| **Book Degradation Engine**   | Protect collection integrity with data-driven issuance controls         | Thresholds adjustable per library budget (rural vs urban)       |
-| **Library Programs Module**   | Structured community engagement with appraisal tracking                 | Supports Ghana Education Service literacy initiatives           |
-| **Staff Governance**          | Clear role hierarchy for Manager version deployments                    | Ghana Card ID verification for all staff records                |
+| Enhancement                   | Purpose                                                                 | Africa-Ready Integration                                                                                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Patron Lifecycle Tracking** | Holistic view of reading behavior, book care, and program participation | Batch promotion aligned with academic calendar per active `country_policy` (Ghana Sept-Aug, Kenya Jan-Dec, Uganda Feb-Nov, Rwanda Jan-Dec, Tanzania Jan-Dec) |
+| **Automated Badge System**    | Motivate reading without manual admin intervention                      | Culturally relevant badges per country profile; configurable icon sets and criteria                                                                          |
+| **Book Degradation Engine**   | Protect collection integrity with data-driven issuance controls         | Thresholds adjustable per library budget (rural vs urban)                                                                                                    |
+| **Library Programs Module**   | Structured community engagement with appraisal tracking                 | Supports national literacy initiatives per country profile                                                                                                   |
+| **Staff Governance**          | Clear role hierarchy for Manager version deployments                    | National ID or equivalent verification per active `country_policy`                                                                                           |
 
 ---
 
@@ -25,21 +25,23 @@ _Comprehensive patron lifecycle management, program administration, staff govern
 
 ### Extended Patron Document Structure
 
+_Example uses a generic patron from any supported country. The `countryProfileId` links to the active national or institutional policy._
+
 ```json
 {
-  "_id": "patron-GHA-123456789-0",
+  "_id": "patron-KE-12345678",
   "type": "patron",
   "patronType": "CHILD",
   "basicInfo": {
-    "ghanaCardId": "hashed:GHA-123456789-0",
-    "firstName": "Kwame",
-    "lastName": "Asante",
+    "nationalIdHash": "hashed:KE-12345678",
+    "firstName": "Wanjiku",
+    "lastName": "Mwangi",
     "dateOfBirth": "2012-05-15",
-    "schoolId": "ACCRA-GREATER-001",
+    "schoolId": "NAIROBI-CENTRAL-001",
     "batchCode": "GRADE-4A",
     "currentGrade": 4,
-    "batchExpiryDate": "2025-08-31",
-    "enrollmentDate": "2023-09-01"
+    "batchExpiryDate": "2025-12-31",
+    "enrollmentDate": "2024-01-15"
   },
   "readingMetrics": {
     "lifetimeBooksRead": 27,
@@ -76,8 +78,8 @@ _Comprehensive patron lifecycle management, program administration, staff govern
   ],
   "lostBooks": [
     {
-      "bookCopyId": "copy-GH-HISTORY-G5-018",
-      "title": "Ghana History Grade 5",
+      "bookCopyId": "copy-KE-HISTORY-G5-018",
+      "title": "Kenya History Grade 5",
       "reportedDate": "2023-11-10",
       "status": "unresolved",
       "replacementCost": 25.0,
@@ -184,7 +186,7 @@ flowchart TD
 1. **Define Program**
    - Title, description, dates, target audience (CHILD/GENERAL)
    - Max participants, session schedule
-   - _Ghana Example_: "GES Literacy Boost: Grade 4 Reading Challenge (Sept–Dec 2024)"
+   - _Example_: "National Literacy Boost: Grade 4 Reading Challenge" — adaptable per country (Ghana GES, Kenya MoE, Uganda MoES, Rwanda REB)
 
 2. **Participant Selection**
    - Auto-select by criteria: `schoolId = "ACCRA-GREATER-001" AND batchCode = "GRADE-4*"`
@@ -220,10 +222,10 @@ flowchart TD
 │  SUMMER READING CHALLENGE 2024 • Active             │
 ├──────────────────────────────────────────────────────┤
 │  📊 PARTICIPATION: 42/50 (84%)                       │
-│  📅 Next Session: Aug 15, 2024 • "Folktales of Ghana"│
+│  📅 Next Session: Aug 15, 2024 • "Local Folktales"   │
 │                                                      │
 │  TOP PERFORMERS                                      │
-│  • Kwame A. (GRADE-4A) • 12 books • ⭐⭐⭐⭐⭐         │
+│  • Wanjiku M. (GRADE-4A) • 12 books • ⭐⭐⭐⭐⭐      │
 │  • Ama S. (GRADE-4B) • 10 books • ⭐⭐⭐⭐            │
 │                                                      │
 │  NEEDS ATTENTION                                     │
@@ -240,6 +242,8 @@ flowchart TD
 
 ### Badge Configuration Document (`badge-config`)
 
+_Badges are configurable per country profile. The following examples show both universal and culturally-adapted badges._
+
 ```json
 {
   "_id": "badge-config",
@@ -253,9 +257,9 @@ flowchart TD
       "criteria": {
         "booksRead": 10,
         "timeframe": "month",
-        "minBookValue": 1 // Exclude picture books for this badge
+        "minBookValue": 1
       },
-      "ghanaCulturalNote": "Celebrates love of learning (Sankofa symbol)"
+      "culturalNote": "Celebrates love of learning"
     },
     {
       "id": "gentle-reader",
@@ -266,18 +270,18 @@ flowchart TD
         "minBooks": 15,
         "maxDegradationRate": 0.01
       },
-      "ghanaCulturalNote": "Honors care for community resources (Fawohodie symbol)"
+      "culturalNote": "Honors care for community resources"
     },
     {
-      "id": "adinkra-reader",
-      "name": "Adinkra Reader",
-      "description": "Read 5 Ghanaian folklore books",
-      "icon": "assets/badges/adinkra.svg",
+      "id": "local-stories",
+      "name": "Local Stories",
+      "description": "Read 5 books from local folklore or cultural heritage",
+      "icon": "assets/badges/local-stories.svg",
       "criteria": {
-        "genres": ["folktales", "ghana-history", "twi-literature"],
+        "genres": ["folktales", "local-history", "local-literature"],
         "minBooks": 5
       },
-      "ghanaCulturalNote": "Celebrates Ghanaian storytelling heritage"
+      "culturalNote": "Celebrates local storytelling heritage (adaptable per country: Anansi for Ghana, Hare for East Africa, etc.)"
     },
     {
       "id": "rising-star",
@@ -290,7 +294,7 @@ flowchart TD
       }
     }
   ],
-  "awardSchedule": "daily", // Run badge checks every 24 hours
+  "awardSchedule": "daily",
   "displayRules": {
     "maxBadgesPerPatron": 8,
     "prioritizeRecent": true
@@ -315,6 +319,8 @@ flowchart TD
 
 ### Staff Document Structure
 
+_Example uses a generic staff member from any supported country. The `nationalIdHash` field stores the identifier from the active country policy._
+
 ```json
 {
   "_id": "staff-MPS-78901",
@@ -322,7 +328,7 @@ flowchart TD
   "role": "section_leader",
   "department": "children_section",
   "personalInfo": {
-    "ghanaCardId": "hashed:GHA-987654321-0",
+    "nationalIdHash": "hashed:KE-987654321-0",
     "firstName": "Akosua",
     "lastName": "Boateng",
     "serviceNumber": "MPS-78901",
@@ -330,12 +336,12 @@ flowchart TD
     "dateOfAppointment": "2018-03-10"
   },
   "contactInfo": {
-    "email": "akosua.boateng@accralibrary.gov.gh",
-    "phone": "+233249876543",
+    "email": "akosua.boateng@library.go.ke",
+    "phone": "+254249876543",
     "emergencyContact": {
       "name": "Kofi Boateng",
       "relationship": "Spouse",
-      "phone": "+233201234567"
+      "phone": "+254201234567"
     }
   },
   "responsibilities": [
@@ -344,7 +350,7 @@ flowchart TD
     "Manage Grade 1-6 batch promotions",
     "Lead storytelling sessions every Tuesday"
   ],
-  "supervisorId": "staff-MPS-12345", // Department head
+  "supervisorId": "staff-MPS-12345",
   "isActive": true,
   "lastLogin": "2024-02-12T08:45:22Z"
 }
@@ -360,7 +366,7 @@ flowchart TD
 | **Librarian**       | Circulation, cataloging, program facilitation  | Staff document with `role: "librarian"`                           |
 | **Assistant**       | Check-in/out only; no deletions                | Staff document with `role: "assistant"`                           |
 
-> 🔒 **Security**: Staff logins use same authentication as patrons but with role-based UI filtering. Ghana Card ID hashed for privacy.
+> 🔒 **Security**: Staff logins use same authentication as patrons but with role-based UI filtering. National ID or equivalent identifier hashed per active `country_policy`.
 
 ---
 
@@ -426,24 +432,28 @@ flowchart LR
 
 ---
 
-## 🌍 GHANA-SPECIFIC ADAPTATIONS
+## 🌍 Africa-Ready Adaptations
 
-| Feature                    | Standard Implementation    | Ghana Adaptation                                                                        |
-| -------------------------- | -------------------------- | --------------------------------------------------------------------------------------- |
-| **Batch Expiry**           | Calendar year (Dec 31)     | Academic year (Aug 31) aligned with GES                                                 |
-| **Badge Icons**            | Generic book/star icons    | Adinkra symbols (Sankofa, Fawohodie) with cultural notes                                |
-| **Program Types**          | Generic reading challenges | GES Literacy Boost, National Reading Day events                                         |
-| **Parental Consent**       | Email confirmation         | SMS consent + physical signature option for rural areas                                 |
-| **Degradation Thresholds** | Fixed global value         | Configurable per library (rural libraries: higher thresholds due to budget constraints) |
-| **Lost Book Resolution**   | Fine payment required      | Flexible options: replacement book donation, community service hours                    |
+| Feature                    | Standard Implementation    | Africa-Ready Adaptation                                                                                                             |
+| -------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Batch Expiry**           | Calendar year (Dec 31)     | Academic year derived from active `country_policy` (Ghana: Aug 31, Kenya: Dec 31, Uganda: Nov 30, Rwanda: Dec 31, Tanzania: Dec 31) |
+| **Badge Icons**            | Generic book/star icons    | Culturally relevant icons per country; configurable badge set per `country_profile`                                                 |
+| **Program Types**          | Generic reading challenges | National literacy initiatives per country (Ghana GES, Kenya MoE, Uganda MoES, Rwanda REB)                                           |
+| **Parental Consent**       | Email confirmation         | SMS consent + physical signature option for rural areas; local-language templates per country                                       |
+| **Degradation Thresholds** | Fixed global value         | Configurable per library (rural libraries: higher thresholds due to budget constraints)                                             |
+| **Lost Book Resolution**   | Fine payment required      | Flexible options: replacement book donation, community service hours                                                                |
+| **Language Support**       | English only               | Multi-language per country profile: Twi/Ga (Ghana), Swahili (Kenya/Tanzania), Kinyarwanda (Rwanda), Luganda (Uganda)                |
+| **Identity Verification**  | Single national ID format  | Configurable per country: Ghana Card ID, Kenya National ID, Uganda National ID, Rwanda National ID                                  |
 
 ---
 
 ## 📱 PATRON DASHBOARD: Unified View
 
+_Example shows a patron from Kenya. The dashboard adapts to the active country profile._
+
 ```text
 ┌──────────────────────────────────────────────────────┐
-│  KWAME ASANTE • GRADE-4A • Batch Expiry: Aug 31, 2025│
+│  WANJIKU MWANGI • GRADE-4A • Batch Expiry: Dec 31, 2025│
 ├──────────────────────────────────────────────────────┤
 │  📚 READING STATS                                    │
 │  • Books Read This Year: 8/12 (Target)              │
@@ -456,12 +466,12 @@ flowchart LR
 │  📖 RECENT RETURNS                                   │
 │  • Basic Science G4 (Returned: Feb 3)                │
 │    Condition: Spine 4/5 • Pages 4/5 • Edges 5/5     │
-│  • Ghana Folktales (Returned: Jan 20)                │
+│  • Kenya Folktales (Returned: Jan 20)                │
 │    Condition: Perfect (5/5 all components)           │
 │                                                      │
 │  ⚠️ LOST BOOKS                                       │
-│  • Ghana History G5 (Reported: Nov 10, 2023)         │
-│    Status: Parent contacted • Replacement cost: GHS 25│
+│  • Kenya History G5 (Reported: Nov 10, 2023)         │
+│    Status: Parent contacted • Replacement cost: KES 25│
 │                                                      │
 │  🌱 PROGRAM PARTICIPATION                            │
 │  • Summer Reading Challenge 2024 (Active)            │
@@ -481,19 +491,21 @@ flowchart LR
 
 2. **Batch Promotion Automation**
    - Eliminates manual grade tracking errors
-   - Parent notifications reduce administrative calls
+   - Academic calendar derived from the active `country_policy` — not hard-coded to one nation
+   - Parent notifications in local language per country profile
 
 3. **Badge System Integrity**
    - Algorithmic awards prevent favoritism accusations
-   - Cultural relevance increases child engagement
+   - Cultural relevance increases child engagement; badge sets configurable per country
 
 4. **Staff Governance Clarity**
    - Clear role hierarchy prevents workflow conflicts in Manager version
-   - Ghana Card ID verification ensures staff authenticity
+   - National ID or equivalent identity verification per active `country_policy`
 
-5. **Ghana Curriculum Alignment**
-   - Automatic expiry dates reduce admin overhead
-   - Program types support national literacy initiatives
+5. **Africa-Ready Curriculum Alignment**
+   - Automatic expiry dates derived from the active country profile
+   - Program types support national literacy initiatives across Ghana, Kenya, Uganda, Rwanda, Tanzania, and custom profiles
+   - Multi-language support for UI, SMS, and metadata per country profile
 
 ---
 
@@ -503,7 +515,7 @@ This specification provides:
 
 - ✅ Complete data models for all new features (degradation tracking, programs, badges, staff)
 - ✅ Algorithmic logic for automated systems (badge awards, degradation calculation)
-- ✅ Ghana-specific adaptations embedded in every workflow
+- ✅ Africa-ready adaptations embedded in every workflow; country-specific rules driven by active `country_profile`
 - ✅ Clear separation of Manager vs Enterprise implementation paths
 - ✅ UI mockups showing integrated patron dashboard
 - ✅ Threshold enforcement workflows with staff override paths
