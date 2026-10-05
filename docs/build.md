@@ -3,9 +3,9 @@ Author: Kelvin Kabute
 Last-updated: 2026-10-05
 ---
 
-# ðŸ—ï¸ Alpha Rabbit LMS Build Document
+# 🏗️ Alpha Rabbit LMS Build Document
 
-## ðŸ“‹ File Context
+## 📋 File Context
 
 **Purpose:** This file is the implementation blueprint for agents and contributors. It explains the authoritative source documents, project guardrails, sprint structure, and verification gates that should guide build work.
 
@@ -13,9 +13,9 @@ Last-updated: 2026-10-05
 
 **How agents use it:** Agents should use this file to understand the sequence of work, the project constraints, and the country-configurable rules that must remain in place before a feature is considered complete.
 
-## 1. ðŸ“¦ Source Assets & Defaults
+## 1. 📦 Source Assets & Defaults
 
-### ðŸ“š Source Assets
+### 📚 Source Assets
 
 | Asset                                             | Purpose                                                  | Required Use                                            |
 | ------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------- |
@@ -25,7 +25,7 @@ Last-updated: 2026-10-05
 | `docs/database.md`                                | Canonical schema contracts                               | Doc types, retention, sync state, audit fields          |
 | `docs/ressources/product_specs.md`                | Stack and deployment decisions                           | Offline-first stack, packaging, Ghana hardware          |
 | `docs/ressources/system_specs.md`                 | Manager vs Enterprise setup                              | Environment-specific behavior                           |
-| `docs/ressources/functionality_specs.md`          | End-to-end module behavior                               | Acquisitions â†’ Processing â†’ Distribution â†’ Sections     |
+| `docs/ressources/functionality_specs.md`          | End-to-end module behavior                               | Acquisitions → Processing → Distribution → Sections     |
 | `docs/ressources/module_functionality_specs.md`   | User-centric module acceptance                           | User stories, offline behavior, Extension workflows     |
 | `docs/ressources/functionality_specs_expanded.md` | Patron intelligence, governance extensions               | Degradation engine, badges, patron signals              |
 | `docs/research_dmp/aquisisions_module.md`         | Deep implementation notes for acquisitions               | Forms, metadata shape, offline patterns                 |
@@ -35,7 +35,7 @@ Last-updated: 2026-10-05
 | `docs/research_dmp/library_sections_pi_sg.md`     | Deep implementation notes for sections + PI + governance | Degradation enforcement, section workflows              |
 | `docs/research_dmp/deploy_doc.md`                 | Pilot/deployment/validation package                      | Pilot validation, packaging constraints                 |
 
-### ðŸ›¡ï¸ Global Non-Negotiables
+### 🛡️ Global Non-Negotiables
 
 - **One codebase, two modes**: Manager (offline standalone) and Enterprise (local-first with sync)
 - **No plaintext national ID values** in storage, logs, backups, exports, or UI state dumps; local identity rules must be configurable by country and institution
@@ -50,13 +50,13 @@ Last-updated: 2026-10-05
 - **Offline-first**: Every critical workflow completes locally; sync is deferred
 - **Country policy configuration**: school calendar, language labels, curriculum rules, compliance checks, and academic terms must be data-driven rather than hard-coded to a single nation. Each selected country or custom institution profile must be saved and reused for batch promotions, expiry checks, and curriculum tagging.
 - **Extension Services is a top-level DEPARTMENT** (peer to Acquisitions, Processing, Distribution, Library Operations, System Admin) â€” NOT a library section
-- **Books remain owned by Lending Section**; Extension Services borrows temporarily via bulk allocation: `Extension Request â†’ Lending Fulfillment â†’ Distribution Delivery â†’ Extension Rotation â†’ Return to Lending`
+- **Books remain owned by Lending Section**; Extension Services borrows temporarily via bulk allocation: `Extension Request → Lending Fulfillment → Distribution Delivery → Extension Rotation → Return to Lending`
 - **Community handoff remains under Extension Services**: books sent to community leaders and rural outreach points retain their extension workflow, not a separate one-off library section.
 - **Outreach learners and mobile-library patrons have minimal profiles** (QR or local token ID only, no condition scoring, no degradation tracking unless the country policy explicitly requires it)
 - **Android app is an external tool** for Extension Services field operations only â€” NOT part of the Electron desktop application
 - **Operational reality**: many African libraries combine public-library, school-library, outreach-library, and community-reading functions. The system must support those mixed workflows without forcing a single branch model
 
-### ðŸ—„ï¸ Database Modeling Requirements (must be planned before build work)
+### 🗄️ Database Modeling Requirements (must be planned before build work)
 
 - **Domain separation**: maintain distinct domain databases or collections for `books`, `patrons`, `loans`, `extensionLoans`, `departments`, `auditLog`, and `config` rather than building one large flat document store.
 - **Shared document contract**: every record must include the shared `BaseDocument` fields (`_id`, `_rev`, `type`, `createdAt`, `updatedAt`, `_syncStatus`, `_schemaVersion`) and any domain-specific fields must be added through a versioned schema definition.
@@ -118,7 +118,7 @@ Last-updated: 2026-10-05
 
 ---
 
-## 2. ðŸ“… Sprint Plan Overview
+## 2. 📅 Sprint Plan Overview
 
 | Sprint | Weeks | Theme                                           | Tickets                                                                                                                          | Goal                                                                                                                    |
 | ------ | ----- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
@@ -135,7 +135,7 @@ Last-updated: 2026-10-05
 
 ---
 
-## 3. ðŸ” Detailed Sprint Breakdown
+## 3. 🔍 Detailed Sprint Breakdown
 
 ### Sprint 1: Core Infrastructure + Acquisitions
 
@@ -298,7 +298,7 @@ Last-updated: 2026-10-05
 - Zone logic: Green (â‰¤0.15), Yellow (0.16-0.29), Red (0.30-0.44), Critical (â‰¥0.45)
 - Red zone: block issuance + require staff override with 10-char reason
 - Critical zone: block + auto-schedule coaching workshop
-- Auto-promotion: >80% attendance â†’ promote, <70% â†’ repeat batch
+- Auto-promotion: >80% attendance → promote, <70% → repeat batch
 - SMS notifications in Twi/English to parents
 - Teleporter detection: 3+ pristine returns after >7 days
 - Context-aware: does NOT flag if staff notes contain "read aloud" or "sibling"
@@ -398,7 +398,7 @@ Last-updated: 2026-10-05
 - Extension staff CANNOT access library section data
 - Lending staff see ONLY "Bulk Requests" tab for Extension
 - Bulk request form: school, cycle, quantity, subject areas, destination region
-- Request status: Pending â†’ Approved â†’ Fulfilling â†’ Ready for Delivery
+- Request status: Pending → Approved → Fulfilling → Ready for Delivery
 - 4-cycle rotation: CYCLE-1 (Sept-Dec), CYCLE-2 (Jan-Mar), CYCLE-3 (Apr-Jun), CYCLE-4 (Jul-Aug)
 - Auto-flag sets for collection 14 days before cycle end
 - August 31 hard stop: ALL sets return to depot
@@ -421,7 +421,7 @@ Last-updated: 2026-10-05
 **Verification Gate:**
 
 - Department boundary enforced (Extension cannot access library sections)
-- Bulk allocation workflow: request â†’ fulfillment â†’ delivery â†’ return
+- Bulk allocation workflow: request → fulfillment → delivery → return
 - Zero books stranded; 100% requests fulfilled within 48 hours
 - Android app processes 100 transactions offline without data loss
 - QR scanning works in low-light rural conditions
@@ -455,7 +455,7 @@ Last-updated: 2026-10-05
 
 **Build Focus:**
 
-- Android checkout: scan QR â†’ display learner â†’ scan book barcode â†’ max 2 books
+- Android checkout: scan QR → display learner → scan book barcode → max 2 books
 - NO condition scoring, NO interaction scores, NO degradation tracking
 - Transaction saves to local encrypted SQLite
 - Dagbani template: "Zuli libri ka ti kpÉ›. YÉ›lsim cycle 2 books."
@@ -483,7 +483,7 @@ Last-updated: 2026-10-05
 
 ---
 
-## 4. ðŸš€ Git Workflow & PR Guidelines
+## 4. 🚀 Git Workflow & PR Guidelines
 
 ### Workflow Steps (Using GitHub MCP Tools)
 
