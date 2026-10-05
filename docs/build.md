@@ -1,9 +1,9 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-04
+Last-updated: 2026-10-05
 ---
 
-# Alpha Rabbit LMS Build Prompt (Compression-Aligned v1.2)
+# 🏗️ Alpha Rabbit LMS Build Prompt (Compression-Aligned v1.2)
 
 <!-- markdownlint-disable MD032 MD060 -->
 
@@ -14,7 +14,7 @@ _Critical correction: Extension Services is a full external department (not libr
 
 ---
 
-## 0) Source Assets Table (Read First)
+## 0) 📚 Source Assets Table (Read First)
 
 | Asset                                             | Purpose in Build                                                                    | Required Use                                                                                  |
 | ------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
@@ -36,7 +36,7 @@ _Critical correction: Extension Services is a full external department (not libr
 
 ---
 
-## 1) Global Non-Negotiables
+## 1) 🛡️ Global Non-Negotiables
 
 - One codebase, two modes:
   - Manager: fully offline on single device.
