@@ -3,11 +3,6 @@ Author: Kelvin Kabute
 Last-updated: 2026-10-06
 ---
 
-﻿---
-Author: Kelvin Kabute
-Last-updated: 2026-10-05
----
-
 # 🏗️ Alpha Rabbit LMS Build Document
 
 ## 📋 File Context
@@ -72,9 +67,9 @@ Last-updated: 2026-10-05
 
 ---
 
-### Sprint 1: Core Infrastructure + Acquisitions
+### Database Modeling Prerequisites for Sprint 1
 
-**Results to achieve:**
+**Results to achieve before Sprint 1 build work begins:**
 
 - PouchDB offline storage with SQLite adapter operational
 - Database model contract defined and enforced for shared records
@@ -142,7 +137,7 @@ Last-updated: 2026-10-05
 
 ## 3. 🔍 Detailed Sprint Breakdown
 
-### Sprint 1: Core Infrastructure + Acquisitions
+### 3.1 Sprint 1: Core Infrastructure + Acquisitions
 
 **Results to achieve:**
 
