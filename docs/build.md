@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-05
+Last-updated: 2026-10-06
 ---
 
 # 🏗️ Alpha Rabbit LMS Build Document
@@ -45,15 +45,15 @@ Last-updated: 2026-10-05
 - **Schema discipline**: every document must extend the same `BaseDocument` contract; no field drift without a schema version bump and migration note; data must be validated at the application boundary (Zod) and, for Enterprise, by CouchDB validation logic where relevant
 - **Query-first indexing**: required indexes must exist for typical access patterns such as `type + status`, `type + department`, `type + barcode`, `type + cycleCode`, `type + schoolId`, `type + patronId + status`, and `type + dueDate` so that offline performance does not degrade as data grows
 - **Conflict-safe sync**: PouchDB/CouchDB conflicts must be treated as first-class events; no silent overwrite of concurrent edits; every conflict must be resolved with an explicit audit trail and human-visible review when needed
-- **Package manager**: `pnpm` only — no `npm`, `yarn`, or `bun`
+- **Package manager**: `pnpm` only â€” no `npm`, `yarn`, or `bun`
 - **Device baseline**: Windows 10, 4GB RAM, unstable power/internet expected
 - **Offline-first**: Every critical workflow completes locally; sync is deferred
 - **Country policy configuration**: school calendar, language labels, curriculum rules, compliance checks, and academic terms must be data-driven rather than hard-coded to a single nation. Each selected country or custom institution profile must be saved and reused for batch promotions, expiry checks, and curriculum tagging.
-- **Extension Services is a top-level DEPARTMENT** (peer to Acquisitions, Processing, Distribution, Library Operations, System Admin) — NOT a library section
+- **Extension Services is a top-level DEPARTMENT** (peer to Acquisitions, Processing, Distribution, Library Operations, System Admin) â€” NOT a library section
 - **Books remain owned by Lending Section**; Extension Services borrows temporarily via bulk allocation: `Extension Request → Lending Fulfillment → Distribution Delivery → Extension Rotation → Return to Lending`
 - **Community handoff remains under Extension Services**: books sent to community leaders and rural outreach points retain their extension workflow, not a separate one-off library section.
 - **Outreach learners and mobile-library patrons have minimal profiles** (QR or local token ID only, no condition scoring, no degradation tracking unless the country policy explicitly requires it)
-- **Android app is an external tool** for Extension Services field operations only — NOT part of the Electron desktop application
+- **Android app is an external tool** for Extension Services field operations only â€” NOT part of the Electron desktop application
 - **Operational reality**: many African libraries combine public-library, school-library, outreach-library, and community-reading functions. The system must support those mixed workflows without forcing a single branch model
 
 ### 🗄️ Database Modeling Requirements (must be planned before build work)
@@ -67,9 +67,9 @@ Last-updated: 2026-10-05
 
 ---
 
-### Sprint 1: Core Infrastructure + Acquisitions
+### Database Modeling Prerequisites for Sprint 1
 
-**Results to achieve:**
+**Results to achieve before Sprint 1 build work begins:**
 
 - PouchDB offline storage with SQLite adapter operational
 - Database model contract defined and enforced for shared records
@@ -137,7 +137,7 @@ Last-updated: 2026-10-05
 
 ## 3. 🔍 Detailed Sprint Breakdown
 
-### Sprint 1: Core Infrastructure + Acquisitions
+### 3.1 Sprint 1: Core Infrastructure + Acquisitions
 
 **Results to achieve:**
 
@@ -207,20 +207,20 @@ Last-updated: 2026-10-05
 **Build Focus:**
 
 - Four 1-5 sliders: Spine (40%), Cover (25%), Pages (25%), Edges (10%)
-- Climate-aware tooltips: "Critical in humid climate – check for separation"
+- Climate-aware tooltips: "Critical in humid climate â€“ check for separation"
 - Auto-save every 30 seconds with checksum validation
 - Recovery snapshot with timestamp display
 - Barcode format: `[SUBJECT]-[GRADE][AUTHOR_INITIAL]-[SEQUENTIAL]`
 - Extension suffix: `-C[1-4]` for rotation cycles
 - Seasonal calendar: Dec-Feb (dry), Mar-May/Sept-Nov (rainy), Jun-Aug (major rainy)
 - Extension routing conditional fields: Rotation Cycle, Mobile Handling Durability, Destination Region
-- Durability ≥3 required for Tamale-Bolgatanga corridor
+- Durability â‰¥3 required for Tamale-Bolgatanga corridor
 - Corridor safety protocols auto-trigger for Northern Region
 
 **Verification Gate:**
 
 - Condition scoring works offline
-- Mold risk assessment matches manual review (≥90%)
+- Mold risk assessment matches manual review (â‰¥90%)
 - Barcode format `SCI-6M-042-C2` generated correctly
 - Extension routing shows conditional fields, hides batch assignment
 - Auto-save recovers 99% of transactions >30s old after 4h outage
@@ -253,14 +253,14 @@ Last-updated: 2026-10-05
 **Build Focus:**
 
 - Packing slip groups books by batch with learner counts
-- Repeat batch warning: "Repeat learners – 20% extra books required"
+- Repeat batch warning: "Repeat learners â€“ 20% extra books required"
 - Rural mode toggle disables GPS, requires community leader contact
 - Rainy season banner: "RAINY SEASON ALERT: Use waterproof covers + silica gel"
 - Glossy page books (Science/Math) flagged for extra protection
 - Depot routing: rotation cycle indicator, depot location, community leader signature
 - READ-ONLY rotation cycle metadata (assigned during Lending fulfillment)
-- Dagbani SMS: "Zuli libri ka ti kpɛ. Cycle 2 books arriving today."
-- Backup: daily 8 PM incremental, ≤5% DB size, WhatsApp compression <10MB
+- Dagbani SMS: "Zuli libri ka ti kpÉ›. Cycle 2 books arriving today."
+- Backup: daily 8 PM incremental, â‰¤5% DB size, WhatsApp compression <10MB
 - 30-day retention with auto-deletion
 
 **Verification Gate:**
@@ -295,7 +295,7 @@ Last-updated: 2026-10-05
 **Build Focus:**
 
 - Degradation formula: `(spine_loss*0.4 + cover_loss*0.25 + pages_loss*0.25 + edges_loss*0.1)`
-- Zone logic: Green (≤0.15), Yellow (0.16-0.29), Red (0.30-0.44), Critical (≥0.45)
+- Zone logic: Green (â‰¤0.15), Yellow (0.16-0.29), Red (0.30-0.44), Critical (â‰¥0.45)
 - Red zone: block issuance + require staff override with 10-char reason
 - Critical zone: block + auto-schedule coaching workshop
 - Auto-promotion: >80% attendance → promote, <70% → repeat batch
@@ -307,7 +307,7 @@ Last-updated: 2026-10-05
 **Verification Gate:**
 
 - Batch promotion accurate (100% learner assignment)
-- Degradation engine ≥90% accuracy vs manual review
+- Degradation engine â‰¥90% accuracy vs manual review
 - Teleporter flags show "Watch" not "Teleporter" (non-punitive)
 - Calendar auto-expires batches on September 1
 
@@ -361,7 +361,7 @@ Last-updated: 2026-10-05
 - Staff roles switch without data loss
 - Extension staff CANNOT access library section data
 - Lending bulk allocation fulfills requests correctly
-- Local-language SMS delivers ≥95% success rate when connectivity allows
+- Local-language SMS delivers â‰¥95% success rate when connectivity allows
 - Cross-department sync prevents double-allocation
 
 ---
@@ -412,7 +412,7 @@ Last-updated: 2026-10-05
 - Battery optimization: 30s screen timeout, low-power mode
 - Post-service sync on depot Wi-Fi
 - QR smart tag: 85.6x54mm, 250-micron laminate, rounded corners
-- QR contains ONLY `qrCodeId` — NO personal data
+- QR contains ONLY `qrCodeId` â€” NO personal data
 - Lost tag reuses same `qrCodeId` to preserve history
 - Cross-department sync: status "On Loan to Extension Services"
 - Real-time sync prevents double-allocation
@@ -458,7 +458,7 @@ Last-updated: 2026-10-05
 - Android checkout: scan QR → display learner → scan book barcode → max 2 books
 - NO condition scoring, NO interaction scores, NO degradation tracking
 - Transaction saves to local encrypted SQLite
-- Dagbani template: "Zuli libri ka ti kpɛ. Yɛlsim cycle 2 books."
+- Dagbani template: "Zuli libri ka ti kpÉ›. YÉ›lsim cycle 2 books."
 - Seasonal calendar: auto-detect season from device date
 - Mold risk defaults: high during rainy seasons
 - Dagbani translations validated by UDS linguist
@@ -470,192 +470,301 @@ Last-updated: 2026-10-05
 - Withdrawal recommendation when condition drops below threshold
 - CouchDB 3.3 on Raspberry Pi 4, port 5984
 - Data persists in `/home/pi/couchdb/data`
-- ≤15% CPU during idle
+- â‰¤15% CPU during idle
 
 **Verification Gate:**
 
 - Android field test at Bolgatanga school: 100 transactions offline
 - QR smart tag scanning works in low-light conditions
 - Full offline resilience: 24h simulated outage, zero data loss
-- Dagbani SMS delivers ≥95% success rate
+- Dagbani SMS delivers â‰¥95% success rate
 - DPC submission package complete
 - Pilot-ready: all acceptance criteria pass on Ghana-spec hardware
 
 ---
 
-## 4. 🚀 Git Workflow & PR Guidelines
+## 4. 🚀 Development & Release Workflow: Branching, Commits, PRs & Build Tags
 
-### 🌿 Branching Rules
+### 🧭 Overview
 
-- `testing-main` is the development base branch
-- Create one branch per ticket only
-- Never combine multiple tickets into one branch or PR
-- Branch naming: `LMS-[XXX]/[kebab-case-title]`
-- Create from latest `testing-main`
-- Sync with `testing-main` before starting work
+All feature development follows a branch-per-ticket model anchored to ticket IDs from `docs/jira/compression.md`. The `testing-main` branch is the integration target for all feature work. Pull requests are the only merge path into `testing-main`. Every merge commit is tagged with a lightweight build number; every completed sprint receives an annotated tag aggregating all builds from that sprint.
 
-### 💻 Commit Format
+### 🌿 Branch Naming Convention
 
-```
-LMS-[XXX]: <type>: <vivid summary>
-
-<Paragraph explaining what was built, how it works, and why>
+```text
+LMS-[XXX]/[title-or-description]
 ```
 
-Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`
+- `[XXX]` = the numeric ticket ID from `compression.md` (e.g., `101`, `302`, `801`)
+- `[title-or-description]` = kebab-case summary of the ticket title
 
-### Pull Request Requirements
+**Examples:**
 
-Every PR to `testing-main` must include:
+| Ticket     | Branch Name                                         |
+| ---------- | --------------------------------------------------- |
+| LMS-101    | `LMS-101/implement-sha256-hashing-ghana-card-id`    |
+| LMS-302    | `LMS-302/build-budget-tracking-ges-alignment`       |
+| LMS-801    | `LMS-801/create-bulk-book-requests-rotation-cycles` |
+| LMS-NA-001 | `LMS-NA-001/power-outage-resilience-validation`     |
 
-- Ticket ID and title
-- Short implementation summary
-- Acceptance criteria covered
-- Known gaps
-- Evidence of verification performed
+### 🛠️ Workflow Steps (Using GitHub MCP Tools)
 
-### Build Tags
+#### Step 1: 🌱 Create Feature Branch from `testing-main`
 
-- Lightweight tag per commit: `[YY###]` (e.g., `[261]`)
-- Annotated sprint tag on sprint completion: `v<M.m.0>`
-- Tag body includes: build entries, contributors, full PR descriptions
+Use the GitHub MCP `create_branch` tool to create the branch on the remote, branching off `testing-main`:
 
-### MCP Tool Sequence
-
-```
-1. Create feature branch from testing-main
-2. Sync feature branch with testing-main
-3. Read existing files before editing
-4. Commit and push all changes
-5. Tag commit with build number [YY###]
-6. Open PR to testing-main
-7. Create annotated sprint tag on sprint completion
+```yaml
+Tool: mcp_io_github_git_create_branch
+  owner: noobix
+  repo: alpha-rabbit-lms
+  branch: LMS-[XXX]/[title-or-description]
+  from_branch: testing-main
 ```
 
-### Fork-to-Upstream Contribution Workflow
+#### Step 2: 🔄 Sync with `testing-main`
 
-This repository requires using GitHub MCP for any pull request targeting the upstream organizational repository.
+If a PR already exists for the branch and `testing-main` has moved ahead, use the MCP `update_pull_request_branch` tool to pull the latest base branch changes into the feature branch:
 
-Steps:
+```yaml
+Tool: mcp_io_github_git_update_pull_request_branch
+  owner: noobix
+  repo: alpha-rabbit-lms
+  pullNumber: <PR number>
+```
 
-1. Add upstream remote (once):
+This merges the latest `testing-main` into the feature branch on the remote — no local pull needed.
 
-   ```bash
-   git remote add upstream https://github.com/noobix/alpha-rabbit-lms.git
-   git fetch upstream
-   ```
+#### Step 3: 💻 Implement the Feature
 
-2. Create feature branch from latest upstream `testing-main`:
+Work on the ticket. Every commit message must paint a clear picture of what was built and why. Use the acceptance criteria from `compression.md` as context to inform what you write — don't copy them verbatim, describe the work you actually did.
 
-   ```bash
-   git fetch upstream
-   git checkout -b LMS-[XXX]/[title] upstream/testing-main
-   git push origin LMS-[XXX]/[title]
-   ```
+**Commit message format:**
 
-3. Work on only that ticket. Commit with ticket ID and concise acceptance summary.
+```text
+LMS-[XXX]: <type>: <vivid summary of what was accomplished>
 
-4. Keep branch current with upstream `testing-main` before PR review:
+<Paragraph explaining what was built, how it works, and why it was
+done this way. Reference the real behavior and constraints from the
+ticket naturally — not as a checklist.>
+```
 
-   ```bash
-   git fetch upstream
-   git checkout testing-main
-   git pull upstream testing-main
-   git checkout <feature-branch>
-   git merge testing-main
-   git push origin <feature-branch>
-   ```
+Where `<type>` is one of: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 
-5. Open fork PR targeting `origin/testing-main` and require:
-   - CI passing on fork PR
-   - Explicit QA sign-off from QA reviewer in fork PR
+**Example (LMS-101):**
 
-6. After CI and QA sign-off, open upstream MCP PR. Link fork PR, note QA sign-off, include verification steps.
+```text
+LMS-101: feat: implement SHA-256 hashing pipeline for Ghana Card ID storage
 
-7. Post-merge housekeeping:
-   ```bash
-   git checkout testing-main
-   git pull upstream testing-main
-   git push origin testing-main
-   git branch -d <feature-branch>
-   git push origin --delete <feature-branch>
-   ```
+Built the hashing service in the Electron main process to ensure plaintext
+Ghana Card IDs never reach the renderer. IDs are validated against the
+GHA-000000000-0 format at the form boundary, salted and hashed with SHA-256
+before persistence, and displayed as masked values (GHA-123***89-0) across
+all UI surfaces. Log sanitization strips any accidental plaintext leakage
+from backups and debug output. The masked format function is shared with
+the vendor Ghana Card display for reuse in LMS-301.
+```
 
-### Sprint Branch Mapping
+#### Step 4: 📤 Commit and Push Feature Branch
 
-| Sprint   | Tickets                                                                                                             | Branch Names                                                                                                                                                                                                                                                                                                                                                           |
-| -------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Sprint 1 | LMS-CORE-01, LMS-CORE-02, LMS-ACQ-10, LMS-ACQ-01, LMS-ACQ-02                                                        | `LMS-CORE-01/setup-pouchdb-sqlite`, `LMS-CORE-02/implement-sha256-hashing`, `LMS-ACQ-10/preload-ges-curriculum-tags`, `LMS-ACQ-01/vendor-management-ghana-card`, `LMS-ACQ-02/curriculum-tag-selection`                                                                                                                                                                 |
-| Sprint 2 | LMS-CORE-04, LMS-PROC-10, LMS-PROC-11, LMS-PROC-12, LMS-PROC-01, LMS-PROC-02, LMS-PROC-03, LMS-PROC-04              | `LMS-CORE-04/30-second-auto-save`, `LMS-PROC-10/pdf417-barcode-generator`, `LMS-PROC-11/ghana-seasonal-calendar`, `LMS-PROC-12/barcode-rotation-cycle`, `LMS-PROC-01/condition-scoring-sliders`, `LMS-PROC-02/mold-risk-assessment`, `LMS-PROC-03/batch-assignment`, `LMS-PROC-04/extension-services-routing`                                                          |
-| Sprint 3 | LMS-CORE-03, LMS-DIST-10, LMS-DIST-11, LMS-DIST-12, LMS-DIST-01, LMS-DIST-02, LMS-DIST-03, LMS-DIST-04              | `LMS-CORE-03/incremental-backup-scheduler`, `LMS-DIST-10/offline-pdf-generation`, `LMS-DIST-11/tamale-bolgatanga-corridor`, `LMS-DIST-12/extension-depot-routing`, `LMS-DIST-01/batch-aware-packing-slips`, `LMS-DIST-02/rural-delivery-mode`, `LMS-DIST-03/rainy-season-alerts`, `LMS-DIST-04/extension-depot-delivery`                                               |
-| Sprint 4 | LMS-CHILD-10, LMS-CHILD-11, LMS-CHILD-01, LMS-CHILD-02, LMS-CHILD-03                                                | `LMS-CHILD-10/degradation-engine`, `LMS-CHILD-11/ges-academic-calendar`, `LMS-CHILD-01/batch-promotion`, `LMS-CHILD-02/degradation-threshold-enforcement`, `LMS-CHILD-03/teleporter-detection`                                                                                                                                                                         |
-| Sprint 5 | LMS-STAFF-10, LMS-STAFF-01, LMS-STAFF-02, LMS-STAFF-03, LMS-LEND-10, LMS-LEND-01, LMS-LEND-02, LMS-GH-10, LMS-GH-01 | `LMS-STAFF-10/role-based-ui-filtering`, `LMS-STAFF-01/staff-profiles-hashing`, `LMS-STAFF-02/department-role-switching`, `LMS-STAFF-03/extension-staff-certification`, `LMS-LEND-10/cross-department-book-status`, `LMS-LEND-01/fulfill-bulk-allocation`, `LMS-LEND-02/rotation-tracking-return`, `LMS-GH-10/offline-sms-queue`, `LMS-GH-01/twi-dagbani-sms-templates` |
-| Sprint 6 | LMS-CORE-06, LMS-EXT-10, LMS-EXT-11, LMS-EXT-12, LMS-EXT-13, LMS-EXT-01, LMS-EXT-02, LMS-EXT-03                     | `LMS-CORE-06/department-security-objects`, `LMS-EXT-10/android-offline-transaction-app`, `LMS-EXT-11/qr-learner-identification`, `LMS-EXT-12/extension-lending-sync`, `LMS-EXT-13/extension-schedule-safety`, `LMS-EXT-01/bulk-book-requests`, `LMS-EXT-02/rotation-cycle-management`, `LMS-EXT-03/school-delivery-tracking`                                           |
-| Sprint 7 | LMS-EXT-04, LMS-EXT-05, LMS-GH-11, LMS-GH-12, LMS-GH-02, LMS-LEND-03, LMS-CORE-05                                   | `LMS-EXT-04/qr-checkout-return-android`, `LMS-EXT-05/dagbani-sms-templates`, `LMS-GH-11/ghana-seasonal-calendar-mold`, `LMS-GH-12/dagbani-language-support`, `LMS-GH-02/community-leader-notification`, `LMS-LEND-03/collection-health-monitoring`, `LMS-CORE-05/couchdb-raspberry-pi`                                                                                 |
+Use the GitHub MCP `push_files` tool to commit and push all changed files to the feature branch in a single operation. Use `get_file_contents` to read current file contents from the branch if needed.
+
+```yaml
+Tool: mcp_io_github_git_push_files
+  owner: noobix
+  repo: alpha-rabbit-lms
+  branch: LMS-[XXX]/[title-or-description]
+  files:
+    - path: "<relative/path/to/file>"
+      content: "<full file content>"
+    - path: "<relative/path/to/another-file>"
+      content: "<full file content>"
+  message: |
+    LMS-[XXX]: <type>: <vivid summary>
+
+    <Paragraph describing what was built, how it works,
+    and why it was done this way.>
+```
+
+To read existing file contents before pushing updates:
+
+```yaml
+Tool: mcp_io_github_git_get_file_contents
+  owner: noobix
+  repo: alpha-rabbit-lms
+  path: "<relative/path/to/file>"
+  ref: "refs/heads/LMS-[XXX]/[title-or-description]"
+```
+
+#### Step 5: 🏷️ Tag the Commit with a Build Number
+
+Before opening the PR, tag the current commit on the feature branch with a lightweight build number tag. Each commit receives exactly one build number. Build numbers are the primary traceability unit linking a commit to its delivered work.
+
+**Build number format:**
+
+```text
+[YY###]
+```
+
+- `YY` = two-digit year (2026 → `26`)
+- `###` = sequential counter starting at `1` for the year, incrementing by one per merged PR
+- 2026 range: `[261]` through `[26999]`
+- Build numbers are year-scoped, never reset mid-year, and never appear in the semantic version string
+
+**Reading the next build number from `.build_counter`:**
+
+The repo tracks the next build number to use in a plain text file at the root:
+
+```bash
+cat .build_counter   # e.g. outputs: 261
+```
+
+Read this file before tagging. The value it contains is the number you apply to your commit. After tagging, increment and write it back so the next developer gets the correct number:
+
+```bash
+# 1. Read current counter
+BUILD=$(cat .build_counter)
+
+# 2. Tag the commit
+git tag "[$BUILD]"
+git push origin "[$BUILD]"
+
+# 3. Increment and commit the counter back to testing-main
+echo $(( BUILD + 1 )) > .build_counter
+git add .build_counter
+git commit -m "chore: increment build counter to $(( BUILD + 1 ))"
+git push origin testing-main
+```
+
+> **Race condition note:** If two PRs are being tagged concurrently, both may read the same counter value. In practice, serialise this step manually (one tag operation at a time) or rely on the CI automation in `docs/release.md` which handles this atomically.
+
+#### Step 6: 🔀 Create Pull Request to `testing-main`
+
+Use the GitHub MCP `create_pull_request` tool:
+
+```yaml
+Tool: mcp_io_github_git_create_pull_request
+  owner: noobix
+  repo: alpha-rabbit-lms
+  title: "LMS-[XXX]: <ticket title>"
+  head: LMS-[XXX]/[title-or-description]
+  base: testing-main
+  body: |
+    ## Ticket
+    **LMS-[XXX]**: <ticket title>
+
+    ## Changes
+    - Write this section as a paraphrase of the ticket's acceptance criteria, phrased as completed implementation behavior rather than a checklist.
+    - Describe what the code now does, how it behaves, and why it satisfies the ticket, without copying the acceptance criteria verbatim.
+    - You may reference the commit message for context, but do not lift its wording directly.
+    - This section will be reused in annotated tags, so keep it clear, factual, and implementation-focused.
+
+    ## Acceptance Criteria (from compression.md)
+    - [ ] <AC 1>
+    - [ ] <AC 2>
+    - [ ] <AC 3>
+
+    ## Completion Gate Checklist
+    - [ ] All acceptance criteria satisfied
+    - [ ] Offline behavior demonstrated
+    - [ ] Security/privacy checks pass
+    - [ ] Audit artifacts exist where required
+    - [ ] Manager/Enterprise impact recorded
+```
 
 ---
 
-## 5. 🧩 Cross-Cutting Constraints
+#### Step 7: 📦 Create Sprint Annotated Tag
 
-### Architecture Boundaries
+When every ticket in a sprint is merged into `testing-main`, create a single annotated tag covering the entire sprint. The annotated tag is the durable, human-readable record of everything delivered in the sprint; its body feeds release notes and audit records. The semantic version increments the MINOR component at sprint completion.
 
-| Boundary              | Rule                                                      |
-| --------------------- | --------------------------------------------------------- |
-| System vs Application | System tasks enable features; features deliver user value |
-| Manager vs Enterprise | Manager first, Enterprise builds on top                   |
-| Department Isolation  | Extension ↔ Lending data access blocked                   |
-| Desktop vs Android    | Android is external tool, not part of Electron app        |
+**Annotated tag body format:**
 
-### Department Security
+```text
+Build #[261]
+Changes:
+- <Paraphrased description of what was delivered — drawn from the PR ## Changes section, not copied verbatim>
+- <Additional delivered behavior expressed as what the system now does as a result of this build>
 
-- Extension Services staff CANNOT access library section data
-- Lending staff see ONLY "Bulk Requests" tab for Extension requests
-- Cross-department writes blocked by security objects
+Build #[262]
+Changes:
+- <Paraphrased description of what was delivered>
+- <Additional delivered behavior>
 
-### Jurisdiction Compliance
-
-- Country-specific privacy rules: auto-anonymization, purge, and audit trails
-- Curriculum tags stored from the selected national or institutional profile, available offline as needed
-- Academic calendar rules derived from the active country policy: promotion windows, expiry dates, and rollover logic
-- Local-language support for rural or mobile operations
-- Rural corridor safety protocols based on active delivery policy and community leadership requirements
-
-### Offline-First Requirements
-
-- All critical workflows complete locally
-- Sync deferred to reconnect
-- 30-second auto-save for power resilience
-- 24-hour outage tolerance with zero data loss
+Contributors:
+@github-handle (Display Name)
+@github-handle-2 (Display Name)
 
 ---
 
-## 6. ✅ Ticket Completion Gate
+Appendix: Full PR descriptions
+[Full PR description for each build, appended in chronological order]
+```
 
-A ticket is complete only when:
+**Rules:**
 
-- [ ] All acceptance criteria from `jira_doc.md` satisfied
-- [ ] Offline behavior demonstrated
-- [ ] Security/privacy checks pass for sensitive fields
-- [ ] Audit artifacts exist where required
-- [ ] Manager/Enterprise impact recorded
-- [ ] Extension Services department boundary verified (where applicable)
-- [ ] Bulk allocation workflow integrity confirmed (where applicable)
+- Open each build entry with `Build #[YY###]`.
+- `Changes:` items are paraphrased from the PR `## Changes` section. Describe what the system now does as a result of the build — implementation behavior, not requirements. Do not copy from the acceptance criteria list or lift wording from the commit message verbatim.
+- Order entries chronologically by merge date.
+- After all build entries, include a `Contributors:` section listing every GitHub handle (and display name where available) that authored a PR or commit merged in this sprint. Format each line as `@handle (Display Name)` — or `@handle` alone when no display name is set. Deduplicate and sort alphabetically. This section is generated automatically by `scripts/release-aggregate.sh`.
+- After the contributors section, append a `---` separator followed by `Appendix: Full PR descriptions`, then the full PR description body for each build in chronological order. This appendix is the reference used by `docs/release.md` and for audit purposes.
+- The tag body must be entirely self-contained — readable without accessing GitHub.
+
+**Command:**
+
+```bash
+git tag -a v1.1.0 -F sprint-tag-body.txt
+git push origin v1.1.0
+```
+
+Write the tag body to a temporary file to handle multi-line content reliably; remove the file after tagging. Automation details live in `docs/release.md`.
+
+**Example (Sprint 1, v1.1.0):**
+
+```text
+Build #[261]
+Changes:
+- Ghana Card IDs submitted at any form boundary are validated against the GHA-000000000-0 format, then hashed and salted exclusively in the Electron main process before reaching the database — plaintext values never appear in storage, logs, or the renderer.
+- All UI surfaces render the masked format GHA-123***89-0; the masking function is shared with the vendor identity form.
+
+Build #[262]
+Changes:
+- The backup scheduler fires daily at 8 PM, produces an incremental snapshot capped at 5% of database size, and resumes automatically from the last checkpoint after a power interruption.
+- A WhatsApp export path compresses the output below 10 MB; a retention job prunes backups older than 30 days on schedule.
+
+Build #[263]
+Changes:
+- Active transaction drafts are persisted to a local snapshot every 30 seconds and stamped with a checksum; on restart after an outage the app locates the last clean snapshot, verifies its integrity, and displays the exact timestamp of the recovered state to the user.
+
+Contributors:
+@noobix (Kelvin Kabute)
 
 ---
 
-## 7. ⚡ Quick Reference
+Appendix: Full PR descriptions
+[Full PR description for Build #[261] — LMS-101]
+[Full PR description for Build #[262] — LMS-102]
+[Full PR description for Build #[263] — LMS-103]
+```
 
-| Question             | Answer                       |
-| -------------------- | ---------------------------- |
-| Base branch?         | `testing-main`               |
-| Issues per branch?   | Exactly one                  |
-| PR target?           | `testing-main`               |
-| Package manager?     | `pnpm` only                  |
-| Device baseline?     | Windows 10, 4GB RAM          |
-| Department boundary? | Extension ↔ Lending isolated |
-| Offline requirement? | All critical workflows       |
-| Country policy?      | Configurable by jurisdiction |
+### Sprint Branch Mapping (from compression.md)
 
----
+| Sprint   | Tickets                                                      | Branch Names                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| -------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sprint 1 | LMS-101, LMS-102, LMS-103                                    | `LMS-101/implement-sha256-hashing-ghana-card-id`<br>`LMS-102/build-incremental-backup-whatsapp-compression`<br>`LMS-103/implement-30-second-auto-save-power-outage`                                                                                                                                                                                                                                                                                                                                                                      |
+| Sprint 2 | LMS-201, LMS-202, LMS-301, LMS-302                           | `LMS-201/ghana-data-protection-act-compliance`<br>`LMS-202/integrate-ges-curriculum-tags`<br>`LMS-301/vendor-management-ghana-card-validation`<br>`LMS-302/build-budget-tracking-ges-alignment`                                                                                                                                                                                                                                                                                                                                          |
+| Sprint 3 | LMS-401, LMS-402, LMS-403, LMS-404                           | `LMS-401/condition-scoring-sliders`<br>`LMS-402/mold-risk-assessment-seasonal-calendar`<br>`LMS-403/generate-pdf417-barcodes-gla-format`<br>`LMS-404/route-books-extension-services-durability`                                                                                                                                                                                                                                                                                                                                          |
+| Sprint 4 | LMS-501, LMS-502, LMS-503, LMS-504                           | `LMS-501/batch-aware-packing-slips`<br>`LMS-502/rural-delivery-tamale-bolgatanga`<br>`LMS-503/rainy-season-alerts-packing-slips`<br>`LMS-504/deliver-books-extension-depot-rotation`                                                                                                                                                                                                                                                                                                                                                     |
+| Sprint 5 | LMS-601, LMS-602, LMS-603                                    | `LMS-601/ges-batch-promotion-workflow`<br>`LMS-602/degradation-threshold-enforcement`<br>`LMS-603/teleporter-detection-oral-tradition`                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Sprint 6 | LMS-701, LMS-702, LMS-703, LMS-851, LMS-852, LMS-860         | `LMS-701/staff-profile-ghana-card-hashing`<br>`LMS-702/role-switcher-manager-version`<br>`LMS-703/extension-staff-route-certification`<br>`LMS-851/fulfill-bulk-allocation-extension`<br>`LMS-852/rotation-tracking-return-workflow`<br>`LMS-860/cross-department-book-status-tracking`                                                                                                                                                                                                                                                  |
+| Sprint 7 | LMS-105, LMS-801, LMS-802, LMS-803, LMS-812, LMS-813         | `LMS-105/department-security-objects`<br>`LMS-801/create-bulk-book-requests-rotation-cycles`<br>`LMS-802/rotation-cycle-management-ges-calendar`<br>`LMS-803/school-delivery-tracking-mobile-van`<br>`LMS-812/extension-lending-cross-department-sync`<br>`LMS-813/extension-schedule-corridor-safety`                                                                                                                                                                                                                                   |
+| Sprint 8 | LMS-804, LMS-805, LMS-810, LMS-811, LMS-NA-001 to LMS-NA-007 | `LMS-804/qr-learner-checkout-return-android`<br>`LMS-805/dagbani-sms-templates-northern-region`<br>`LMS-810/android-offline-transaction-app`<br>`LMS-811/qr-learner-identification-smart-tag`<br>`LMS-NA-001/power-outage-resilience-validation`<br>`LMS-NA-002/battery-drain-profiling`<br>`LMS-NA-003/translate-critical-screens-twi-dagbani`<br>`LMS-NA-004/language-toggle-settings`<br>`LMS-NA-005/anonymized-patron-heartbeat`<br>`LMS-NA-006/qa-tooling-patron-simulation`<br>`LMS-NA-007/validate-extension-bulk-allocation-e2e` |
 
-_Document Version: 2.0 • Prepared for multi-country African library operations • October 2026_
+### Quick Reference: MCP Tool Sequence
+
+```text
+1. mcp_io_github_git_create_branch         → Create feature branch from testing-main
+2. mcp_io_github_git_update_pull_request_branch → Sync feature branch with testing-main
+3. mcp_io_github_git_get_file_contents      → Read existing files before editing
+4. mcp_io_github_git_push_files             → Commit and push all changes
+5. mcp_io_github_git_create_pull_request    → Open PR to testing-main
+```

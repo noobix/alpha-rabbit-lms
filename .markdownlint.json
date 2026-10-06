@@ -1,9 +1,12 @@
 {
+  "MD003": { "style": "atx" },
   "MD013": false,
   "MD029": { "style": "ordered" },
   "MD033": {
     "allowed_elements": ["br"]
   },
+  "MD035": { "style": "---" },
   "MD036": false,
+  "MD041": false,
   "MD060": false
 }
