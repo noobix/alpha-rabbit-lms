@@ -1,0 +1,83 @@
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-10
+
+name: Deploy on Tag
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node & pnpm
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 18
+
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build || echo "No build script; replace with your app build command"
+
+      - name: Generate CHANGELOG.md
+        run: |
+          chmod +x ./scripts/generate-changelog.sh
+          ./scripts/generate-changelog.sh
+
+      - name: Commit and push CHANGELOG.md
+        env:
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG=${GITHUB_REF_NAME}
+          git config user.name "CI Bot"
+          git config user.email "ci@alpharabbit.dev"
+          git fetch origin testing-main
+          git checkout testing-main
+          git add CHANGELOG.md
+          if git diff --cached --quiet; then
+            echo "CHANGELOG.md unchanged; nothing to commit"
+          else
+            git commit -m "chore(changelog): update for ${TAG}"
+            PAT="${RELEASE_PAT:-${GITHUB_TOKEN}}"
+            git remote set-url origin https://x-access-token:${PAT}@github.com/${{ github.repository }}
+            git push origin testing-main || { echo "::error::Changelog push failed"; exit 1; }
+          fi
+
+      - name: Create GitHub Release and upload artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT || secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          TAG=${GITHUB_REF_NAME}
+          if [ -f release-entry.md ] && [ -s release-entry.md ]; then
+            NOTES_FILE=release-entry.md
+          else
+            git for-each-ref "refs/tags/${TAG}" --format='%(contents)' > release-notes-raw.txt
+            NOTES_FILE=release-notes-raw.txt
+          fi
+          gh release create "$TAG" --notes-file "$NOTES_FILE" --repo "$REPO" || gh release view "$TAG" --repo "$REPO"
+          gh release view "$TAG" --repo "$REPO" > /dev/null || { echo "::error::Release not found after creation"; exit 1; }
+          rm -f release-entry.md release-notes-raw.txt
+          if [ -d dist ]; then
+            for f in dist/*; do gh release upload "$TAG" "$f" --repo "$REPO" || true; done
+          fi
+          if [ -d out ]; then
+            for f in out/*; do gh release upload "$TAG" "$f" --repo "$REPO" || true; done
+          fi

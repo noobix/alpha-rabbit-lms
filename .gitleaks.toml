@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "GSD manifest maps file names (e.g. secrets.cjs) to content hashes"
+paths = ['''\.github/gsd-file-manifest\.json$''']

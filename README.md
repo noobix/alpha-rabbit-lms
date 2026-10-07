@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 🐇 Alpha Rabbit LMS
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
@@ -169,7 +174,7 @@ Examples: `LMS-101/implement-sha256-hashing-ghana-card-id`, `LMS-502/extension-q
 # 1. Sync with integration branch
 git fetch origin
 git checkout LMS-[XXX]/[title-or-description]
-git merge origin/develop
+git merge origin/testing-main
 
 # 2. Work, then commit
 git add .
@@ -194,7 +199,7 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 
 ## 📬 Pull Requests
 
-- **Target branch** — always `develop`.
+- **Target branch** — always `testing-main`.
 - **One PR per ticket** — do not bundle unrelated changes.
 - **PR body** must follow the template in `docs/build.md` Section 5 Step 6: `## Ticket`, `## Changes`, `## Acceptance Criteria`, `## Completion Gate Checklist`.
 - **Merging rules**:

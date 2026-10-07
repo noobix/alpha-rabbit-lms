@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-04
+---
+
 # 📚 Library Management System: Acquisitions Module Implementation (Week 1)
 
 _Electron.js desktop application with extensive bibliographic metadata capture, Ghana curriculum integration, and offline-first workflow_
@@ -10,7 +15,7 @@ _Electron.js desktop application with extensive bibliographic metadata capture, 
 ✅ **Electron desktop application scaffold** (Manager version) with PouchDB + SQLite
 ✅ **Acquisitions UI** with dynamic contributor fields, Ghana Curriculum Tag selector, and vendor management
 ✅ **Offline-first workflow** with local save + incremental backup system
-✅ **Ghana-specific compliance** (Ghana Card ID hashing, curriculum tags, Twi language support)
+✅ **Ghana-specific compliance** (business registration validation, curriculum tags, Twi language support)
 
 ---
 
@@ -24,7 +29,7 @@ library-manager/
 │   ├── index.ts                   # App entry point
 │   ├── database.ts                # PouchDB initialization + backup service
 │   ├── backup-manager.ts          # Incremental backup scheduler
-│   └── security.ts                # Ghana Card ID hashing utilities
+│   └── security.ts                # Password hashing utilities
 ├── renderer/                      # React + Vite frontend
 │   ├── src/
 │   │   ├── types/
@@ -210,7 +215,8 @@ export interface AcquisitionOrder {
   vendor: {
     id: string; // References vendor document ID
     name: string; // Required
-    ghanaCardId: string; // HASHED storage (never plaintext)
+    businessRegistration: string; // Ghana Enterprises Agency registration
+    taxId: string; // Ghana Revenue Authority TIN
     contactPerson?: string;
     phone: string; // Required (E.164 format)
     email?: string;
@@ -254,12 +260,19 @@ export interface AcquisitionOrder {
 export interface Vendor {
   _id: string; // "vendor-accra-edu-pub"
   type: "vendor";
-  name: string; // Required
-  ghanaCardId: string; // HASHED (format: GHA-000000000-0)
-  businessRegistration?: string; // Ghana business registration number
-  contactPerson: string; // Required
+  name: string; // Required (business/legal name)
+  businessRegistration: string; // Ghana Enterprises Agency registration (e.g., "EA-123456")
+  taxId: string; // Ghana Revenue Authority TIN (e.g., "TIN-123456789")
+  businessType: "company" | "sole_protrader" | "partnership" | "ngo" | "government";
+  registrationAuthority: string; // "Ghana Enterprises Agency", "Registrar General"
+  incorporationDate?: string; // ISO 8601
+  contactPerson: string; // Required (primary contact name)
+  contactPersonTitle?: string; // "Managing Director", "Sales Manager"
   phone: string; // Required (E.164)
+  businessPhone?: string; // E.164
   email: string; // Required
+  businessEmail?: string;
+  website?: string;
   address: string; // Required
   city: string; // "Accra"
   region: string; // "Greater Accra", "Ashanti"
@@ -506,53 +519,25 @@ export class BackupManager {
 
 ---
 
-## 🔐 GHANA CARD ID SECURITY (Main Process)
+## 🔐 SECURITY (Main Process)
 
 ### `main/security.ts`
 
 ```typescript
-import CryptoJS from "crypto-js";
-
-// Rotate quarterly per Ghana Data Protection Commission guidelines
-const GHANA_CARD_SALT = "ghana-library-authority-2024-q1";
-
 /**
- * Hash Ghana Card ID before storage (never store plaintext)
- * Format validation: GHA-000000000-0
+ * Validate business registration format (Ghana Enterprises Agency)
+ * Format: EA-XXXXXX (e.g., EA-123456)
  */
-export function hashGhanaCardId(ghanaCardId: string): string {
-  // Validate format: GHA-000000000-0
-  if (!/^[A-Z]{3}-\d{9}-\d$/.test(ghanaCardId)) {
-    throw new Error(
-      "Invalid Ghana Card ID format. Expected format: GHA-000000000-0",
-    );
-  }
-
-  // Hash with salt (SHA-256)
-  const hash = CryptoJS.SHA256(`${ghanaCardId}${GHANA_CARD_SALT}`).toString();
-
-  // Store truncated hash for privacy (first 16 chars)
-  return `hashed:${hash.substring(0, 16)}`;
+export function validateBusinessRegistration(reg: string): boolean {
+  return /^EA-\d{6}$/.test(reg);
 }
 
 /**
- * Validate Ghana Card ID format (client-side validation helper)
+ * Validate Ghana Revenue Authority TIN format
+ * Format: TIN-XXXXXXXXX (e.g., TIN-123456789)
  */
-export function validateGhanaCardFormat(id: string): boolean {
-  return /^[A-Z]{3}-\d{9}-\d$/.test(id);
-}
-
-/**
- * Mask Ghana Card ID for display (e.g., GHA-123***89-0)
- */
-export function maskGhanaCardId(id: string): string {
-  if (!id.startsWith("GHA-")) return id;
-  const parts = id.split("-");
-  if (parts.length !== 3) return id;
-
-  // Mask middle digits: GHA-123456789-0 → GHA-123***89-0
-  const maskedMiddle = parts[1].substring(0, 3) + "***" + parts[1].substring(7);
-  return `${parts[0]}-${maskedMiddle}-${parts[2]}`;
+export function validateTaxId(tin: string): boolean {
+  return /^TIN-\d{9}$/.test(tin);
 }
 ```
 
@@ -1396,7 +1381,7 @@ export const databaseService = new DatabaseService();
 ```typescript
 import { ipcMain } from "electron";
 import { BOOKS_DB, VENDORS_DB } from "./database";
-import { hashGhanaCardId } from "./security";
+import { validateBusinessRegistration, validateTaxId } from "./security";
 
 // Save book draft
 ipcMain.handle("db:save-book-draft", async (event, { book, coverImage }) => {
@@ -1444,17 +1429,18 @@ ipcMain.handle("db:get-vendors", async () => {
   }
 });
 
-// Save vendor with Ghana Card ID hashing
+// Save vendor with business registration validation
 ipcMain.handle("db:save-vendor", async (event, vendor) => {
   try {
-    // Hash Ghana Card ID before storage
-    const hashedGhanaCardId = hashGhanaCardId(vendor.ghanaCardId);
+    // Validate business registration format
+    if (!/^EA-\d{6}$/.test(vendor.businessRegistration)) {
+      throw { forbidden: "Invalid business registration format. Expected: EA-XXXXXX" };
+    }
 
     const vendorDoc = {
       _id: `vendor-${Date.now()}`,
       type: "vendor",
       ...vendor,
-      ghanaCardId: hashedGhanaCardId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -1472,12 +1458,12 @@ ipcMain.handle("db:save-vendor", async (event, vendor) => {
 
 ## 🌍 GHANA-SPECIFIC IMPLEMENTATIONS
 
-### 1. Ghana Card ID Hashing Utility (Main Process)
+### 1. Corporate Vendor Validation Utility (Main Process)
 
 ```typescript
 // main/security.ts (already shown above)
-// Critical: Never store plaintext Ghana Card IDs
-// Hashing happens in main process (secure environment)
+// Validates Ghana Enterprises Agency business registration and GRA TIN
+// Vendors are corporate entities — no personal identifiers collected
 ```
 
 ### 2. Curriculum Tag Database (Pre-loaded)
@@ -1632,10 +1618,10 @@ ipcMain.handle("backup:share-whatsapp", async (event, filePath: string) => {
 | **Bibliographic Data Model** | ✅     | Full TypeScript interfaces with unlimited contributors |
 | **Acquisitions UI**          | ✅     | Tailwind-styled form with dynamic contributor fields   |
 | **Ghana Curriculum Tags**    | ✅     | Pre-loaded taxonomy matching GES syllabus              |
-| **Ghana Card ID Security**   | ✅     | Hashing in main process; masked display in UI          |
+| **Vendor Corporate Validation**   | ✅     | Business registration + TIN validation in main process |
 | **Offline-First Workflow**   | ✅     | Local save via IPC; sync queue architecture            |
 | **Incremental Backup**       | ✅     | Daily at 8 PM; WhatsApp-friendly compression           |
-| **Vendor Management**        | ✅     | CRUD interface with Ghana Card validation              |
+| **Vendor Management**        | ✅     | CRUD interface with corporate registration validation  |
 | **Manager Version Ready**    | ✅     | Fully functional standalone desktop app                |
 
 ---
@@ -1669,7 +1655,7 @@ ipcMain.handle("backup:share-whatsapp", async (event, filePath: string) => {
 | Feature                       | Implementation                                          | Why It Matters                                          |
 | ----------------------------- | ------------------------------------------------------- | ------------------------------------------------------- |
 | **Ghana Curriculum Tags**     | Pre-loaded taxonomy matching GES syllabus               | Ensures books align with national education standards   |
-| **Ghana Card ID Hashing**     | SHA-256 with salt in main process                       | Complies with Data Protection Act 2012 (Act 843)        |
+| **Corporate Vendor Validation** | Business registration (EA-XXXXXX) + TIN (TIN-XXXXXXXXX) format validation | Vendors are corporate entities, not natural persons — no Ghana Card collected |
 | **Oral Tradition Roles**      | `narrator`, `recorder`, `transcriber` contributor roles | Supports Ghana's rich oral storytelling heritage        |
 | **Local Language Support**    | Twi, Ga, Ewe, Akan, Hausa in metadata                   | Preserves Ghanaian literature in original languages     |
 | **Publication Place Default** | "Accra, Ghana" pre-filled                               | Reduces data entry for local publishers                 |

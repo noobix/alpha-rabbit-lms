@@ -1,0 +1,95 @@
+Build #[unassigned]
+Changes:
+- This PR adds an audit note and patch files documenting two transient placeholder commits that were created then removed on `fix/cc-dump-tests-corrections` and merged via PR #14.
+
+Build #[unassigned]
+Changes:
+- Adds `prot_final.json` and `prot_noreview.json` — branch protection rule configs that define required CI status checks (Python 3.10 & 3.11), enforce_admins, and zero-approval PR review requirements. These were stranded on the local `add/owner-merge-workflow` branch.
+
+Build #[unassigned]
+Changes:
+- Updates the branch protection guide formatting so the ordered steps lint cleanly and preserves the intended content on the fix branch.
+
+Build #[unassigned]
+Changes:
+- ## Summary
+
+Build #[unassigned]
+Changes:
+- # PR: Merge local changes preserved from failed sync
+
+Build #[unassigned]
+Changes:
+- Adds `.github/workflows/owner-merge.yml` — a dispatch workflow that lets the sole owner merge any PR number(s) without a second reviewer, using `gh pr merge --admin`.
+
+Build #[unassigned]
+Changes:
+- Copilot/vscode mopnvqrt xc3c
+
+Contributors:
+@noobix
+
+---
+
+Appendix: Full PR descriptions
+[Full PR description for Build #[16] — PR#16]
+This PR adds an audit note and patch files documenting two transient placeholder commits that were created then removed on `fix/cc-dump-tests-corrections` and merged via PR #14.
+
+Files added: `audit/29161a9.patch`, `audit/1b4f99b.patch`, and `audit/PLACEHOLDER_AUDIT.md`.
+
+These patches prove the placeholder additions and their immediate reverts; the files are not present on `testing-main`. This PR is informational and safe to merge.
+
+[Full PR description for Build #[15] — PR#15]
+Adds `prot_final.json` and `prot_noreview.json` — branch protection rule configs that define required CI status checks (Python 3.10 & 3.11), enforce_admins, and zero-approval PR review requirements. These were stranded on the local `add/owner-merge-workflow` branch.
+
+[Full PR description for Build #[14] — PR#14]
+Updates the branch protection guide formatting so the ordered steps lint cleanly and preserves the intended content on the fix branch.
+
+[Full PR description for Build #[13] — PR#13]
+## Summary
+
+Adds `.github/gsd-flat-directory/` — a Copilot-readable catalog that maps all GSD skills and agents to six lifecycle stages, and updates `copilot-instructions.md` to point Copilot to it at the start of every planning session.
+
+## What was added
+
+**New directory: `.github/gsd-flat-directory/`**
+
+- `README.md` — entry point; explains the six-stage model, access rules summary, and directory layout
+- `copilot-integration.md` — detailed access rules; stages 01–03 open during planning, stages 04–06 locked until the handoff protocol is satisfied
+- `HANDOFF.md` — transition protocol from planning to execution; required artifact checklist, executor invocation, rollback path
+- `stages/01-research.md` — 6 skills + 12 agents: `gsd-explore`, `gsd-map-codebase`, `gsd-graphify`, `gsd-ingest-docs`, `gsd-new-project`, `gsd-new-milestone`
+- `stages/02-planning.md` — 8 skills + 8 agents: `gsd-spec-phase`, `gsd-discuss-phase`, `gsd-plan-phase`, `gsd-ui-phase`, `gsd-ai-integration-phase`, `gsd-sketch`, `gsd-spike`, `gsd-capture`
+- `stages/03-orchestration.md` — 14 skills: `gsd-progress`, `gsd-phase`, `gsd-review`, `gsd-plan-review-convergence`, `gsd-workstreams`, `gsd-manager`, `gsd-autonomous`, `gsd-import`, `gsd-thread`, `gsd-pause-work`, `gsd-workspace`, `gsd-health`, `gsd-config`, `gsd-settings`, `gsd-stats`, `gsd-update`, `gsd-help`
+- `stages/04-coding.md` — **LOCKED during planning**; `gsd-execute-phase`, `gsd-fast`, `gsd-quick`, `gsd-ultraplan-phase` + executor agents
+- `stages/05-testing.md` — **LOCKED during planning**; `gsd-add-tests`, `gsd-verify-work`, `gsd-validate-phase`, `gsd-audit-uat`, `gsd-code-review`, `gsd-audit-fix`, `gsd-debug`, `gsd-secure-phase`, `gsd-forensics`, `gsd-ui-review`, `gsd-eval-review`, `gsd-audit-milestone` + 11 agents
+- `stages/06-deployment.md` — **LOCKED during planning**; `gsd-ship`, `gsd-pr-branch`, `gsd-complete-milestone`, `gsd-cleanup`, `gsd-milestone-summary`, `gsd-docs-update`, `gsd-extract-learnings`, `gsd-undo`, `gsd-inbox` + 4 agents
+
+**Updated: `.github/copilot-instructions.md`**
+
+Added `## GSD Planning Integration` section (between "How to read this file" and "Usage patterns and guidance") directing Copilot to read the flat directory at the start of any planning session.
+
+## Design decisions
+
+- Stage 03 (Orchestration) is accessible during planning — it is the lifecycle control layer, not execution
+- Stages 04–06 are present in the directory so execution agents can read them post-handoff, but `copilot-integration.md` explicitly gates them from the planning context
+- No tables anywhere — flowing prose with `bash` code blocks for commands
+- Stage documents are indexes referencing canonical `.github/skills/` paths; no content is duplicated
+
+[Full PR description for Build #[12] — PR#12]
+# PR: Merge local changes preserved from failed sync
+
+This PR contains local work preserved from autostash before synchronizing `testing-main` with remote. It includes provenance detection scripts, CI helpers, and documentation updates. Created by Copilot agent to help the repository owner review and merge.
+
+- Preserved branch: `wip/autostash-20260504`
+- Target branch: `testing-main`
+
+Please review changes and run CI.
+
+[Full PR description for Build #[11] — PR#11]
+Adds `.github/workflows/owner-merge.yml` — a dispatch workflow that lets the sole owner merge any PR number(s) without a second reviewer, using `gh pr merge --admin`.
+
+No existing workflow files are modified. Closes #9.
+
+[Full PR description for Build #[10] — PR#10]
+
+

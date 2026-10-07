@@ -1,0 +1,14 @@
+{
+  "name": "alpha-rabbit-lms",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Alpha Rabbit LMS — offline-first Library Management System for African library operations",
+  "scripts": {
+    "build": "pnpm run build:app || echo 'replace with build command'",
+    "release:patch": "node scripts/release-patch.js",
+    "release:minor": "node scripts/release-minor.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,10 +1,3 @@
-/*
- * Author: Kelvin Kabute
- * Last-updated: 2026-05-14
- * Provenance-Evidence: low-lexical-uniqueness:0.36, comment-density:0.25, long-comment-block
- */
-
-
 #!/usr/bin/env bash
 set -euo pipefail
 

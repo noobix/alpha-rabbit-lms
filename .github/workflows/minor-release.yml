@@ -1,0 +1,157 @@
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-12
+
+name: Minor Release
+on:
+  workflow_dispatch: {}
+  pull_request:
+    types: [closed]
+    branches: [testing-main]
+
+jobs:
+  minor_release:
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node & pnpm
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 18
+
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+
+      - name: Run aggregation script (build annotated tag body)
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x ./scripts/release-aggregate.sh
+          ./scripts/release-aggregate.sh
+
+      - name: Check GPG secret availability
+        id: gpg_check
+        env:
+          GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          if [ -n "$GPG_KEY" ]; then
+            echo "has_gpg=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_gpg=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Import GPG key (for signed tags)
+        if: steps.gpg_check.outputs.has_gpg == 'true'
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git_user_signingkey: true
+
+      - name: Configure GPG signing (optional)
+        if: steps.gpg_check.outputs.has_gpg == 'true'
+        run: |
+          # ghaction-import-gpg already sets user.signingkey; just enable commit signing.
+          git config commit.gpgsign true
+
+      - name: Compute next version
+        id: version
+        run: |
+          # Derive the next MINOR version from existing semantic tags so the
+          # workflow is idempotent and does not depend on package.json existing.
+          LAST_TAG=$(git tag --list "v*.*.*" --sort=-v:refname | head -n1 || true)
+          if [ -n "$LAST_TAG" ]; then
+            CURRENT="${LAST_TAG#v}"
+            MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+            MINOR=$(echo "$CURRENT" | cut -d. -f2)
+            PATCH=$(echo "$CURRENT" | cut -d. -f3)
+            NEW_MINOR=$((MINOR + 1))
+            CANDIDATE="$MAJOR.$NEW_MINOR.0"
+          else
+            MAJOR=0
+            NEW_MINOR=1
+            CANDIDATE="0.1.0"
+            PATCH=0
+          fi
+
+          # If the candidate tag already exists (re-run), bump PATCH until free.
+          while git rev-parse "v${CANDIDATE}" >/dev/null 2>&1; do
+            PATCH=$((PATCH + 1))
+            CANDIDATE="$MAJOR.$NEW_MINOR.$PATCH"
+          done
+
+          echo "Computed next version: ${CANDIDATE}"
+          echo "new_version=$CANDIDATE" >> $GITHUB_OUTPUT
+
+      - name: Increment build counter (before tag)
+        env:
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+        run: |
+          if [ ! -f .build_counter ]; then
+            echo "::error::.build_counter file missing; aborting"
+            exit 1
+          fi
+          CUR=$(cat .build_counter)
+          NEXT=$((CUR + 1))
+          echo $NEXT > .build_counter
+          git add .build_counter
+          git commit -m "chore: increment build counter to ${NEXT}"
+          if [ -n "$RELEASE_PAT" ]; then
+            git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
+          fi
+          git push origin testing-main || { echo "::error::Failed to push build counter"; exit 1; }
+
+      - name: Update package.json version (before tag)
+        env:
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
+        run: |
+          if [ ! -f package.json ]; then
+            echo "package.json not present; skipping"
+            exit 0
+          fi
+          node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('package.json','utf8')); p.version=process.env.NEW_VERSION; fs.writeFileSync('package.json', JSON.stringify(p, null, 2)+'\n');"
+          git add package.json
+          git commit -m "chore(release): bump version to ${NEW_VERSION}" || echo "no changes"
+          if [ -n "$RELEASE_PAT" ]; then
+            git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
+          fi
+          git push origin testing-main || { echo "::error::Failed to push version bump"; exit 1; }
+
+      - name: Create annotated (and optionally signed) tag and push
+        id: tag
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          HAS_GPG: ${{ steps.gpg_check.outputs.has_gpg }}
+        run: |
+          TAG_MSG_FILE=sprint-tag-body.txt
+          if [ ! -f "$TAG_MSG_FILE" ]; then
+            echo "::error::No sprint-tag-body.txt found; aborting"
+            exit 1
+          fi
+          git config user.name "CI Bot"
+          git config user.email "ci@alpharabbit.dev"
+          if [ "$HAS_GPG" = "true" ]; then
+            echo "Creating signed tag v${NEW_VERSION}"
+            git tag -s "v${NEW_VERSION}" -F "$TAG_MSG_FILE"
+          else
+            echo "Creating annotated tag v${NEW_VERSION}"
+            git tag -a "v${NEW_VERSION}" -F "$TAG_MSG_FILE"
+          fi
+          if [ -n "$RELEASE_PAT" ]; then
+            git remote set-url origin https://x-access-token:${RELEASE_PAT}@github.com/${{ github.repository }}
+          fi
+          git push origin "v${NEW_VERSION}" || { echo "::error::Tag push failed"; exit 1; }
+          git fetch origin "v${NEW_VERSION}" || { echo "::error::Tag not found after push"; exit 1; }
+          echo "Tag v${NEW_VERSION} created and verified"

@@ -1,50 +1,75 @@
+#
+# Author: Kelvin Kabute
+# Last-updated: 2026-05-12
+
 name: Enable Branch Protection
 
 on:
   workflow_dispatch:
     inputs:
       branches:
-        description: 'Comma-separated branches to protect'
+        description: "Comma-separated branches to protect"
         required: false
-        default: 'main,testing-main'
+        default: "main"
 
 permissions:
   contents: read
-  administration: write
 
 jobs:
   protect:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Prepare
-        run: |
-          echo "Setting up branch protection for repository: $GITHUB_REPOSITORY"
-
-      - name: Enable protection via REST API
+      - name: Apply and verify protection
         env:
           REPO: ${{ github.repository }}
           TOKEN: ${{ secrets.ADMIN_TOKEN }}
-          BRANCHES: ${{ github.event.inputs.branches }}
+          BRANCHES: ${{ inputs.branches }}
         run: |
+          set -euo pipefail
+          [ -n "$TOKEN" ] || { echo "::error::ADMIN_TOKEN secret is not set"; exit 1; }
+
           IFS=',' read -ra B <<< "$BRANCHES"
           for br in "${B[@]}"; do
-            br_trim=$(echo "$br" | xargs)
-            echo "Protecting branch: $br_trim"
-            curl -s -X PUT \
-              -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer $TOKEN" \
-              https://api.github.com/repos/$REPO/branches/$br_trim/protection \
-              -d '{
-                "required_status_checks": {
-                  "strict": true,
-                  "contexts": ["CI"]
-                },
-                "enforce_admins": true,
-                "required_pull_request_reviews": {
-                  "dismiss_stale_reviews": true,
-                  "require_code_owner_reviews": false,
-                  "required_approving_review_count": 1
-                },
-                "restrictions": null
-              }'
+            br=$(echo "$br" | xargs)
+            [[ "$br" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "::error::Invalid branch name: $br"; exit 1; }
+
+            if [ "$br" = "main" ]; then
+              contexts='["Continuation Gate","CI Gate","Security Gate","PR Gate","Coverage Ratchet","CodeQL Gate"]'; approvals=1
+            else
+              contexts='["CI Gate","Security Gate"]'; approvals=0
+            fi
+
+            payload=$(jq -n --argjson contexts "$contexts" --argjson approvals "$approvals" '{
+              required_status_checks: {strict: true, contexts: $contexts},
+              enforce_admins: false,
+              required_pull_request_reviews: {
+                dismiss_stale_reviews: true,
+                require_code_owner_reviews: false,
+                require_last_push_approval: ($approvals > 0),
+                required_approving_review_count: $approvals
+              },
+              restrictions: null,
+              required_conversation_resolution: true,
+              allow_force_pushes: false,
+              allow_deletions: false
+            }')
+
+            url="https://api.github.com/repos/$REPO/branches/$br/protection"
+            hdr=(-H "Accept: application/vnd.github+json" -H "Authorization: Bearer $TOKEN")
+
+            echo "Protecting $br (approvals=$approvals, checks=$contexts)"
+            curl -sS --fail-with-body -X PUT "${hdr[@]}" "$url" -d "$payload" > /dev/null
+
+            curl -sS --fail-with-body "${hdr[@]}" "$url" | jq -e \
+              --argjson contexts "$contexts" --argjson approvals "$approvals" '
+                (.required_status_checks.contexts | sort) == ($contexts | sort)
+                and .required_status_checks.strict == true
+                and .required_pull_request_reviews.required_approving_review_count == $approvals
+                and .required_conversation_resolution.enabled == true
+                and .allow_force_pushes.enabled == false
+                and .allow_deletions.enabled == false' > /dev/null \
+              || { echo "::error::Protection on $br does not match the intended policy"; exit 1; }
+
+            echo "Verified protection on $br"
           done

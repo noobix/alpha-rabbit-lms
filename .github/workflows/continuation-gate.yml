@@ -1,0 +1,60 @@
+name: Continuation Gate
+
+on:
+  workflow_run:
+    workflows: [CI, Security, PR Gate]
+    types: [completed]
+    branches: [main, testing-main]
+
+permissions:
+  contents: read
+
+jobs:
+  continuation:
+    name: Continuation Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Evaluate all upstream workflows
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          REPO="${{ github.repository }}"
+          SHA="${{ github.event.workflow_run.head_sha }}"
+          EVENT="${{ github.event.workflow_run.event }}"
+
+          fetch_conclusion() {
+            local wf_name="$1"
+            gh api "repos/$REPO/actions/runs?head_sha=$SHA&event=$EVENT" \
+              --jq ".workflow_runs[] | select(.name == \"$wf_name\") | .conclusion" 2>/dev/null || echo "unknown"
+          }
+
+          CI_CONC=$(fetch_conclusion "CI")
+          SEC_CONC=$(fetch_conclusion "Security")
+          PR_CONC=$(fetch_conclusion "PR Gate")
+
+          echo "=== Continuation Summary ==="
+          echo "CI:          ${CI_CONC:-not found}"
+          echo "Security:    ${SEC_CONC:-not found}"
+          echo "PR Gate:     ${PR_CONC:-not found}"
+          echo "==========================="
+
+          FAILED=0
+          for result in "$CI_CONC" "$SEC_CONC" "$PR_CONC"; do
+            case "$result" in
+              success|skipped) ;;
+              *)
+                echo "::error::Workflow concluded with '$result' — continuation blocked."
+                FAILED=1
+                ;;
+            esac
+          done
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo "::error::Not all upstream workflows passed. Continuation is RED."
+            exit 1
+          fi
+
+          echo "::notice::All upstream workflows passed. Continuation is GREEN."
