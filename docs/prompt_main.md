@@ -208,7 +208,7 @@ alpha_rabbit-LMS/
 - Local language support and culturally relevant badge semantics.
 - Rural operation mode (reduced GPS dependency, offline emphasis).
 - SMS queue behavior for offline-to-online delivery.
-- Backup system: automated compression (archiver npm package), cloud storage upload (Google Drive, Backblaze B2, Cloudflare R2), and unified backup interface for scheduling and credential management.
+- Backup system: automated compression (zlib gzip + node-tar), cloud storage upload (Google Drive, Backblaze B2, Cloudflare R2), and unified backup interface for scheduling and credential management.
 - Regional support for mobile van service, school outreach, community reading hubs, and branch-based library operations.
 - Academic rules such as term length, promotion windows, expiry dates, and learner progression must be derived from the selected country profile or a custom institutional profile rather than hard-coded to one nation.
 

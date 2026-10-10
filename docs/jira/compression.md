@@ -236,7 +236,7 @@ _Top-level department managing mobile library services for underserved schools v
 
 | Gate | Criteria | Validation Method |
 |------|----------|-------------------|
-| **Offline Resilience Gate** | Zero data loss after 24h simulated outage | Jest test with mock power loss + restart |
+| **Offline Resilience Gate** | Zero data loss after 24h simulated outage | Vitest test with mock power loss + restart |
 | **Ghana Compliance Gate** | No plaintext national IDs anywhere | Codebase grep + security audit script |
 | **Degradation Accuracy Gate** | ≥90% match with manual librarian review | 100-book degradation audit with 3 librarians |
 | **GES Calendar Gate** | All batches expire August 31; Extension cycles aligned | Date validation across 50 test batches + 4 rotation cycles |

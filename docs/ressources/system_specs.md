@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-05
+Last-updated: 2026-10-10
 ---
 
 # Library Management System: Manager vs Enterprise – Setup Comparison
@@ -90,16 +90,15 @@ The database layer is not an implementation detail; it is a product requirement.
     "build:linux": "electron-builder --linux"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-router-dom": "^6.21.0",
-    "pouchdb": "^8.0.1",
-    "pouchdb-adapter-node-websql": "^7.3.1",
-    "pouchdb-find": "^8.0.1",
-    "zustand": "^4.4.7",
+    "pouchdb": "^9.0.0",
+    "pouchdb-find": "^9.0.0",
+    "zustand": "^5.0.0",
     "react-hook-form": "^7.49.3",
-    "zod": "^3.22.4",
-    "date-fns": "^3.0.6",
+    "zod": "^4.0.0",
+    "date-fns": "^4.0.0",
     "phosphor-react": "^1.4.1",
     "@headlessui/react": "^1.7.17",
     "file-saver": "^2.0.5",
@@ -197,8 +196,8 @@ ENVIRONMENT="production"
 
 # Database Settings (PouchDB)
 DB_NAME="library_data"
-DB_ADAPTER="websql"
-DB_LOCATION="./data/library_data.db"
+DB_ADAPTER="indexeddb"
+DB_LOCATION="./data"
 
 # Backup Settings
 BACKUP_PATH="./backups"
@@ -316,38 +315,38 @@ networks:
     "build:linux": "electron-builder --linux"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-router-dom": "^6.21.0",
-    "pouchdb": "^8.0.1",
-    "pouchdb-adapter-http": "^8.0.1",
-    "pouchdb-find": "^8.0.1",
-    "pouchdb-replication": "^8.0.1",
-    "zustand": "^4.4.7",
+    "pouchdb": "^9.0.0",
+    "pouchdb-adapter-http": "^9.0.0",
+    "pouchdb-find": "^9.0.0",
+    "pouchdb-replication": "^9.0.0",
+    "zustand": "^5.0.0",
     "react-hook-form": "^7.49.3",
-    "zod": "^3.22.4",
-    "date-fns": "^3.0.6",
+    "zod": "^4.0.0",
+    "date-fns": "^4.0.0",
     "phosphor-react": "^1.4.1",
     "@headlessui/react": "^1.7.17",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
-    "node-schedule": "^2.1.1",
+    "croner": "^8.0.0",
     "axios": "^1.6.5"
   },
   "devDependencies": {
-    "@types/react": "^18.2.47",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@types/pouchdb": "^7.0.0",
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.0.11",
     "typescript": "^5.3.3",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^4.0.0",
     "postcss": "^8.4.33",
     "autoprefixer": "^10.4.16",
-    "electron": "^28.1.0",
+    "electron": "^39.0.0",
     "electron-builder": "^24.9.1",
     "electron-rebuild": "^3.2.13",
-    "pouchdb-adapter-memory": "^8.0.1"
+    "pouchdb-adapter-memory": "^9.0.0"
   }
 }
 ```
@@ -356,7 +355,7 @@ networks:
 
 - `pouchdb-adapter-http` – Connects to remote CouchDB server
 - `pouchdb-replication` – Handles sync between client and server
-- `node-schedule` – Manages automatic sync intervals
+- `croner` – Manages automatic sync intervals
 - `axios` – HTTP client for server communication
 
 ---
@@ -500,7 +499,7 @@ SYNC_INTERVAL=300  # Sync every 5 minutes (seconds)
 
 # Database Settings (Local PouchDB)
 LOCAL_DB_NAME="library_local"
-LOCAL_DB_ADAPTER="websql"
+LOCAL_DB_ADAPTER="indexeddb"
 
 # User Settings
 DEFAULT_DEPARTMENT="general"

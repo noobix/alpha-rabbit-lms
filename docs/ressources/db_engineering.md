@@ -16,8 +16,8 @@ Before diving into code, understand the two deployment modes from `product_specs
 ```mermaid
 graph TB
     subgraph "Manager Mode (Single Library)"
-        A[Electron App] --> B[PouchDB<br/>websql adapter]
-        B --> C[SQLite File<br/>library_data.db]
+        A[Electron App] --> B[PouchDB<br/>IndexedDB adapter]
+        B --> C[IndexedDB Store]
     end
 
     subgraph "Enterprise Mode (Multi-Department)"
@@ -44,42 +44,38 @@ graph TB
 | Library                       | Purpose                                                         | Install                                |
 | ----------------------------- | --------------------------------------------------------------- | -------------------------------------- |
 | `pouchdb`                     | Core database engine                                            | `pnpm add pouchdb`                     |
-| `pouchdb-adapter-node-websql` | SQLite-backed adapter for Electron (pure JS, no native modules) | `pnpm add pouchdb-adapter-node-websql` |
 | `pouchdb-find`                | Mango query support (like SQL WHERE clauses)                    | `pnpm add pouchdb-find`                |
 | `pouchdb-adapter-memory`      | In-memory adapter for testing                                   | `pnpm add -D pouchdb-adapter-memory`   |
 | `@types/pouchdb`              | TypeScript definitions                                          | `pnpm add -D @types/pouchdb`           |
 | `zod`                         | Runtime schema validation                                       | `pnpm add zod`                         |
-| `use-pouchdb`                 | React hooks for PouchDB (optional)                              | `pnpm add use-pouchdb`                 |
+| `sql.js` (WASM SQLite)        | Produce `.db` snapshots for IT/audit (snapshot/export only)     | `pnpm add sql.js`                      |
+
+> **Note:** The live store uses the built-in IndexedDB adapter (Chromium-maintained, zero dependencies). For SQLite `.db` artifacts, use `sql.js` WASM — no native modules required.
 
 ### Installation for Alpha Rabbit LMS
 
 ```bash
 # Core dependencies
-pnpm add pouchdb pouchdb-adapter-node-websql pouchdb-find zod
+pnpm add pouchdb pouchdb-find zod sql.js
 
 # TypeScript types
 pnpm add -D @types/pouchdb
-
-# Optional React integration
-pnpm add use-pouchdb
 ```
 
-### Registering the WebSQL Adapter (Critical for Electron)
+### Database Setup (IndexedDB Live Store)
 
 ```typescript
 // src/lib/database/setup.ts
 import PouchDB from "pouchdb";
 import PouchDBFind from "pouchdb-find";
-import websqlAdapter from "pouchdb-adapter-node-websql";
 
 // Register plugins ONCE at app startup
-PouchDB.plugin(websqlAdapter);
 PouchDB.plugin(PouchDBFind);
 
 export { PouchDB };
 ```
 
-> ⚠️ **Why WebSQL adapter?** The default PouchDB adapter (LevelDB) uses native modules that break across Electron versions. WebSQL uses SQLite under the hood, is pure JavaScript, and works reliably on Windows 7+ (common in Ghana schools).
+> **Why IndexedDB?** The built-in Chromium adapter requires zero native modules, zero dependencies, and is maintained by the Chromium team. For SQLite `.db` artifacts (IT/audit/export), use `sql.js` WASM — also no native modules.
 
 ---
 
@@ -117,7 +113,7 @@ class DatabaseManager {
   }
 
   /**
-   * Initialize all databases with WebSQL adapter
+   * Initialize all databases with IndexedDB adapter (built-in)
    * Called once during Electron app startup
    */
   async initialize(
@@ -138,12 +134,8 @@ class DatabaseManager {
     ];
 
     for (const name of dbNames) {
-      this.databases[name] = new PouchDB(`lms_${name}`, {
-        adapter: "websql",
-        // WebSQL-specific options
-        size: 50, // 50MB max (WebSQL limit on some browsers)
-        location: "default",
-      });
+      // Use built-in IndexedDB adapter (no native modules, Chromium-maintained)
+      this.databases[name] = new PouchDB(`lms_${name}`);
 
       // Create indexes for common queries (performance critical)
       await this.createIndexes(name);
@@ -1579,7 +1571,7 @@ graph TD
 
 **Week-by-week approach:**
 
-1. **Week 1**: Get PouchDB running in Electron with WebSQL adapter. Write/read a simple document.
+1. **Week 1**: Get PouchDB running in Electron with IndexedDB adapter. Write/read a simple document.
 2. **Week 2**: Build the repository pattern with Zod. Implement Book and Patron CRUD.
 3. **Week 3**: Add CouchDB server, configure sync, handle online/offline transitions.
 4. **Week 4**: Lock down security, implement conflict resolution, hash Ghana Cards properly.

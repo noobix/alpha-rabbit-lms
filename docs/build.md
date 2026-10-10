@@ -166,7 +166,7 @@ Last-updated: 2026-10-10
 - Health report generation for admin review
 - Orphaned record detection
 - Duplicate ISBN/barcode detection
-- Compression package integration (archiver npm package)
+- Compression package integration (zlib gzip + node-tar)
 - Cloud storage abstraction layer (Google Drive, Backblaze B2, Cloudflare R2)
 - Backup automation interface with scheduling and credential management
 
@@ -709,7 +709,7 @@ LMS-CORE-01: feat: set up PouchDB with SQLite adapter for offline storage
 
 Built the database registry with per-domain PouchDB instances for books,
 patrons, loans, extensionLoans, departments, auditLog, and config. Each
-domain store is initialized with the WebSQL adapter and indexed for the
+domain store is initialized with the IndexedDB adapter and indexed for the
 critical access paths (type + status, type + department, type + barcode,
 type + cycleCode, type + schoolId, type + patronId + status, type + dueDate).
 The registry is a singleton initialized once at app startup and provides
@@ -876,7 +876,7 @@ Write the tag body to a temporary file to handle multi-line content reliably; re
 ```text
 Build #[261]
 Changes:
-- PouchDB offline storage with SQLite adapter is operational. The database registry initializes all domain stores (books, patrons, loans, extensionLoans, departments, auditLog, config) with the WebSQL adapter and creates required indexes for critical access paths. The system works fully offline with no internet dependency.
+- PouchDB offline storage with IndexedDB adapter is operational. The database registry initializes all domain stores (books, patrons, loans, extensionLoans, departments, auditLog, config) with the IndexedDB adapter and creates required indexes for critical access paths. The system works fully offline with no internet dependency.
 - National ID hashing and masking is verified. The hashing service runs exclusively in the Electron main process; plaintext IDs never reach the renderer. Masked display follows the active country profile format.
 
 Build #[262]
