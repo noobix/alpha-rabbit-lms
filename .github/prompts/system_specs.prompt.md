@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-04
+Last-updated: 2026-10-10
 ---
 
 # Library Management System: Manager vs Enterprise – Setup Comparison
@@ -21,6 +21,32 @@ _Clear differentiation of requirements, packages, and environments for both vers
 | **Installation Complexity** | Simple (single installer)                            | Moderate (server setup + client installs)         |
 | **Cost**                    | $0 (free software)                                   | ~$50 (Raspberry Pi server)                        |
 | **Best For**                | Rural schools, community libraries, mobile libraries | Universities, district offices, national archives |
+
+---
+
+## 🧱 DATABASE ARCHITECTURE REQUIREMENTS
+
+The database layer is not an implementation detail; it is a product requirement. The solution must be explicitly modeled around PouchDB and CouchDB before feature work proceeds.
+
+### Required storage model
+
+- Maintain a single local document store per logical domain in Manager mode.
+- Use the same logical domain separation in Enterprise mode so replication remains predictable.
+- Data domains include `books`, `patrons`, `loans`, `extensionLoans`, `departments`, `auditLog`, and `config`.
+- Every stored entity must implement the same `BaseDocument` contract: `_id`, `_rev`, `type`, `createdAt`, `updatedAt`, `_syncStatus`, and `_schemaVersion`.
+
+### Required validation and indexing
+
+- Zod validation must run before a write reaches the database boundary.
+- Critical write paths must also be validated at the service or database layer in Enterprise mode.
+- Required indexes must be present for query patterns such as `type + status`, `type + department`, `type + barcode`, `type + cycleCode`, `type + schoolId`, `type + patronId + status`, and `type + dueDate`.
+- Conflict records are part of the data model; silent overwrite is not permitted.
+
+### Required enterprise constraints
+
+- Department-level data separation must exist as a security and data-access boundary, not just as a UI rule.
+- Audit events must be recorded for identity changes, overrides, bulk allocations, and policy-driven lifecycle events.
+- Schema evolution must include a version bump and migration plan so the system remains stable across updates.
 
 ---
 
@@ -64,15 +90,15 @@ _Clear differentiation of requirements, packages, and environments for both vers
     "build:linux": "electron-builder --linux"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-router-dom": "^6.21.0",
-    "pouchdb": "^8.0.1",
-    "pouchdb-adapter-node-websql": "^7.3.1",
-    "zustand": "^4.4.7",
+    "pouchdb": "^9.0.0",
+    "pouchdb-find": "^9.0.0",
+    "zustand": "^5.0.0",
     "react-hook-form": "^7.49.3",
-    "zod": "^3.22.4",
-    "date-fns": "^3.0.6",
+    "zod": "^4.0.0",
+    "date-fns": "^4.0.0",
     "phosphor-react": "^1.4.1",
     "@headlessui/react": "^1.7.17",
     "file-saver": "^2.0.5",
@@ -81,6 +107,7 @@ _Clear differentiation of requirements, packages, and environments for both vers
   "devDependencies": {
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
+    "@types/pouchdb": "^7.0.0",
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.0.11",
     "typescript": "^5.3.3",
@@ -89,7 +116,8 @@ _Clear differentiation of requirements, packages, and environments for both vers
     "autoprefixer": "^10.4.16",
     "electron": "^28.1.0",
     "electron-builder": "^24.9.1",
-    "electron-rebuild": "^3.2.13"
+    "electron-rebuild": "^3.2.13",
+    "pouchdb-adapter-memory": "^8.0.1"
   }
 }
 ```
@@ -168,8 +196,8 @@ ENVIRONMENT="production"
 
 # Database Settings (PouchDB)
 DB_NAME="library_data"
-DB_ADAPTER="websql"
-DB_LOCATION="./data/library_data.db"
+DB_ADAPTER="indexeddb"
+DB_LOCATION="./data"
 
 # Backup Settings
 BACKUP_PATH="./backups"
@@ -287,35 +315,38 @@ networks:
     "build:linux": "electron-builder --linux"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-router-dom": "^6.21.0",
-    "pouchdb": "^8.0.1",
-    "pouchdb-adapter-http": "^8.0.1",
-    "pouchdb-replication": "^8.0.1",
-    "zustand": "^4.4.7",
+    "pouchdb": "^9.0.0",
+    "pouchdb-adapter-http": "^9.0.0",
+    "pouchdb-find": "^9.0.0",
+    "pouchdb-replication": "^9.0.0",
+    "zustand": "^5.0.0",
     "react-hook-form": "^7.49.3",
-    "zod": "^3.22.4",
-    "date-fns": "^3.0.6",
+    "zod": "^4.0.0",
+    "date-fns": "^4.0.0",
     "phosphor-react": "^1.4.1",
     "@headlessui/react": "^1.7.17",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
-    "node-schedule": "^2.1.1",
+    "croner": "^8.0.0",
     "axios": "^1.6.5"
   },
   "devDependencies": {
-    "@types/react": "^18.2.47",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/pouchdb": "^7.0.0",
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.0.11",
     "typescript": "^5.3.3",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^4.0.0",
     "postcss": "^8.4.33",
     "autoprefixer": "^10.4.16",
-    "electron": "^28.1.0",
+    "electron": "^39.0.0",
     "electron-builder": "^24.9.1",
-    "electron-rebuild": "^3.2.13"
+    "electron-rebuild": "^3.2.13",
+    "pouchdb-adapter-memory": "^9.0.0"
   }
 }
 ```
@@ -324,7 +355,7 @@ networks:
 
 - `pouchdb-adapter-http` – Connects to remote CouchDB server
 - `pouchdb-replication` – Handles sync between client and server
-- `node-schedule` – Manages automatic sync intervals
+- `croner` – Manages automatic sync intervals
 - `axios` – HTTP client for server communication
 
 ---
@@ -468,7 +499,7 @@ SYNC_INTERVAL=300  # Sync every 5 minutes (seconds)
 
 # Database Settings (Local PouchDB)
 LOCAL_DB_NAME="library_local"
-LOCAL_DB_ADAPTER="websql"
+LOCAL_DB_ADAPTER="indexeddb"
 
 # User Settings
 DEFAULT_DEPARTMENT="general"

@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-05
+Last-updated: 2026-10-10
 ---
 
 # 📚 Library Management System: Acquisitions Module Implementation (Week 1)
@@ -419,8 +419,8 @@ export class BackupManager {
 
       await fs.writeJson(backupFile, backupData, { spaces: 2 });
 
-      // WhatsApp-friendly compression (under 10MB)
-      await this.compressForWhatsApp(backupFile);
+      // Cloud storage compression (under 10MB)
+      await this.compressForCloudStorage(backupFile);
 
       // Cleanup old backups
       await this.cleanupOldBackups();
@@ -462,8 +462,8 @@ export class BackupManager {
 
       await fs.writeJson(backupFile, backupData, { spaces: 2 });
 
-      // WhatsApp-friendly compression
-      await this.compressForWhatsApp(backupFile);
+      // cloud storage-friendly compression
+      await this.compressForCloudStorage(backupFile);
 
       console.log(`✓ Full backup created: ${path.basename(backupFile)}`);
       return backupFile;
@@ -473,8 +473,8 @@ export class BackupManager {
     }
   }
 
-  private async compressForWhatsApp(filePath: string) {
-    // Compress to under 10MB for WhatsApp transfer
+  private async compressForCloudStorage(filePath: string) {
+    // Compress to under 10MB for cloud storage upload
     const stats = await fs.stat(filePath);
     if (stats.size > 10 * 1024 * 1024) {
       // Create compressed version
@@ -503,7 +503,7 @@ export class BackupManager {
     }
   }
 
-  // Ghana-specific: "Send via WhatsApp" helper
+  // Ghana-specific: "Send via Cloud Storage" helper
   async getLatestBackupPath(): Promise<string | null> {
     const files = await fs.readdir(this.backupDir);
     const backupFiles = files
@@ -1587,20 +1587,20 @@ app.on("activate", () => {
   }
 });
 
-// Handle backup export for WhatsApp
+// Handle backup export for cloud storage
 ipcMain.handle("backup:get-latest-path", async () => {
   return await backupManager.getLatestBackupPath();
 });
 
-// Handle WhatsApp sharing (platform-specific)
-ipcMain.handle("backup:share-whatsapp", async (event, filePath: string) => {
+// Handle cloud storage sharing (platform-specific)
+ipcMain.handle("backup:share-cloud", async (event, filePath: string) => {
   if (process.platform === "win32") {
-    // Windows: Open WhatsApp desktop with file attachment
-    const whatsappPath = "C:\\\\Users\\\\Public\\\\Desktop\\\\WhatsApp.lnk";
-    // Implementation would use child_process to launch WhatsApp with args
+    // Windows: Open cloud storage app with file attachment
+    const cloudPath = "C:\\\\Users\\\\Public\\\\Desktop\\\\Cloud Storage.lnk";
+    // Implementation would use child_process to launch Cloud Storage with args
     return true;
   } else if (process.platform === "darwin") {
-    // macOS: Use AppleScript to share via Messages/WhatsApp
+    // macOS: Use AppleScript to share via Messages/Cloud Storage
     return true;
   }
   return false;
@@ -1620,7 +1620,7 @@ ipcMain.handle("backup:share-whatsapp", async (event, filePath: string) => {
 | **Ghana Curriculum Tags**    | ✅     | Pre-loaded taxonomy matching GES syllabus              |
 | **Vendor Corporate Validation**   | ✅     | Business registration + TIN validation in main process |
 | **Offline-First Workflow**   | ✅     | Local save via IPC; sync queue architecture            |
-| **Incremental Backup**       | ✅     | Daily at 8 PM; WhatsApp-friendly compression           |
+| **Incremental Backup**       | ✅     | Daily at 8 PM; cloud storage-friendly compression           |
 | **Vendor Management**        | ✅     | CRUD interface with corporate registration validation  |
 | **Manager Version Ready**    | ✅     | Fully functional standalone desktop app                |
 
@@ -1661,7 +1661,7 @@ ipcMain.handle("backup:share-whatsapp", async (event, filePath: string) => {
 | **Publication Place Default** | "Accra, Ghana" pre-filled                               | Reduces data entry for local publishers                 |
 | **ISBN Validation**           | Ghana-standard ISBN-13 (978/979 prefixes)               | Prevents cataloging errors with local publications      |
 | **Offline-First**             | Full functionality without internet                     | Critical for rural libraries with unstable connectivity |
-| **WhatsApp Backup**           | <10MB compressed backups                                | Enables data transfer in low-connectivity areas         |
+| **Cloud Backup**           | <10MB compressed backups                                | Enables data transfer in low-connectivity areas         |
 
 ---
 

@@ -248,7 +248,7 @@ flowchart TD
     E --> F[CouchDB Server<br>Raspberry Pi 4]
     F --> G[Accra Central HQ<br>Enterprise Client]
     G --> H[Real-Time Dashboard<br>Shows Tamale Delivery]
-    subgraph “Validation Checks”
+    subgraph "Validation Checks"
         I[Data Integrity] --> J[✓ 50 books synced]
         K[Batch Preservation] --> L[✓ GRADE-4A intact]
         M[Condition Scores] --> N[✓ Spine/cover/pages/edges preserved]

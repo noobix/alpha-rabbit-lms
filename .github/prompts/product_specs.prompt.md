@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-04
+Last-updated: 2026-10-10
 ---
 
 # 📚 Library Management System: Unified Tech Stack Specification
@@ -15,7 +15,7 @@ _Two-tier architecture (Manager + Enterprise) with Ghana deployment readiness_
 | ----------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | **Offline-First Core**  | Manager works 100% offline; Enterprise syncs when available | Critical for unstable power/internet in rural libraries                              |
 | **Single Codebase**     | Shared React frontend; database layer abstracted            | 80% code reuse between versions; faster Ghana-wide rollout                           |
-| **Incremental Backups** | File-diff based (Manager) + replication (Enterprise)        | Works on slow connections (<50kbps); backup files small enough for WhatsApp transfer |
+| **Incremental Backups** | File-diff based (Manager) + replication (Enterprise)        | Works on slow connections (<50kbps); backup files small enough for cloud storage upload |
 | **Zero Native Modules** | Pure JavaScript dependencies only                           | No rebuild headaches across Windows/macOS/Linux deployments                          |
 | **Ghana-Ready UI**      | Tailwind + Phosphor optimized for low-literacy staff        | Icons > text; color-blind safe; works on 1366x768 screens                            |
 
@@ -27,9 +27,9 @@ _Two-tier architecture (Manager + Enterprise) with Ghana deployment readiness_
 
 | Layer         | Technology                   | Why It Fits Ghana Libraries                                                                                                                                                                                                                                                                                                                                |
 | ------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Runtime**   | Electron 28+ (Chromium 120+) | Works on Windows 7+ (common in Ghana schools); no internet required for core functions                                                                                                                                                                                                                                                                     |
-| **Framework** | React 18 + Vite              | Hot reload for Ghana-based devs; tiny production bundles (<15MB)                                                                                                                                                                                                                                                                                           |
-| **Styling**   | **Tailwind CSS 3.4+**        | ✅ **LOW-LEVEL CSS WINNER**<br>• Zero CSS conflicts with Electron<br>• PurgeCSS removes unused styles (final CSS <50KB)<br>• Ghana-appropriate color palette pre-configured<br>• Works flawlessly in packaged apps (tested on NSIS/DMG/AppImage)                                                                                                           |
+| **Runtime**   | Electron 39+ (Chromium 120+) | Works on Windows 10+ (required by Electron); no internet required for core functions                                                                                                                                                                                                                                                                     |
+| **Framework** | React 19 + Vite              | Hot reload for Ghana-based devs; tiny production bundles (<15MB)                                                                                                                                                                                                                                                                                           |
+| **Styling**   | **Tailwind CSS 4+**          | ✅ **LOW-LEVEL CSS WINNER**<br>• Zero CSS conflicts with Electron<br>• PurgeCSS removes unused styles (final CSS <50KB)<br>• Ghana-appropriate color palette pre-configured<br>• Works flawlessly in packaged apps (tested on NSIS/DMG/AppImage)                                                                                                           |
 | **Icons**     | **Phosphor Icons (React)**   | ✅ **ICON LIBRARY WINNER**<br>• **4,200+ icons** (vs Iconoir's 1,300)<br>• Library-specific: `Book`, `BookOpen`, `BookBookmark`, `Student`, `GraduationCap`, `TreeStructure`, `Archive`, `ShieldCheck`<br>• Customizable weight (thin to bold) for low-vision staff<br>• Tree-shakable (only bundle used icons)<br>• MIT license (no attribution required) |
 | **State**     | Zustand                      | Minimal boilerplate; perfect for non-Redux teams                                                                                                                                                                                                                                                                                                           |
 | **Forms**     | React Hook Form + Zod        | Validation for Ghana Card IDs, batch codes, ISBNs                                                                                                                                                                                                                                                                                                          |
@@ -46,32 +46,33 @@ _Two-tier architecture (Manager + Enterprise) with Ghana deployment readiness_
 
 ## 📦 MANAGER VERSION: Standalone Desktop (For Single Libraries)
 
-### Database Strategy: **PouchDB + SQLite Adapter**
+### Database Strategy: **PouchDB + IndexedDB Adapter**
 
 | Requirement             | Solution                                     | Why It Wins                                                                                                                                                                                                                          |
 | ----------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Embedded NoSQL**      | PouchDB with `pouchdb-adapter-node-websql`   | ✅ Pure JS (no native modules)<br>✅ Uses SQLite under hood (battle-tested)<br>✅ Document-based = perfect for irregular patron/book metadata                                                                                        |
+| **Embedded NoSQL**      | PouchDB with built-in IndexedDB adapter      | ✅ Pure JS (no native modules)<br>✅ Chromium-maintained, zero dependencies<br>✅ Document-based = perfect for irregular patron/book metadata                                                                                        |
+| **SQLite Export**       | `sql.js` WASM for `.db` snapshots            | ✅ Produces portable SQLite artifacts for IT/audit<br>✅ No native modules (pure WASM)<br>✅ On-demand export, not live store                                                                                                        |
 | **Incremental Backups** | Custom service using PouchDB replication API | ✅ Backs up only changed documents since last backup<br>✅ Creates `.backup` files (e.g., `library_20240212_1430.incremental`)<br>✅ Full backup weekly; incremental daily<br>✅ Backup size: ~5% of main DB (e.g., 3MB for 60MB DB) |
 | **ORM Experience**      | TypeScript wrappers + schema validation      | ✅ Type-safe queries with Zod<br>✅ Business logic encapsulated in services<br>✅ No traditional ORM needed (PouchDB API is intuitive)                                                                                               |
-| **Packaging**           | Bundled as single `.asar` file               | ✅ Zero external dependencies<br>✅ Works on 4GB RAM Windows laptops<br>✅ Data file: `library_data.db` (SQLite format)                                                                                                              |
+| **Packaging**           | Bundled as single `.asar` file               | ✅ Zero external dependencies<br>✅ Works on 4GB RAM Windows laptops<br>✅ Data stored in IndexedDB (browser-managed)                                                                                                                |
 
 ### Backup Implementation Snippet
 
 ```typescript
 // services/backup-manager.ts
 import PouchDB from "pouchdb";
-import { scheduleJob } from "node-schedule";
+import { createGzip } from "node:zlib";
+import croner from "croner";
 
 class BackupManager {
   private mainDB: PouchDB.Database;
   private backupDB: PouchDB.Database;
 
   async initialize() {
-    this.mainDB = new PouchDB("library_main", { adapter: "websql" });
+    // Live store uses built-in IndexedDB adapter (no native modules)
+    this.mainDB = new PouchDB("library_main");
     // Incremental backup DB (stored in /backups/)
-    this.backupDB = new PouchDB("file://backups/library_backup", {
-      adapter: "websql",
-    });
+    this.backupDB = new PouchDB("library_backup");
 
     // Daily incremental backup at 8 PM
     scheduleJob("0 20 * * *", () => this.createIncrementalBackup());
@@ -99,7 +100,7 @@ class BackupManager {
 ### Ghana-Specific Manager Features
 
 - **Offline-Only Mode**: All operations work during power outages
-- **Backup Transfer**: "Send backup via WhatsApp" button (compresses to <10MB)
+- **Backup Transfer**: Automated upload to cloud storage (Google Drive, Backblaze B2, Cloudflare R2) with credential management
 - **Low-Spec Optimized**: Works on Intel Celeron, 4GB RAM devices
 - **Local Storage Path**: Defaults to `C:/GhanaLibraryData/` (Windows) for easy IT access
 
@@ -204,7 +205,7 @@ class BackupManager {
 | ---------------------------- | ---------------------------------------------------------------- |
 | **No Internet**              | Manager version only; backups via USB drive                      |
 | **Unstable Internet**        | Enterprise clients work offline; sync when connection stable     |
-| **Slow Internet (<100kbps)** | Compressed sync; backup files small enough for WhatsApp transfer |
+| **Slow Internet (<100kbps)** | Compressed sync; backup files small enough for cloud storage upload |
 | **Power Outages**            | UPS recommended; PouchDB auto-saves every 30s                    |
 
 ### Localization Ready
@@ -231,7 +232,7 @@ class BackupManager {
 
 | Requirement                  | Solution                   | Proof Point                                                 |
 | ---------------------------- | -------------------------- | ----------------------------------------------------------- |
-| **Lightweight embedded DB**  | PouchDB + WebSQL adapter   | Installs in <2 mins on Windows 7 laptop                     |
+| **Lightweight embedded DB**  | PouchDB + IndexedDB adapter | Installs in <2 mins on Windows 10 laptop                     |
 | **Incremental backups**      | PouchDB replication API    | 3MB backup file for 60MB database                           |
 | **NoSQL for irregular data** | Document structure         | Store custom fields per school without schema changes       |
 | **Low-level CSS framework**  | Tailwind CSS               | Zero conflicts in packaged Electron app                     |
@@ -251,7 +252,7 @@ npx create-electron-app library-manager --template=react-typescript
 cd library-manager
 
 # Install core dependencies
-npm install pouchdb pouchdb-adapter-node-websql phosphor-react zustand
+npm install pouchdb phosphor-react zustand
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 

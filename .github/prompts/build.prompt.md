@@ -1,880 +1,645 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-04
+Last-updated: 2026-10-10
 ---
 
-# Alpha Rabbit LMS Build Prompt (Compression-Aligned v1.2)
+# 🏗️ Alpha Rabbit LMS Build Document
 
-<!-- markdownlint-disable MD032 MD060 -->
+## 📋 File Context
 
-This file is the implementation control document used with `prompt_main.md`.
-Primary objective: keep all build decisions anchored to `docs/jira/compression.md` while using docs in `docs/ressources` as the source assets.
+**Purpose:** This file is the implementation blueprint for agents and contributors. It explains the authoritative source documents, project guardrails, sprint structure, and verification gates that should guide build work.
 
-_Critical correction: Extension Services is a full external department (not library section) that borrows books from Lending section via bulk allocation workflow_
+**Why this matters:** A library system in Africa is operationally different from a single-branch desktop product. This document keeps the project adaptable across national policies, rural delivery realities, school calendars, and multi-department workflows without breaking the existing lifecycle model.
 
----
+**How agents use it:** Agents should use this file to understand the sequence of work, the project constraints, and the country-configurable rules that must remain in place before a feature is considered complete.
 
-## 0) Source Assets Table (Read First)
+## 1. 📦 Source Assets & Defaults
 
-| Asset                                             | Purpose in Build                                                                    | Required Use                                                                                  |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `docs/jira/compression.md`                        | Canonical ticket scope and acceptance criteria (v1.2 — Extension Services update)   | Must be treated as source of truth for every ticket in this file                              |
-| `docs/jira/jira_doc.md`                           | Detailed ticket specification with sprint planning                                  | Use for sprint sequencing, labeling conventions, and quality gates                            |
-| `docs/prompt_main.md`                             | Architecture constraints and project structure                                      | Use for codebase layout, mode split (Manager/Enterprise), and non-functional constraints      |
-| `docs/ressources/product_specs.md`                | Stack and deployment decisions                                                      | Use to enforce offline-first stack, packaging assumptions, and Ghana hardware constraints     |
-| `docs/ressources/system_specs.md`                 | Manager vs Enterprise setup detail                                                  | Use for environment-specific behavior and operational boundaries                              |
-| `docs/ressources/functionality_specs.md`          | End-to-end module behavior                                                          | Use for flow details across acquisitions → processing → distribution → sections               |
-| `docs/ressources/module_functionality_specs.md`   | User-centric module acceptance examples (updated with Extension Services)           | Use for user stories, offline behavior specifics, and Extension workflows                     |
-| `docs/ressources/functionality_specs_expanded.md` | Patron intelligence, governance extensions, and expanded specs                      | Use for degradation engine, badges, patron profile signals, and cross-check details           |
-| `docs/database.md`                                | Canonical schema contracts (updated with Extension Services)                        | Use for doc types, retention fields, sync state, audit fields, and Extension loan objects     |
-| `docs/research_dmp/aquisisions_module.md`         | Deep implementation notes for acquisitions                                          | Use for forms, metadata shape, and offline create/sync patterns                               |
-| `docs/research_dmp/processing_module.md`          | Deep implementation notes for processing (updated with Extension routing)           | Use for condition model, mold risk logic, barcode behavior, and Extension durability scoring  |
-| `docs/research_dmp/distribution_module.md`        | Deep implementation notes for distribution (updated with Extension depot delivery)  | Use for packing slips, rural mode, delivery confirmation queue, and Extension depot workflows |
-| `docs/research_dmp/extension_module.md`           | Deep implementation notes for Extension Services                                    | Use for Android app, QR learner tracking, bulk allocation workflow, schedule management       |
-| `docs/research_dmp/library_sections_pi_sg.md`     | Deep implementation notes for sections + PI + governance (includes Lending Section) | Use for degradation enforcement, section workflows, and Lending bulk allocation fulfillment   |
-| `docs/research_dmp/deploy_doc.md`                 | Pilot/deployment/validation package                                                 | Use for pilot validation checks and packaging constraints                                     |
+### 📚 Source Assets
 
----
+| Asset | Purpose | Required Use |
+|-------|---------|--------------|
+| `docs/jira/compression.md` | Canonical ticket scope and acceptance criteria | Source of truth for every ticket |
+| `docs/jira/jira_doc.md` | Detailed ticket specification with sprint planning | Sprint sequencing, labeling, quality gates |
+| `docs/prompt_main.md` | Architecture constraints and project structure | Codebase layout, mode split, non-functional constraints |
+| `docs/database.md` | Canonical schema contracts | Doc types, retention, sync state, audit fields |
+| `docs/ressources/product_specs.md` | Stack and deployment decisions | Offline-first stack, packaging, Ghana hardware |
+| `docs/ressources/system_specs.md` | Manager vs Enterprise setup | Environment-specific behavior |
+| `docs/ressources/functionality_specs.md` | End-to-end module behavior | Acquisitions → Processing → Distribution → Sections |
+| `docs/ressources/module_functionality_specs.md` | User-centric module acceptance | User stories, offline behavior, Extension workflows |
+| `docs/ressources/functionality_specs_expanded.md` | Patron intelligence, governance extensions | Degradation engine, badges, patron signals |
+| `docs/ressources/db_engineering.md` | Database architecture and patterns | PouchDB setup, sync, conflict resolution, repository pattern |
+| `docs/research_dmp/aquisisions_module.md` | Deep implementation notes for acquisitions | Forms, metadata shape, offline patterns |
+| `docs/research_dmp/processing_module.md` | Deep implementation notes for processing | Condition model, mold risk, barcode behavior |
+| `docs/research_dmp/distribution_module.md` | Deep implementation notes for distribution | Packing slips, rural mode, delivery confirmation |
+| `docs/research_dmp/extension_module.md` | Deep implementation notes for Extension Services | Android app, QR learner tracking, bulk allocation |
+| `docs/research_dmp/library_sections_pi_sg.md` | Deep implementation notes for sections + PI + governance | Degradation enforcement, section workflows |
+| `docs/research_dmp/deploy_doc.md` | Pilot/deployment/validation package | Pilot validation, packaging constraints |
 
-## 1) Global Non-Negotiables
+### 🛡️ Global Non-Negotiables
 
-- One codebase, two modes:
-  - Manager: fully offline on single device.
-  - Enterprise: local-first client with resilient sync.
-- No plaintext Ghana Card IDs in storage, logs, backups, exports, or UI state dumps.
-- Ghana Card hashing must execute in Electron main process only.
-- Core data docs include `_id`, `type`, `createdAt`, `updatedAt`, `_syncStatus`, `_schemaVersion`.
-- Package manager standard: `pnpm` is the default for this project; use `pnpm` for install/run/build scripts and avoid `npm`/`yarn` commands in implementation docs.
-- Device baseline: Windows 10, 4GB RAM, unstable power/internet expected.
-- Offline-first means every critical workflow completes locally and sync is deferred.
-- Extension Services is a top-level DEPARTMENT (peer to Acquisitions, Processing, Distribution, Library Operations, System Admin) — NOT a library section.
-- Books remain owned by Lending Section; Extension Services borrows temporarily via bulk allocation workflow: `Extension Request → Lending Fulfillment → Distribution Delivery → Extension Rotation → Return to Lending`.
-- Extension learners have minimal profiles (QR ID only, no condition scoring, no degradation tracking).
-- Android app is an external tool for Extension Services field operations only — it is NOT part of the Electron desktop application.
+- **One codebase, two modes**: Manager (offline standalone) and Enterprise (local-first with sync)
+- **No plaintext national ID values** in storage, logs, backups, exports, or UI state dumps; local identity rules must be configurable by country and institution
+- **Identity hashing** must execute in the Electron main process only; the UI should never hold plaintext identity data
+- **Core data envelope**: `_id`, `_rev`, `type`, `createdAt`, `updatedAt`, `_syncStatus`, `_schemaVersion`
+- **One database per logical domain**: books, patrons, loans, extensionLoans, departments, auditLog, config, and related domain stores must be initialized independently and indexed by query path rather than stored in a single giant collection
+- **Schema discipline**: every document must extend the same `BaseDocument` contract; no field drift without a schema version bump and migration note; data must be validated at the application boundary (Zod) and, for Enterprise, by CouchDB validation logic where relevant
+- **Query-first indexing**: required indexes must exist for typical access patterns such as `type + status`, `type + department`, `type + barcode`, `type + cycleCode`, `type + schoolId`, `type + patronId + status`, and `type + dueDate` so that offline performance does not degrade as data grows
+- **Conflict-safe sync**: PouchDB/CouchDB conflicts must be treated as first-class events; no silent overwrite of concurrent edits; every conflict must be resolved with an explicit audit trail and human-visible review when needed
+- **Package manager**: `pnpm` only — no `npm`, `yarn`, or `bun`
+- **Device baseline**: Windows 10, 4GB RAM, unstable power/internet expected
+- **Offline-first**: Every critical workflow completes locally; sync is deferred
+- **Country policy configuration**: school calendar, language labels, curriculum rules, compliance checks, and academic terms must be data-driven rather than hard-coded to a single nation. Each selected country or custom institution profile must be saved and reused for batch promotions, expiry checks, and curriculum tagging.
+- **Extension Services is a top-level DEPARTMENT** (peer to Acquisitions, Processing, Distribution, Library Operations, System Admin) — NOT a library section
+- **Books remain owned by Lending Section**; Extension Services borrows temporarily via bulk allocation: `Extension Request → Lending Fulfillment → Distribution Delivery → Extension Rotation → Return to Lending`
+- **Community handoff remains under Extension Services**: books sent to community leaders and rural outreach points retain their extension workflow, not a separate one-off library section.
+- **Outreach learners and mobile-library patrons have minimal profiles** (QR or local token ID only, no condition scoring, no degradation tracking unless the country policy explicitly requires it)
+- **Android app is an external tool** for Extension Services field operations only — NOT part of the Electron desktop application
+- **Operational reality**: many African libraries combine public-library, school-library, outreach-library, and community-reading functions. The system must support those mixed workflows without forcing a single branch model
 
----
+### 🗄️ Database Modeling Requirements (must be planned before build work)
 
-## 2) Build Plan by Child Epic (from `compression.md`)
-
-## Child Epic: LMS-CORE-SECURITY
-
-### LMS-101 — Implement SHA-256 hashing for Ghana Card ID storage
-
-Build focus:
-
-- Validate `GHA-000000000-0` format at form boundary.
-- Hash and salt in main process service only.
-- Store hash only; display masked value.
-
-Acceptance criteria (from compression):
-
-- Ghana Card ID `GHA-123456789-0` stored as `hashed:a3f8d2...`.
-- Plaintext ID never appears in logs/backups/UI.
-- Masked display `GHA-123***89-0` in all interfaces.
-- Hashing occurs ONLY in Electron main process (never renderer).
+- **Domain separation**: maintain distinct domain databases or collections for `books`, `patrons`, `loans`, `extensionLoans`, `departments`, `auditLog`, and `config` rather than building one large flat document store.
+- **Shared document contract**: every record must include the shared `BaseDocument` fields (`_id`, `_rev`, `type`, `createdAt`, `updatedAt`, `_syncStatus`, `_schemaVersion`) and any domain-specific fields must be added through a versioned schema definition.
+- **Validation layer**: implement runtime validation with Zod at the application boundary, and enforce critical business rules at the server or replication layer (Enterprise) when the data crosses trust boundaries.
+- **Migration readiness**: schema changes must be traceable and reversible; document versioning and migration notes are part of the delivery requirements, not a later cleanup task.
+- **Conflict handling**: record writes from multiple rural devices must be treated as first-class events; no silent overwrite of concurrent edits; every conflict must be resolved with an explicit audit trail and human-visible review when needed.
+- **Repository pattern**: all database operations must use the type-safe `BaseRepository<T>` pattern with auto-generated IDs, timestamps, and validation before persistence.
+- **Index strategy**: required indexes must exist for `type + status`, `type + department`, `type + barcode`, `type + cycleCode`, `type + schoolId`, `type + patronId + status`, and `type + dueDate`.
 
 ---
 
-### LMS-102 — Build incremental backup scheduler with WhatsApp compression
+## 2. 📅 Sprint Plan Overview
 
-Build focus:
-
-- Daily incremental at 8 PM.
-- Resume-safe backup after interruption.
-- 30-day retention cleanup.
-- WhatsApp export compressing output.
-
-Acceptance criteria (from compression):
-
-- Daily backup at 8 PM creates file `<=5%` of DB size (3MB for 60MB DB).
-- "Send via WhatsApp" button compresses backup to `<10MB`.
-- Backup resumes automatically after power outage.
-- 30-day retention policy enforced with auto-deletion.
-
----
-
-### LMS-103 — Implement 30-second auto-save for power outage resilience
-
-Build focus:
-
-- Save active drafts every 30 seconds.
-- Recovery snapshot with timestamp.
-- Integrity check before restore.
-
-Acceptance criteria (from compression):
-
-- Transaction data saved every 30 seconds without user action.
-- After 4-hour power outage, 99% of transactions >30s old recover.
-- Recovery message shows timestamp: "Recovered work from 10:14 AM".
-- Zero data corruption verified via checksum validation.
+| Sprint | Weeks | Theme | Tickets | Goal |
+|--------|-------|-------|---------|------|
+| **1** | 1-2 | Core Infrastructure | LMS-CORE-01, LMS-CORE-02, LMS-CORE-03, LMS-CORE-04 | Zero data loss after 24h simulated outage; PouchDB + SQLite working |
+| **2** | 3-4 | Database Foundation + Backup System | LMS-CORE-07, LMS-CORE-08, LMS-CORE-09, LMS-CORE-10, LMS-CORE-11, LMS-BACK-01, LMS-BACK-02, LMS-BACK-03 | All domain databases initialized; Zod validation enforced; Repository pattern implemented; Sync and conflict handling operational; Backup pipeline fully automated with cloud storage |
+| **3** | 5-6 | Acquisitions + Ghana Compliance | LMS-ACQ-01, LMS-ACQ-02, LMS-ACQ-03, LMS-ACQ-10, LMS-ACQ-11, LMS-GH-01, LMS-GH-02, LMS-GH-10, LMS-GH-11, LMS-GH-12 | 247 curriculum tags load offline in <2s; Orders sync on reconnect; Country profiles configurable for multi-country deployment |
+| **4** | 7-8 | Processing + Extension Routing | LMS-PROC-01, LMS-PROC-02, LMS-PROC-03, LMS-PROC-04, LMS-PROC-10, LMS-PROC-11, LMS-PROC-12 | Mold risk ≥90% accuracy; Extension routing populates conditional fields; Seasonal calendar operational |
+| **5** | 9-10 | Distribution + Extension Depot | LMS-DIST-01, LMS-DIST-02, LMS-DIST-03, LMS-DIST-04, LMS-DIST-10, LMS-DIST-11, LMS-DIST-12 | Packing slips <10s offline; depot routing includes rotation metadata; Dagbani SMS operational |
+| **6** | 11-12 | Children's Section + Degradation | LMS-CHILD-01, LMS-CHILD-02, LMS-CHILD-03, LMS-CHILD-10, LMS-CHILD-11 | Batch promotion 100% accurate; degradation ≥90% accuracy; GES calendar enforced |
+| **7** | 13-14 | Staff + Lending Section | LMS-STAFF-01, LMS-STAFF-02, LMS-STAFF-03, LMS-STAFF-10, LMS-LEND-01, LMS-LEND-02, LMS-LEND-03, LMS-LEND-10 | Role switching includes Extension; bulk allocation workflow tested |
+| **8** | 15-16 | Extension Services + Android | LMS-EXT-01, LMS-EXT-02, LMS-EXT-03, LMS-EXT-04, LMS-EXT-05, LMS-EXT-10, LMS-EXT-11, LMS-EXT-12, LMS-EXT-13 | Department boundary enforced; rotation cycles aligned with GES; Android syncs 100 transactions offline |
+| **9** | 17-18 | Data Operations & Disaster Recovery | LMS-DATA-01, LMS-DATA-02, LMS-DATA-03, LMS-DATA-04, LMS-DATA-05, LMS-DATA-06, LMS-DATA-07 | Import, export, seeding, retention, migration, and disaster recovery operational |
+| **10** | 19-20 | Sync Infrastructure & Conflict Resolution | LMS-SYNC-01, LMS-SYNC-02, LMS-SYNC-03, LMS-SYNC-04, LMS-SYNC-05, LMS-SYNC-06 | Conflict UX, partitions, server validation, Android sync, and sync testing |
+| **11** | 21-22 | Data Quality & Integrity | LMS-QUAL-01, LMS-QUAL-02, LMS-QUAL-03, LMS-QUAL-04, LMS-QUAL-05, LMS-QUAL-06, LMS-QUAL-07, LMS-QUAL-08, LMS-QUAL-09, LMS-QUAL-10 | Duplicate detection, collision handling, monitoring, error handling, and performance targets |
 
 ---
 
-### LMS-104 — Add battery optimization exemption flow for rural libraries
+## 3. 🔍 Detailed Sprint Breakdown
 
-Build focus:
+### 3.1 Sprint 1: Core Infrastructure
 
-- Explain rationale in-app.
-- One-tap guidance for Windows background app permissions.
-- Persistent warning until handled.
+**Results to achieve:**
 
-Acceptance criteria (from compression):
+- PouchDB offline storage with SQLite adapter operational
+- National ID hashing and masking verified by DPC liaison
+- Incremental backup scheduler with cloud storage integration
+- 30-second auto-save for power outage resilience
 
-- In-app rationale screen explains Ghana power instability context.
-- One-tap enable flow for Windows "Allow background apps".
-- Persistent notification when exemption not granted.
-- Works on Windows 10 devices with 4GB RAM.
+**Tickets in scope:**
 
----
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-CORE-01 | System | Set up PouchDB with SQLite adapter for offline storage | 5 | None |
+| LMS-CORE-02 | System | Implement SHA-256 hashing for national ID storage | 3 | LMS-CORE-01 |
+| LMS-CORE-03 | System | Build incremental backup scheduler | 5 | LMS-CORE-01 |
+| LMS-CORE-04 | System | Implement 30-second auto-save for power outage resilience | 3 | LMS-CORE-01 |
+| LMS-CORE-05 | System | Set up CouchDB server deployment for Raspberry Pi 4 | 8 | None |
 
-### LMS-105 — Implement department security objects for 6 departments (NEW)
+**Build Focus:**
 
-Build focus:
+- SQLite database creation at `C:/GhanaLibraryData/`
+- Indexed collections for books, patrons, staff, extension records
+- National ID format validation at form boundary (country-aware)
+- Hashing service in Electron main process only
+- Masked display per country profile
+- Backup: daily 8 PM incremental, ≤5% DB size, compressed for cloud storage upload
+- 30-day retention with auto-deletion
+- Auto-save every 30 seconds with checksum validation
+- Recovery snapshot with timestamp display
 
-- Configure 6 departments as security principals.
-- Enforce cross-department data isolation via security objects.
-- Extension Services boundary: no access to library section data.
-- Lending Section boundary: only "Bulk Requests" tab visible for Extension requests.
+**Verification Gate:**
 
-Acceptance criteria (from compression):
-
-- 6 departments configured: Acquisitions, Processing, Distribution, Library Operations, Extension Services, System Admin.
-- Extension Services staff CANNOT access library section data.
-- Lending section staff see ONLY "Bulk Requests" tab for Extension requests.
-- Cross-department data access blocked by security objects.
-
----
-
-## Child Epic: LMS-GHANA-COMPLIANCE
-
-### LMS-201 — Implement Ghana Data Protection Act 2012 (Act 843) compliance
-
-Build focus:
-
-- Retention/anonymization/purge jobs.
-- Deletion workflow with audit trails and bilingual confirmation SMS.
-
-Acceptance criteria (from compression):
-
-- Patron records auto-anonymized after 2 years inactive.
-- Closed accounts purged within 72 hours + audit log entry.
-- Staff records retained exactly 7 years post-employment.
-- One-tap account deletion with confirmation SMS in Twi/English.
+- SQLite inspection confirms indexed collections
+- Hashing audit: plaintext ID never in storage/logs/backups
+- Backup resumes after power outage
+- Auto-save recovers 99% of transactions >30s old after 4h outage
 
 ---
 
-### LMS-202 — Integrate Ghana Education Service curriculum tags (2024/25)
+### 3.2 Sprint 2: Database Foundation + Backup System
 
-Build focus:
+**Results to achieve:**
 
-- Bundle GES tags offline JSON.
-- Grouped taxonomy search.
-- Dewey suggestion mapping.
+- Shared `BaseDocument` contract enforced across all domain stores
+- Zod validation at app boundary with migration gates
+- Sync manager for Enterprise bi-directional replication
+- Conflict resolution UI for staff review
+- Data integrity monitoring and health reporting
+- Backup pipeline fully automated with cloud storage
 
-Acceptance criteria (from compression):
+**Tickets in scope:**
 
-- 247 pre-loaded GES tags matching MoE validation certificate #MoE-2024-087.
-- Tags grouped by level: Basic/JHS/SHS with grade-specific variants.
-- Offline access without internet (embedded JSON <=2.5MB).
-- Auto-suggest Dewey Decimal based on curriculum tag.
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-CORE-07 | System | Define the shared database contract and indexing strategy for all domain stores | 5 | LMS-CORE-01 |
+| LMS-CORE-08 | System | Enforce Zod validation and migration gates for schema evolution | 4 | LMS-CORE-07 |
+| LMS-CORE-09 | System | Implement sync manager for Enterprise bi-directional replication | 8 | LMS-CORE-07 |
+| LMS-CORE-10 | System | Implement conflict resolution UI for staff review | 5 | LMS-CORE-09 |
+| LMS-CORE-11 | System | Build data integrity monitoring and health reporting | 3 | LMS-CORE-07 |
+| LMS-BACK-01 | System | Implement compression package integration | 5 | LMS-CORE-01 |
+| LMS-BACK-02 | System | Implement cloud storage abstraction layer | 8 | LMS-BACK-01 |
+| LMS-BACK-03 | System | Implement backup automation interface | 5 | LMS-BACK-02 |
 
----
+**Build Focus:**
 
-### LMS-203 — Build Twi/Dagbani language support for rural library and Extension staff (UPDATED)
+- BaseDocument contract: `_id`, `_rev`, `type`, `createdAt`, `updatedAt`, `_syncStatus`, `_schemaVersion`
+- Required indexes: `type + status`, `type + department`, `type + barcode`, `type + cycleCode`, `type + schoolId`, `type + patronId + status`, `type + dueDate`
+- Zod schemas for all domain entities
+- Migration service with idempotent migrations and rollback support
+- Sync state tracking: `idle`, `active`, `paused`, `error`, `offline`
+- Conflict resolution: last-write-wins based on `updatedAt`, with manual review for critical conflicts
+- Stale pending detection (>24h flagged)
+- Clock skew detection beyond 5 minutes
+- Health report generation for admin review
+- Orphaned record detection
+- Duplicate ISBN/barcode detection
+- Compression package integration (zlib gzip + node-tar)
+- Cloud storage abstraction layer (Google Drive, Backblaze B2, Cloudflare R2)
+- Backup automation interface with scheduling and credential management
 
-Build focus:
+**Verification Gate:**
 
-- Translate critical task flows and SMS templates in Twi and Dagbani.
-- Dagbani translations for Extension Services Northern Region operations.
-- Android app language toggle: English/Twi/Dagbani.
-- Persist language setting.
-
-Acceptance criteria (from compression):
-
-- Critical screens (checkout, batch management) fully translated to Twi.
-- Dagbani translations for Extension Services Northern Region operations.
-- Android app language toggle: English/Twi/Dagbani.
-- SMS templates in Twi/Dagbani validated by University of Ghana + UDS linguists.
-- Language toggle in Settings with persistent selection.
-
----
-
-### LMS-204 — Implement GES academic calendar with August 31 expiry (UPDATED)
-
-Build focus:
-
-- Batch expiry enforcement.
-- Promotion/report scheduler.
-- Extension Services rotation cycles aligned with GES calendar.
-- Hard stop: ALL Extension book sets return to depot by August 31.
-
-Acceptance criteria (from compression):
-
-- All batches auto-expire August 31 per Ghana Education Service standard.
-- Extension Services rotation cycles aligned: Cycle 1 (Sept-Dec), Cycle 2 (Jan-Mar), Cycle 3 (Apr-Jun), Cycle 4 (Jul-Aug).
-- ALL Extension book sets MUST return to depot by August 31 (hard stop).
-- Pre-promotion report generated June 15 listing batches expiring Aug 31.
-- Auto-promotion August 15 for batches with >80% attendance.
+- All domain databases follow BaseDocument contract
+- Zod validation rejects invalid documents before write
+- Sync resumes without data loss after extended offline
+- Conflicts are preserved and reviewable by staff
+- Health report shows orphaned records and schema violations
+- Backup pipeline fully automated: backup → compress → upload → verify
+- Cloud upload works with Google Drive, Backblaze B2, and Cloudflare R2
 
 ---
 
-### LMS-GH-12 — Dagbani language support for Extension Services (NEW)
+### 3.3 Sprint 3: Acquisitions + Ghana Compliance
 
-Build focus:
+**Results to achieve:**
 
-- Dagbani translations validated by University for Development Studies linguist.
-- Northern Region Extension operations in Dagbani.
-- SMS templates for depot contacts in Dagbani.
+- Vendor management with country-aware identity validation
+- Budget tracking per department with country-aligned codes
+- Offline order queue with sync-on-reconnect
+- Ghana Data Protection Act compliance
+- GES curriculum tags available offline
+- Twi/Dagbani language support
+- GES academic calendar with August 31 expiry
+- Country profile configuration for multi-country African deployment
 
-Acceptance criteria (from compression):
+**Tickets in scope:**
 
-- Dagbani template: "Zuli libri ka ti kpɛ. Yɛlsim cycle 2 books."
-- English fallback available.
-- Messages queue offline; send via Vodafone/MTN/AirtelTigo on reconnect.
-- Templates validated by University for Development Studies linguist.
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-ACQ-01 | Feature | Vendor management with country-aware identity validation | 5 | LMS-CORE-01 |
+| LMS-ACQ-02 | Feature | Budget tracking per department with country-aligned codes | 3 | LMS-CORE-01 |
+| LMS-ACQ-03 | Feature | Offline order queue with sync-on-reconnect | 3 | LMS-CORE-01 |
+| LMS-ACQ-10 | System | Build CSV/JSON data import pipeline | 5 | LMS-CORE-01 |
+| LMS-ACQ-11 | System | Build data export pipeline | 3 | LMS-CORE-01 |
+| LMS-GH-01 | System | Implement Ghana Data Protection Act 2012 (Act 843) compliance | 5 | LMS-CORE-01 |
+| LMS-GH-02 | System | Integrate Ghana Education Service curriculum tags (2024/25) | 3 | LMS-CORE-01 |
+| LMS-GH-10 | System | Build Twi/Dagbani language support | 5 | LMS-CORE-01 |
+| LMS-GH-11 | System | Implement GES academic calendar with August 31 expiry | 3 | LMS-CORE-01 |
+| LMS-GH-12 | System | Implement country profile configuration for multi-country African deployment | 8 | LMS-CORE-01 |
 
----
+**Build Focus:**
 
-## Child Epic: LMS-ACQUISITIONS
+- Vendor form: country-aware ID validation, hashing, masked display
+- Company type taxonomy: sole_proprietorship, partnership, limited_liability, nonprofit, government, institution
+- Business registration required per national policy
+- Budget codes follow active country format
+- Amber warning at <20% remaining
+- Order queue: local save with `status: 'pending_sync'`, sync on reconnect
+- Import: validate against BaseDocument contract, reject invalid rows, duplicate detection
+- Export: JSON/CSV with hashed IDs preserved, includes `_schemaVersion`
+- DPA compliance: auto-anonymize after 2 years inactive, purge within 72 hours
+- Curriculum tags: 247 GES tags, grouped by Basic/JHS/SHS, ≤2.5MB embedded JSON
+- Language support: Twi/Dagbani translations validated by UDS linguists
+- Academic calendar: August 31 expiry, August 15 promotion, June 15 pre-promotion report
+- Country profiles: configurable identity rules, curriculum systems, academic calendars, local labels
 
-### LMS-301 — Implement vendor management with Ghana Card ID validation
+**Verification Gate:**
 
-Build focus:
-
-- Vendor form validation and hint copy.
-- Hash-on-save compliance flow.
-- Offline vendor registry + sync.
-
-Acceptance criteria (from compression):
-
-- Vendor form requires Ghana Card ID format `GHA-000000000-0`.
-- Format validation tooltip: "Ghana Card required per Public Procurement Act 2003".
-- Hashed ID stored; plaintext never persisted.
-- Works offline with local vendor list sync on reconnect.
-
----
-
-### LMS-302 — Build budget tracking per department with GES alignment
-
-Build focus:
-
-- Budget code format enforcement.
-- Live spend/remaining indicators.
-- Override path with approval requirement.
-
-Acceptance criteria (from compression):
-
-- Budget codes follow Ghana format `CHILDREN-2024-Q1`.
-- Real-time remaining balance display during order creation.
-- Amber warning at <20% budget remaining.
-- Blocks orders exceeding remaining budget with override requiring Department Head approval.
-
----
-
-### LMS-303 — Implement offline order queue with sync-on-reconnect
-
-Build focus:
-
-- Queue orders locally when offline.
-- Reconnect sync within SLA.
-- Retry/backoff and conflict policy.
-
-Acceptance criteria (from compression):
-
-- Orders save locally with status "Pending Sync" when offline.
-- Sync completes within 60 seconds of internet restoration.
-- Conflict resolution uses timestamp-based "last write wins".
-- Failed syncs retry with exponential backoff (1s -> 30s).
+- Vendor form rejects invalid ID format per country profile
+- Budget blocks orders exceeding remaining balance
+- Orders sync within 60 seconds of internet restoration
+- Import rejects invalid rows with clear error messages
+- DPA compliance: patron records anonymized after 2 years
+- 247 curriculum tags load offline in <2s
+- Country profiles support Ghana, Kenya, Uganda, Tanzania
 
 ---
 
-## Child Epic: LMS-PROCESSING
+### 3.4 Sprint 4: Processing + Extension Routing
 
-### LMS-401 — Implement condition scoring sliders for spine/cover/pages/edges
+**Results to achieve:**
 
-Build focus:
+- Condition scoring sliders with climate-aware weighting
+- Automatic mold risk assessment based on seasonal calendar
+- PDF417 barcodes with Ghana Library Authority format
+- Extension Services routing with durability scoring and corridor safety
+- Barcode and QR code collision detection
+- Ghana seasonal calendar service
+- Barcode rotation cycle indicator for Extension
 
-- Four sliders with weight model.
-- Spine crease count and climate tooltip.
-- Weighted health score calculation.
+**Tickets in scope:**
 
-Acceptance criteria (from compression):
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-PROC-01 | Feature | Condition scoring sliders (spine/cover/pages/edges) | 5 | LMS-CORE-01 |
+| LMS-PROC-02 | Feature | Automatic mold risk assessment | 3 | LMS-PROC-11 |
+| LMS-PROC-03 | Feature | PDF417 barcodes with Ghana Library Authority format | 3 | LMS-PROC-12 |
+| LMS-PROC-04 | Feature | Extension Services routing with durability scoring | 5 | LMS-PROC-12 |
+| LMS-PROC-10 | System | Barcode and QR code collision detection | 2 | LMS-CORE-01 |
+| LMS-PROC-11 | System | Ghana seasonal calendar service | 3 | LMS-CORE-01 |
+| LMS-PROC-12 | System | Barcode rotation cycle indicator for Extension | 3 | LMS-CORE-01 |
 
-- 1-5 sliders with climate-aware weighting (spine 40%, cover 25%, pages 25%, edges 10%).
-- Visual indicators: red=1 (poor) -> green=5 (excellent).
-- Spine crease counter (0-5) with tooltip: "Critical in humid climate".
-- Overall health score auto-calculated as weighted average.
+**Build Focus:**
 
----
+- Four 1-5 sliders: Spine (40%), Cover (25%), Pages (25%), Edges (10%)
+- Climate-aware tooltips: "Critical in humid climate – check for separation"
+- Mold risk: automatic based on device date, high during rainy seasons
+- Seasonal calendar: Dec-Feb (dry), Mar-May/Sept-Nov (rainy), Jun-Aug (major rainy)
+- Barcode format: `[SUBJECT]-[GRADE][AUTHOR_INITIAL]-[SEQUENTIAL]`
+- Extension suffix: `-C[1-4]` for rotation cycles
+- Extension routing conditional fields: Rotation Cycle, Mobile Handling Durability, Destination Region
+- Durability ≥3 required for Tamale-Bolgatanga corridor
+- Corridor safety protocols auto-trigger for Northern Region
+- Collision detection: logged for audit, new unique ID generated
 
-### LMS-402 — Build mold risk assessment based on Ghana seasonal calendar
+**Verification Gate:**
 
-Build focus:
-
-- Risk classification from local date only.
-- Offline seasonal recommendations.
-
-Acceptance criteria (from compression):
-
-- Automatic risk level (none/low/medium/high/critical) based on current date.
-- April-June & Sept-Nov: "high" risk with recommendation "Use silica gel packets".
-- December-February: "low" risk with recommendation "Standard shelving sufficient".
-- Works offline using embedded seasonal calendar (no API calls).
-
----
-
-### LMS-403 — Generate PDF417 barcodes with Ghana Library Authority format (UPDATED)
-
-Build focus:
-
-- Barcode format encoder.
-- Extension Services books append rotation cycle suffix.
-- Local file save with size target.
-- Include QR for downstream scanning.
-
-Acceptance criteria (from compression):
-
-- Barcode format `SCI-6M-042` = `[SUBJECT]-[GRADE][AUTHOR_INITIAL]-[SEQUENTIAL]`.
-- Extension Services books append rotation cycle suffix: `SCI-6M-042-C2`.
-- PDF saves locally <=500KB for WhatsApp transfer.
-- Works offline with no internet dependency.
-- Includes QR code for section scanning upon delivery.
+- Condition scoring works offline
+- Mold risk assessment matches manual review (≥90%)
+- Barcode format `SCI-6M-042-C2` generated correctly
+- Extension routing shows conditional fields, hides batch assignment
+- Collisions logged in audit trail
 
 ---
 
-### LMS-404 — Route books to Extension Services department with durability scoring (NEW)
+### 3.5 Sprint 5: Distribution + Extension Depot
 
-Build focus:
+**Results to achieve:**
 
-- Extension Services as top-level department routing option.
-- Conditional fields: Rotation Cycle, Mobile Handling Durability, Destination Region.
-- Durability threshold enforcement for Northern Region corridor.
-- `extensionServices` object population on routing.
+- Batch-aware packing slips with GRADE-4A vs GRADE-4B separation
+- Rural delivery mode for Tamale-Bolgatanga corridor
+- Rainy season alerts on packing slips
+- Extension Services depot delivery with rotation cycle metadata
+- Offline PDF generation for packing slips
+- Tamale-Bolgatanga corridor detection service
+- Extension Services depot routing with Dagbani SMS
 
-Acceptance criteria (from compression):
+**Tickets in scope:**
 
-- Section routing dropdown includes "Extension Services" as top-level department option.
-- Selecting Extension triggers conditional fields: Rotation Cycle (CYCLE-1 to CYCLE-4), Mobile Handling Durability (1-5), Destination Region.
-- Durability >=3 required for Tamale-Bolgatanga corridor.
-- Tamale-Bolgatanga corridor safety protocols auto-trigger for Northern Region.
-- Batch assignment fields hidden when routing to Extension (not applicable).
-- `extensionServices` object MUST be populated when routing to Extension.
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-DIST-01 | Feature | Batch-aware packing slips | 5 | LMS-DIST-10 |
+| LMS-DIST-02 | Feature | Rural delivery mode for Tamale-Bolgatanga | 3 | LMS-DIST-11 |
+| LMS-DIST-03 | Feature | Rainy season alerts on packing slips | 2 | LMS-PROC-11 |
+| LMS-DIST-04 | Feature | Extension depot delivery with rotation metadata | 5 | LMS-DIST-12 |
+| LMS-DIST-10 | System | Offline PDF generation for packing slips | 5 | LMS-CORE-01 |
+| LMS-DIST-11 | System | Tamale-Bolgatanga corridor detection service | 3 | LMS-CORE-01 |
+| LMS-DIST-12 | System | Extension Services depot routing with Dagbani SMS | 5 | LMS-DIST-10 |
 
----
+**Build Focus:**
 
-## Child Epic: LMS-DISTRIBUTION
+- Packing slip groups books by batch with learner counts
+- Repeat batch warning: "Repeat learners – 20% extra books required"
+- Rural mode toggle disables GPS, requires community leader contact
+- Rainy season banner: "RAINY SEASON ALERT: Use waterproof covers + silica gel"
+- Glossy page books (Science/Math) flagged for extra protection
+- Depot routing: rotation cycle indicator, depot location, community leader signature
+- READ-ONLY rotation cycle metadata (assigned during Lending fulfillment)
+- Dagbani SMS: "Zuli libri ka ti kpɛ. Cycle 2 books arriving today."
+- PDF generation works offline, saves to `C:/GhanaLibraryData/packing-slips/`
+- File size ≤500KB for easy sharing
+- Corridor detection: school ID prefix matching against corridor list
 
-### LMS-501 — Implement batch-aware packing slips with GRADE-4A vs GRADE-4B separation
+**Verification Gate:**
 
-Build focus:
-
-- Batch grouping in PDF output.
-- Repeat batch warning blocks.
-- Include GES expiry context.
-
-Acceptance criteria (from compression):
-
-- Packing slip groups books by batch (`GRADE-4A`: 42 books, `GRADE-4B`: 8 books).
-- Repeat batches (`GRADE-4B`) display amber warning: "GES Policy: 20% extra books required".
-- PDF includes GES academic year expiry date (August 31).
-- File size <=500KB for WhatsApp transfer.
-
----
-
-### LMS-502 — Build rural delivery mode for Tamale-Bolgatanga corridor
-
-Build focus:
-
-- Rural mode switch to make GPS optional.
-- Require community leader contact.
-- Queue confirmations offline.
-
-Acceptance criteria (from compression):
-
-- "Rural Mode" toggle disables GPS requirements.
-- Mandatory community leader contact fields when rural mode enabled.
-- Twi/Dagbani SMS templates based on destination region.
-- Works offline with delivery confirmation queued for sync.
+- Packing slips generate offline <10s
+- Rural mode disables GPS without errors
+- Extension depot packing slips include rotation metadata
+- PDF contains school name, batch groupings, PDF417 barcode, QR code
+- Corridor list embedded in seed data (works offline)
+- Dagbani SMS queues offline, sends on reconnect
 
 ---
 
-### LMS-503 — Implement rainy season alerts on packing slips
+### 3.6 Sprint 6: Children's Section + Degradation Engine
 
-Build focus:
+**Results to achieve:**
 
-- Seasonal alert banners in slip generator.
-- Material-specific protection list for glossy pages.
+- GES-aligned batch promotion on August 15
+- Degradation threshold enforcement blocking poor-care patrons
+- "Teleporter" detection with oral tradition context
+- Degradation engine with climate-aware weighting
+- GES academic calendar service
 
-Acceptance criteria (from compression):
+**Tickets in scope:**
 
-- April-June & Sept-Nov: Red banner "RAINY SEASON ALERT" on packing slip.
-- Lists books with glossy pages (Science/Math) requiring extra protection.
-- Alert disappears automatically September 1.
-- Works offline using device date (no network dependency).
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-CHILD-01 | Feature | GES-aligned batch promotion workflow | 5 | LMS-CHILD-11 |
+| LMS-CHILD-02 | Feature | Degradation threshold enforcement engine | 5 | LMS-CHILD-10 |
+| LMS-CHILD-03 | Feature | "Teleporter" detection with oral tradition context | 3 | LMS-CHILD-10 |
+| LMS-CHILD-10 | System | Degradation engine with climate-aware weighting | 8 | LMS-CORE-01 |
+| LMS-CHILD-11 | System | GES academic calendar service | 3 | LMS-CORE-01 |
 
----
+**Build Focus:**
 
-### LMS-504 — Deliver books to Extension Services depot with rotation cycle metadata (NEW)
+- Degradation formula: climate-aware weighting (spine 40%, cover 25%, pages 25%, edges 10%)
+- Zone logic: Green (≤0.15), Yellow (0.16-0.29), Red (0.30-0.44), Critical (≥0.45)
+- Red zone: block issuance + require staff override with 10-char reason
+- Critical zone: block + auto-schedule coaching workshop
+- Auto-promotion: >80% attendance → promote, <70% → repeat batch
+- SMS notifications in Twi/English to parents
+- Teleporter detection: 3+ pristine returns after >7 days
+- Context-aware: does NOT flag if staff notes contain "read aloud" or "sibling"
+- GES calendar: August 31 expiry, August 15 promotion, June 15 pre-promotion report
 
-Build focus:
+**Verification Gate:**
 
-- Destination type "Extension Services Depot" as new workflow trigger.
-- Packing slip includes rotation cycle, depot location, community leader signature field.
-- Rotation cycle metadata READ-ONLY (assigned during Lending fulfillment).
-- Dagbani SMS notification to depot contact.
-- Distribution NEVER handles school-level delivery (Extension Services' responsibility).
-
-Acceptance criteria (from compression):
-
-- Destination type "Extension Services Depot" triggers depot-specific workflow.
-- Packing slip includes: rotation cycle, depot location, community leader signature field.
-- Rotation cycle metadata is READ-ONLY (assigned during Lending fulfillment).
-- Dagbani SMS notification sent to depot contact.
-- Distribution NEVER handles school-level delivery details (Extension Services' responsibility).
-- Community leader signature workflow activates for rural depot locations.
-
----
-
-## Child Epic: LMS-EXTENSION-SERVICES (NEW)
-
-> **Critical Boundary**: Extension Services is a DEPARTMENT (peer to Library Operations), NOT a library section. Books are temporarily loaned FROM Lending Section. Extension learners have minimal profiles (QR ID only, no condition scoring, no degradation tracking).
-
-### LMS-801 — Create bulk book requests for school rotation cycles (NEW)
-
-Build focus:
-
-- Extension Services Leader creates bulk request form.
-- Request appears on Lending Section "Pending Requests" dashboard.
-- Status tracking through fulfillment pipeline.
-- Extension staff see ONLY Extension workflows.
-
-Acceptance criteria (from compression):
-
-- Extension Services Leader creates request with: school, cycle (1-4), quantity, subject areas, destination region.
-- Request appears on Lending Section "Pending Requests" dashboard.
-- Status tracking: Pending → Approved → Fulfilling → Ready for Delivery.
-- Extension staff see ONLY Extension workflows (no library section access).
-- Works offline with sync on reconnect.
+- Batch promotion accurate (100% learner assignment)
+- Degradation engine ≥90% accuracy vs manual review
+- Teleporter flags show "Watch" not "Teleporter" (non-punitive)
+- Calendar auto-expires batches on September 1
 
 ---
 
-### LMS-802 — Implement rotation cycle management with GES calendar (NEW)
+### 3.7 Sprint 7: Staff + Lending Section
 
-Build focus:
+**Results to achieve:**
 
-- 4-cycle annual rotation aligned with GES academic year.
-- Auto-flag sets for collection before cycle end.
-- August 31 hard stop enforcement.
-- WASSCE/BECE priority for Cycle 2; rainy season kits for Cycle 3.
+- Staff profiles with hashed national ID
+- Department role switching (including Extension Services)
+- Extension staff route certification and bulk request authority
+- Lending Section bulk allocation fulfillment
+- Rotation tracking and return workflow
+- Cross-department book status tracking
+- Data retention and archival policy engine
 
-Acceptance criteria (from compression):
+**Tickets in scope:**
 
-- 4-cycle annual rotation: Cycle 1 (Sept-Dec), Cycle 2 (Jan-Mar), Cycle 3 (Apr-Jun), Cycle 4 (Jul-Aug).
-- Auto-flag sets for collection 14 days before cycle end.
-- ALL book sets MUST return to depot by August 31 (hard stop).
-- Cycle 2 prioritizes WASSCE/BECE exam materials.
-- Cycle 3 includes rainy season mold prevention kits.
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-STAFF-01 | Feature | Staff profiles with national ID hashing | 3 | LMS-CORE-02 |
+| LMS-STAFF-02 | Feature | Department role switching | 5 | LMS-CORE-06 |
+| LMS-STAFF-03 | Feature | Extension staff route certification | 3 | LMS-CORE-06 |
+| LMS-STAFF-10 | System | Data retention and archival policy engine | 3 | LMS-CORE-01 |
+| LMS-LEND-01 | Feature | Fulfill bulk allocation requests from Extension | 5 | LMS-CORE-06 |
+| LMS-LEND-02 | Feature | Rotation tracking and return workflow | 3 | LMS-CORE-06 |
+| LMS-LEND-03 | Feature | Collection health monitoring for Extension-loaned books | 3 | LMS-CORE-06 |
+| LMS-LEND-10 | System | Cross-department book status tracking | 5 | LMS-CORE-01 |
 
----
+**Build Focus:**
 
-### LMS-803 — Build school delivery tracking via mobile library van (NEW)
+- Staff form: document ID validation, hashing, masked display per country policy
+- Duplicate ID prevention across staff records
+- Role switcher dropdown: System Admin, Acquisitions, Processing, Distribution, Library Operations, Extension Services
+- Extension role shows ONLY Extension workflows
+- Lending role shows "Bulk Requests" tab alongside regular lending
+- Extension staff: route certification, bulk request authority, rotation cycle access
+- Bulk request fulfillment: select books from available collection
+- Status change: "On Loan to Extension Services" with cycle metadata
+- Books marked unavailable for regular circulation
+- Return workflow: condition reassessment, status revert to "Available"
+- Track: cycle history, rotation count, cumulative condition changes
+- Overdue returns beyond active academic policy trigger escalation
+- Collection health: rotation history, cycles served, destinations, condition at each return
+- Cumulative Extension degradation tracked separately
+- Withdrawal recommendation when condition drops below threshold
+- Cross-department sync: real-time sync prevents double-allocation
+- Data retention: patron anonymization after 2 years, audit log archival, sync queue purge, tombstone cleanup
 
-Build focus:
+**Verification Gate:**
 
-- Schedule dashboard with school status tracking.
-- Community leader contacts pre-loaded per school.
-- Rainy season road alerts for affected routes.
-- Fully offline operation with sync on reconnect.
-
-Acceptance criteria (from compression):
-
-- Schedule dashboard shows schools with status: scheduled/in-progress/completed/missed.
-- Community leader contacts pre-loaded per school.
-- Rainy season road alerts for affected routes.
-- Works fully offline with sync when connection restores.
-
----
-
-### LMS-804 — Implement QR-based learner checkout/return on Android app (NEW)
-
-Build focus:
-
-- QR smart tag scanning via device camera (low-light capable).
-- Minimal learner profile display from pre-synced data.
-- Book barcode scanning with max 2 books checkout limit.
-- NO condition scoring, NO interaction scores, NO degradation tracking.
-- Local encrypted SQLite storage (Android Keystore).
-
-Acceptance criteria (from compression):
-
-- Scan QR smart tag with device camera (works in low-light rural conditions).
-- Display learner name and current books from pre-synced data.
-- Scan book barcode to checkout (max 2 books enforced).
-- NO condition scoring fields (high-traffic, <5 min/learner).
-- NO interaction scores/degradation tracking for Extension learners.
-- Transaction saves to local encrypted SQLite (Android Keystore).
+- Staff roles switch without data loss
+- Extension staff CANNOT access library section data
+- Lending bulk allocation fulfills requests correctly
+- Cross-department sync prevents double-allocation
+- Collection health shows rotation history and cumulative degradation
 
 ---
 
-### LMS-805 — Build Dagbani SMS templates for Northern Region schools (NEW)
+### 3.8 Sprint 8: Extension Services + Android
 
-Build focus:
+**Results to achieve:**
 
-- Dagbani SMS templates validated by UDS linguist.
-- English fallback available.
-- Offline message queue with multi-carrier reconnect.
+- Bulk book requests for school rotation cycles
+- Rotation cycle management aligned with GES calendar
+- School delivery tracking via mobile van
+- Dagbani SMS templates for Northern Region
+- Android offline transaction app
+- QR-based learner identification with smart tag design
+- Extension-Lending cross-department book status sync
+- Schedule management with corridor safety
 
-Acceptance criteria (from compression):
+**Tickets in scope:**
 
-- Dagbani template: "Zuli libri ka ti kpɛ. Yɛlsim cycle 2 books."
-- English fallback available.
-- Messages queue offline; send via Vodafone/MTN/AirtelTigo on reconnect.
-- Templates validated by University for Development Studies linguist.
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-EXT-01 | Feature | Bulk book requests for school rotation cycles | 5 | LMS-CORE-06 |
+| LMS-EXT-02 | Feature | Rotation cycle management with GES calendar | 5 | LMS-CORE-06 |
+| LMS-EXT-03 | Feature | School delivery tracking via mobile van | 3 | LMS-CORE-06 |
+| LMS-EXT-04 | Feature | Dagbani SMS templates for Northern Region | 3 | LMS-GH-10 |
+| LMS-EXT-05 | Feature | Dagbani SMS templates for Northern Region schools | 3 | LMS-GH-10 |
+| LMS-EXT-10 | System | Android offline transaction app | 13 | LMS-CORE-06 |
+| LMS-EXT-11 | System | QR-based learner identification with smart tag design | 5 | LMS-EXT-10 |
+| LMS-EXT-12 | System | Extension-Lending cross-department book status sync | 8 | LMS-LEND-10 |
+| LMS-EXT-13 | System | Extension schedule management with corridor safety | 3 | LMS-CORE-06 |
 
----
+**Build Focus:**
 
-### Extension Services System Tasks
+- Bulk request form: school, cycle, quantity, subject areas, destination region
+- Request status: Pending → Approved → Fulfilling → Ready for Delivery
+- 4-cycle rotation: CYCLE-1 (Sept-Dec), CYCLE-2 (Jan-Mar), CYCLE-3 (Apr-Jun), CYCLE-4 (Jul-Aug)
+- Auto-flag sets for collection 14 days before cycle end
+- August 31 hard stop: ALL sets return to depot
+- Schedule dashboard: scheduled/in-progress/completed/missed
+- Community leader contacts pre-loaded per school
+- Rainy season road alerts for affected routes
+- Dagbani SMS validated by UDS linguist
+- Android app: ZXing QR scanning, low-light capable
+- Local SQLite encrypted at rest (Android Keystore)
+- Battery optimization: 30s screen timeout, low-power mode
+- Post-service sync on depot Wi-Fi
+- QR smart tag: 85.6×54mm, 250-micron laminate, rounded corners
+- QR contains ONLY `qrCodeId` — NO personal data
+- Lost tag reuses same `qrCodeId` to preserve history
+- Cross-department sync: status "On Loan to Extension Services"
+- Real-time sync prevents double-allocation
+- Return triggers condition reassessment in Lending
 
-### LMS-810 — Build Android offline transaction app for Extension Services (NEW)
+**Verification Gate:**
 
-Build focus:
-
-- Pre-synced learner records and book barcodes available offline.
-- QR scanning via ZXing library for low-light conditions.
-- Local SQLite encrypted at rest (Android Keystore).
-- Battery optimization and post-service sync.
-
-Acceptance criteria (from compression):
-
-- All pre-synced learner records and book barcodes available offline.
-- QR scanning via ZXing library works in low-light conditions.
-- Local SQLite encrypted at rest (Android Keystore).
-- Battery optimization: screen timeout 30s, low-power mode.
-- Post-service sync uploads transactions when depot Wi-Fi available.
-
----
-
-### LMS-811 — Implement QR-based learner identification with smart tag design (NEW)
-
-Build focus:
-
-- QR contains ONLY `qrCodeId` — NO personal data.
-- Physical tag spec: laminated, 85.6x54mm, 250-micron, rounded corners.
-- Low-literacy design: large font learner name + school.
-- Lost tag reuses same `qrCodeId` to preserve history.
-
-Acceptance criteria (from compression):
-
-- QR contains ONLY `qrCodeId` (e.g., "EXT-QR-BOL-00042") — NO personal data.
-- Physical: laminated 85.6x54mm, 250-micron laminate, rounded corners.
-- Visual: learner name + school in large font (low-literacy contexts).
-- Lost tag reuses same `qrCodeId` to preserve borrowing history.
-
----
-
-### LMS-812 — Implement Extension-Lending cross-department book status sync (NEW)
-
-Build focus:
-
-- Book status change to "On Loan to Extension Services" with cycle tracking.
-- Lending section marks books unavailable for regular circulation.
-- Real-time sync prevents double-allocation.
-- Return workflow triggers condition reassessment in Lending.
-
-Acceptance criteria (from compression):
-
-- Books allocated change status to "On Loan to Extension Services" with cycle tracking.
-- Lending section shows books as unavailable for regular circulation.
-- Real-time sync prevents double-allocation.
-- Return workflow triggers condition reassessment in Lending section.
+- Department boundary enforced (Extension cannot access library sections)
+- Bulk allocation workflow: request → fulfillment → delivery → return
+- Zero books stranded; 100% requests fulfilled within 48 hours
+- Android app processes 100 transactions offline without data loss
+- QR scanning works in low-light rural conditions
+- Cross-department sync prevents double-allocation
 
 ---
 
-### LMS-813 — Build Extension Services schedule management with corridor safety (NEW)
+### 3.9 Sprint 9: Data Operations & Disaster Recovery
 
-Build focus:
+**Results to achieve:**
 
-- Tamale-Bolgatanga corridor safety protocols auto-trigger.
-- Community leader contact workflow integration.
-- Schedule syncs to Android app during pre-service depot Wi-Fi.
-- Fully offline using cached route data.
+- CSV/JSON data import pipeline for existing library records
+- Data export pipeline for library records
+- Reference data seeding service for country profiles and curriculum tags
+- Data retention and archival policy engine
+- Disaster recovery and backup verification service
+- Schema migration service for live database upgrades
+- Soft-delete and record restoration
 
-Acceptance criteria (from compression):
+**Tickets in scope:**
 
-- Tamale-Bolgatanga corridor safety protocols auto-trigger.
-- Community leader contact workflow activates.
-- Schedule syncs to Android app during pre-service depot Wi-Fi.
-- Works fully offline using cached route data.
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-DATA-01 | System | Build CSV/JSON data import pipeline for existing library records | 5 | LMS-CORE-07 |
+| LMS-DATA-02 | System | Build data export pipeline for library records | 3 | LMS-CORE-07 |
+| LMS-DATA-03 | System | Build reference data seeding service for country profiles and curriculum tags | 5 | LMS-CORE-07 |
+| LMS-DATA-04 | System | Implement data retention and archival policy engine | 3 | LMS-CORE-07 |
+| LMS-DATA-05 | System | Build disaster recovery and backup verification service | 5 | LMS-CORE-03 |
+| LMS-DATA-06 | System | Implement schema migration service for live database upgrades | 4 | LMS-CORE-08 |
+| LMS-DATA-07 | System | Implement soft-delete and record restoration | 3 | LMS-CORE-07 |
 
----
+**Build Focus:**
 
-## Child Epic: LMS-LENDING-SECTION (NEW)
+- Import: validate against BaseDocument contract, reject invalid rows with clear error messages, duplicate detection, works fully offline
+- Export: JSON or CSV format, national ID hashes remain hashed, includes `_schemaVersion`, works fully offline
+- Seeding: pre-configured country profiles available offline on first launch, curriculum tags pre-loaded per profile, seed data updatable via versioned update package
+- Retention: patron records anonymized after 2 years inactive per country policy, audit logs archived after configured period, sync queue purged after successful sync, tombstones cleaned up after 90 days
+- Disaster recovery: backup integrity verified before restore, point-in-time recovery supported, full restore testable without affecting production data, restore completion verified with checksum audit
+- Migration: existing documents migrated to new schema on app update, migration is idempotent, migration failures logged and rolled back, old schema records flagged until migrated
+- Soft-delete: deleted records visible in recycle bin for 30 days, records restorable within retention window, deletions sync across Enterprise clients
 
-> **Critical Boundary**: Lending Section OWNS the books. Extension Services BORROWS them temporarily. Books return to Lending after each cycle for condition reassessment.
+**Verification Gate:**
 
-### LMS-851 — Fulfill bulk allocation requests from Extension Services (NEW)
-
-Build focus:
-
-- "Pending Requests" tab showing Extension bulk requests.
-- Book selection from available Lending collection.
-- Status change to "On Loan to Extension Services" with cycle metadata.
-- Fulfilled books marked unavailable for regular circulation.
-- Lending staff CANNOT access Extension Services workflows.
-
-Acceptance criteria (from compression):
-
-- "Pending Requests" tab shows Extension bulk requests with: school, cycle, quantity, subjects.
-- Select books from available Lending collection to fulfill.
-- Fulfilled books change status to "On Loan to Extension Services" with cycle metadata.
-- Fulfilled books marked unavailable for regular circulation.
-- Lending staff CANNOT access Extension Services workflows (boundary enforced).
-
----
-
-### LMS-852 — Implement rotation tracking and return workflow (NEW)
-
-Build focus:
-
-- Condition reassessment on book return from Extension cycle.
-- Status revert from "On Loan to Extension Services" to "Available".
-- Cumulative tracking: cycle history, rotation count, condition changes.
-- Overdue return escalation alerts (past August 31 hard stop).
-
-Acceptance criteria (from compression):
-
-- Condition reassessment triggers when books return from Extension cycle.
-- Book status changes from "On Loan to Extension Services" back to "Available".
-- Track: cycle history, number of rotations, cumulative condition changes.
-- Overdue returns (past August 31 hard stop) trigger escalation alerts.
+- Import rejects invalid rows with line number and error
+- Export preserves hashed IDs and includes schema version
+- Seed data loads offline on first launch
+- Retention policy anonymizes records after configured period
+- Backup restore verified without affecting production data
+- Migration is idempotent and reversible
+- Soft-deleted records restorable within 30 days
 
 ---
 
-### LMS-853 — Build collection health monitoring for Extension-loaned books (NEW)
+### 3.10 Sprint 10: Sync Infrastructure & Conflict Resolution
 
-Build focus:
+**Results to achieve:**
 
-- Book rotation history: cycles served, destinations, condition at each return.
-- Cumulative Extension degradation tracked separately from regular circulation.
-- Withdrawal recommendation when condition drops below threshold.
+- Conflict resolution UI for staff review
+- Extended offline behavior for Enterprise network partitions
+- CouchDB server-side document validation
+- Android app sync protocol and data contract
+- Sync health monitoring and stale pending detection
+- Sync testing harness for conflict and partition simulation
 
-Acceptance criteria (from compression):
+**Tickets in scope:**
 
-- Book record shows rotation history: cycles served, destinations, condition at each return.
-- Cumulative Extension degradation tracked separately from regular circulation.
-- System recommends withdrawal when condition drops below threshold after Extension use.
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-SYNC-01 | System | Build conflict resolution UI for staff review | 5 | LMS-CORE-09 |
+| LMS-SYNC-02 | System | Implement extended offline behavior for Enterprise network partitions | 5 | LMS-CORE-09 |
+| LMS-SYNC-03 | System | Implement CouchDB server-side document validation | 4 | LMS-CORE-07 |
+| LMS-SYNC-04 | System | Define Android app sync protocol and data contract | 5 | LMS-EXT-10 |
+| LMS-SYNC-05 | System | Implement sync health monitoring and stale pending detection | 3 | LMS-CORE-09 |
+| LMS-SYNC-06 | System | Build sync testing harness for conflict and partition simulation | 5 | LMS-CORE-09 |
 
----
+**Build Focus:**
 
-### LMS-860 — Implement cross-department book status tracking (NEW)
+- Conflict resolution: both document versions shown side-by-side, admin can choose which version to keep, losing version preserved in audit log, conflicts categorized by severity, clock skew beyond 5 minutes detected and flagged
+- Extended offline: sync resumes without data loss after extended offline, large sync batches throttled on slow connections, UI shows sync progress and estimated completion, max offline duration configured (e.g., 90 days)
+- Server-side validation: `validate_doc_update` checks schema contract on server, invalid documents rejected before replication, validation rules versioned alongside schema, department isolation enforced server-side
+- Android sync: transactions sync via defined protocol on depot Wi-Fi, compressed batch transfer, conflicts resolved by `transactionDate`, Android app authenticates via API key or device token
+- Health monitoring: stale pending records (>24h) flagged, UI shows sync success/failure rates per device, manual retry available for failed syncs
+- Testing harness: simulate network partitions, inject concurrent edits from multiple clients, verify conflict resolution correctness, test large dataset replication (10k+ documents)
 
-Build focus:
+**Verification Gate:**
 
-- Book record update with `status: "on_loan_to_extension"` and `extensionLoan` object.
-- `extensionLoan` includes: department, cycle code, allocated date, due return, staff ID.
-- Lending section never shows allocated books as available.
-- Offline-first with sync on reconnect.
-
-Acceptance criteria (from compression):
-
-- Book record updates: `status: "on_loan_to_extension"` with `extensionLoan` object.
-- `extensionLoan` includes: department, cycle code, allocated date, due return, staff ID.
-- Lending section never shows allocated books as available.
-- Works offline with sync on reconnect.
-
----
-
-## Child Epic: LMS-CHILDRENS-SECTION
-
-### LMS-601 — Implement GES-aligned batch promotion workflow
-
-Build focus:
-
-- Promotion and repeat placement by attendance thresholds.
-- Parent notification workflow.
-- Bulk safety checks for learner updates.
-
-Acceptance criteria (from compression):
-
-- August 15 auto-promotion for batches with >80% attendance.
-- Learners with <70% attendance moved to repeat batch (`GRADE-5B`).
-- SMS notifications in Twi/English sent to all parents.
-- Zero data loss verified across 50-learner promotion test.
+- Conflict resolution UI shows both versions side-by-side
+- Sync resumes without data loss after 24h offline
+- Server-side validation rejects invalid documents
+- Android sync protocol works on depot Wi-Fi
+- Stale pending records flagged after 24h
+- Testing harness simulates partitions and conflicts
 
 ---
 
-### LMS-602 — Build degradation threshold enforcement engine
+### 3.11 Sprint 11: Data Quality & Integrity
 
-Build focus:
+**Results to achieve:**
 
-- Zone logic for issue policy.
-- Required override reason in red zone.
-- Auto-schedule coaching in critical zone.
+- Duplicate book detection during acquisition and processing
+- Barcode and QR code collision detection
+- Data integrity monitoring and health reporting
+- Config database contents and sync behavior
+- User-facing error messages for all failure modes
+- Bulk operation performance targets
+- Clock skew detection for conflict resolution
+- Attachment storage strategy for images and binary data
+- Anonymization for analytics and aggregate reporting
+- Database backup verification and restore testing
 
-Acceptance criteria (from compression):
+**Tickets in scope:**
 
-- Green zone (<=0.15): Normal issuance.
-- Yellow zone (0.16-0.29): Warning message "Handle with care".
-- Red zone (0.30-0.44): Staff override required with 10-char reason.
-- Critical zone (>=0.45): Block issuance + auto-schedule coaching workshop.
+| Ticket | Type | Title | Effort | Dependencies |
+|--------|------|-------|--------|--------------|
+| LMS-QUAL-01 | System | Implement duplicate book detection during acquisition and processing | 3 | LMS-CORE-07 |
+| LMS-QUAL-02 | System | Implement barcode and QR code collision detection | 2 | LMS-CORE-07 |
+| LMS-QUAL-03 | System | Build data integrity monitoring and health reporting | 3 | LMS-CORE-11 |
+| LMS-QUAL-04 | System | Define config database contents and sync behavior | 2 | LMS-CORE-07 |
+| LMS-QUAL-05 | System | Implement user-facing error messages for all failure modes | 3 | LMS-CORE-07 |
+| LMS-QUAL-06 | System | Define bulk operation performance targets | 2 | LMS-CORE-07 |
+| LMS-QUAL-07 | System | Implement clock skew detection for conflict resolution | 3 | LMS-CORE-10 |
+| LMS-QUAL-08 | System | Define attachment storage strategy for images and binary data | 3 | LMS-CORE-07 |
+| LMS-QUAL-09 | System | Implement anonymization for analytics and aggregate reporting | 3 | LMS-CORE-07 |
+| LMS-QUAL-10 | System | Define database backup verification and restore testing | 3 | LMS-DATA-05 |
 
----
+**Build Focus:**
 
-### LMS-603 — Implement "Teleporter" detection with oral tradition context
+- Duplicate detection: ISBN/title match triggers duplicate warning, librarian can add new copy or cancel, works offline
+- Collision detection: collision detected and new unique ID generated, collision logged for audit
+- Integrity monitoring: orphaned records detected, invalid enum values and schema violations flagged, health report generated for admin review
+- Config database: treated differently from transactional data, per-device overrides allowed, config changes audited
+- Error messages: clear, actionable error messages, technical details logged but not shown to non-admin users, localized in Twi/Dagbani where applicable
+- Performance targets: batch promotion of 500 patrons <30s, processing 100 books <60s, packing slips for 50 schools <120s
+- Clock skew: clock skew beyond 5 minutes detected, conflicts flagged for manual review when skew detected, last-write-wins with skew awareness
+- Attachments: images compressed to target size (<200KB covers, <500KB photos), external file storage for large attachments, sync bandwidth throttled on slow connections
+- Anonymization: patron data anonymized in aggregate reports, individual patrons not identifiable from analytics, Ghana Data Protection Act compliance
+- Backup verification: backup integrity verified before restore, full restore testable without affecting production data, restore completion verified with checksum audit
 
-Build focus:
+**Verification Gate:**
 
-- Detection heuristic + confidence state.
-- Context exceptions from staff notes.
-- Non-punitive policy enforcement.
-
-Acceptance criteria (from compression):
-
-- Flags patrons with 3+ pristine returns after >7 days checkout.
-- Context-aware: Does NOT flag if staff notes contain "read aloud" or "sibling".
-- Low-confidence flags shown as "Teleporter Watch" not "Teleporter".
-- Never blocks issuance for Teleporter category.
-
----
-
-## Child Epic: LMS-STAFF-GOVERNANCE
-
-### LMS-701 — Implement staff profile management with Ghana Card ID hashing
-
-Build focus:
-
-- Staff onboarding with compliant identity capture.
-- Duplicate prevention and activation preconditions.
-
-Acceptance criteria (from compression):
-
-- Staff form requires Ghana Card ID format `GHA-000000000-0`.
-- Hashing occurs before storage; masked display `GHA-123***89-0`.
-- Prevents duplicate IDs across staff records.
-- Requires supervisor assignment before activation.
-
----
-
-### LMS-702 — Build role switcher for Manager version single-device operation (UPDATED)
-
-Build focus:
-
-- Role switch control and immediate workflow filtering.
-- Extension Services role shows ONLY Extension workflows.
-- Lending role shows "Bulk Requests" tab alongside regular lending workflows.
-- Local-only enforcement for Manager mode.
-
-Acceptance criteria (from compression):
-
-- Dropdown includes: System Admin, Acquisitions, Processing, Distribution, Library Operations (Children's/Adult/Reference/Lending), Extension Services.
-- Extension Services role shows ONLY Extension workflows (bulk requests, rotation, schedule).
-- Lending role shows "Bulk Requests" tab alongside regular lending workflows.
-- Data isolation enforced per department security objects.
-- Works offline with no permission checks requiring network.
+- Duplicate detection warns on ISBN/title match
+- Collision detection generates new unique ID and logs event
+- Health report shows orphaned records and schema violations
+- Error messages are clear and actionable
+- Bulk operations meet performance targets
+- Clock skew detected beyond 5 minutes
+- Attachments compressed to target size
+- Analytics data is anonymized
+- Backup restore verified without affecting production
 
 ---
 
-### LMS-703 — Configure Extension Services staff profiles with route certification (NEW)
-
-Build focus:
-
-- Department field: "extension_services" (NOT a section code).
-- Route certification for Tamale-Bolgatanga corridor and other regions.
-- Bulk request authority level and rotation cycle access permissions.
-- Extension staff CANNOT access library section workflows.
-
-Acceptance criteria (from compression):
-
-- Department field: "extension_services" (NOT a section code).
-- Route certification: Tamale-Bolgatanga corridor or other regions.
-- Bulk request authority level configurable.
-- Rotation cycle access permissions per staff member.
-- Extension staff CANNOT access library section workflows.
-
----
-
-## 3) Pilot Next Actions (from `compression.md`)
-
-### LMS-NA-001 — Implement power outage resilience validation
-
-Acceptance criteria (from compression):
-
-- 24-hour simulated outage with zero data loss for transactions >30s old.
-- Tested on 3 Ghana-spec Windows 10 devices (4GB RAM).
-- Recovery time <10 seconds after restart.
-
-### LMS-NA-002 — Profile battery drain during circulation workflows
-
-Acceptance criteria (from compression):
-
-- Core circulation workflow <=2.5% drain/hour on Intel Celeron devices.
-- Documented results for Ghana Library Authority review.
-- Optimization recommendations for rural libraries with solar power.
-
-### LMS-NA-003 — Translate critical screens to Twi/Dagbani (UPDATED)
-
-Acceptance criteria (from compression):
-
-- Checkout screen, batch management, degradation alerts in Twi.
-- Extension Services Android app in Twi/Dagbani.
-- Translations validated by University of Ghana + UDS linguists.
-- Zero grammatical errors per validation report.
-
-### LMS-NA-004 — Implement language toggle in Settings (UPDATED)
-
-Acceptance criteria (from compression):
-
-- Persistent selection across app restarts.
-- Reloads UI immediately on change.
-- Default to device language with Ghana fallback (English).
-- Android app supports English/Twi/Dagbani toggle.
-
-### LMS-NA-005 — Build anonymized patron presence heartbeat
-
-Acceptance criteria (from compression):
-
-- Broadcasts "active" status every 60 seconds while app foregrounded.
-- Aggregates counts within 500m radius for "X nearby readers" display.
-- Privacy-preserving: No coordinates shared; only count + batch code.
-
-### LMS-NA-006 — Create QA tooling for patron intelligence simulation
-
-Acceptance criteria (from compression):
-
-- Dev menu to simulate degradation rates (0.05 to 0.50).
-- Verify reader categories assigned correctly per algorithm.
-- Test low-presence fallback copy ("Emergency responders alerted").
-
-### LMS-NA-007 — Validate Extension Services bulk allocation end-to-end (NEW)
-
-Acceptance criteria (from compression):
-
-- Simulate full cycle: bulk request → Lending fulfillment → Distribution delivery → Extension rotation → return.
-- Zero books stranded; 100% requests fulfilled within 48 hours.
-- Department boundary verified (Extension cannot access library sections).
-- Tamale-Bolgatanga corridor field test with community leaders.
-
----
-
-## 4) Ticket Completion Gate
-
-A ticket is complete only if all conditions are true:
-
-- Its listed acceptance criteria in this file are fully satisfied.
-- Offline behavior for the ticket has been demonstrated.
-- Security/privacy checks pass for sensitive fields.
-- Audit artifacts exist where required (identity updates, overrides, purge actions).
-- Manager/Enterprise impact is recorded in implementation notes.
-- Extension Services department boundary verified: Extension staff cannot access library section data, and vice versa.
-- Bulk allocation workflow integrity confirmed where applicable: books tracked from Lending → Extension → return.
-
----
-
-## 5) 🚀 Development & Release Workflow: Branching, Commits, PRs & Build Tags
+## 4. 🚀 Development & Release Workflow: Branching, Commits, PRs & Build Tags
 
 ### 🧭 Overview
 
-All feature development follows a branch-per-ticket model anchored to ticket IDs from `docs/jira/compression.md`. The `testing-main` branch is the integration target for all feature work. Pull requests are the only merge path into `testing-main`. Every merge commit is tagged with a lightweight build number; every completed sprint receives an annotated tag aggregating all builds from that sprint.
+All feature development follows a branch-per-ticket model anchored to ticket IDs from `docs/jira/compression.md`. The `develop` branch is the development base and integration target for all feature work during a sprint. Pull requests are the only merge path into `develop`. Every merge commit is tagged with a lightweight build number. The `testing-main` branch serves a single, well-defined role: it is the integration target for sprint completion and the branch where the CI `minor-release` job creates the sprint annotated tag. After a full sprint is implemented on `develop` and verified with no issues, a single PR is made from `develop` to `testing-main`; the merge triggers the CI job that produces the semantic version tag and release artifacts.
 
 ### 🌿 Branch Naming Convention
 
@@ -882,35 +647,35 @@ All feature development follows a branch-per-ticket model anchored to ticket IDs
 LMS-[XXX]/[title-or-description]
 ```
 
-- `[XXX]` = the numeric ticket ID from `compression.md` (e.g., `101`, `302`, `801`)
+- `[XXX]` = the ticket ID from `compression.md` (e.g., `CORE-01`, `ACQ-01`, `PROC-04`)
 - `[title-or-description]` = kebab-case summary of the ticket title
 
 **Examples:**
 
-| Ticket     | Branch Name                                         |
-| ---------- | --------------------------------------------------- |
-| LMS-101    | `LMS-101/implement-sha256-hashing-ghana-card-id`    |
-| LMS-302    | `LMS-302/build-budget-tracking-ges-alignment`       |
-| LMS-801    | `LMS-801/create-bulk-book-requests-rotation-cycles` |
-| LMS-NA-001 | `LMS-NA-001/power-outage-resilience-validation`     |
+| Ticket | Branch Name |
+|--------|-------------|
+| LMS-CORE-01 | `LMS-CORE-01/set-up-pouchdb-sqlite-offline-storage` |
+| LMS-ACQ-01 | `LMS-ACQ-01/vendor-management-country-identity` |
+| LMS-PROC-04 | `LMS-PROC-04/extension-routing-durability` |
+| LMS-EXT-01 | `LMS-EXT-01/bulk-book-requests-rotation` |
 
 ### 🛠️ Workflow Steps (Using GitHub MCP Tools)
 
-#### Step 1: 🌱 Create Feature Branch from `testing-main`
+#### Step 1: 🌱 Create Feature Branch from `develop`
 
-Use the GitHub MCP `create_branch` tool to create the branch on the remote, branching off `testing-main`:
+Use the GitHub MCP `create_branch` tool to create the branch on the remote, branching off `develop`:
 
 ```yaml
 Tool: mcp_io_github_git_create_branch
   owner: noobix
   repo: alpha-rabbit-lms
   branch: LMS-[XXX]/[title-or-description]
-  from_branch: testing-main
+  from_branch: develop
 ```
 
-#### Step 2: 🔄 Sync with `testing-main`
+#### Step 2: 🔄 Sync with `develop`
 
-If a PR already exists for the branch and `testing-main` has moved ahead, use the MCP `update_pull_request_branch` tool to pull the latest base branch changes into the feature branch:
+If a PR already exists for the branch and `develop` has moved ahead, use the MCP `update_pull_request_branch` tool to pull the latest base branch changes into the feature branch:
 
 ```yaml
 Tool: mcp_io_github_git_update_pull_request_branch
@@ -919,7 +684,7 @@ Tool: mcp_io_github_git_update_pull_request_branch
   pullNumber: <PR number>
 ```
 
-This merges the latest `testing-main` into the feature branch on the remote — no local pull needed.
+This merges the latest `develop` into the feature branch on the remote — no local pull needed.
 
 #### Step 3: 💻 Implement the Feature
 
@@ -937,18 +702,19 @@ ticket naturally — not as a checklist.>
 
 Where `<type>` is one of: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 
-**Example (LMS-101):**
+**Example (LMS-CORE-01):**
 
 ```text
-LMS-101: feat: implement SHA-256 hashing pipeline for Ghana Card ID storage
+LMS-CORE-01: feat: set up PouchDB with SQLite adapter for offline storage
 
-Built the hashing service in the Electron main process to ensure plaintext
-Ghana Card IDs never reach the renderer. IDs are validated against the
-GHA-000000000-0 format at the form boundary, salted and hashed with SHA-256
-before persistence, and displayed as masked values (GHA-123***89-0) across
-all UI surfaces. Log sanitization strips any accidental plaintext leakage
-from backups and debug output. The masked format function is shared with
-the vendor Ghana Card display for reuse in LMS-301.
+Built the database registry with per-domain PouchDB instances for books,
+patrons, loans, extensionLoans, departments, auditLog, and config. Each
+domain store is initialized with the IndexedDB adapter and indexed for the
+critical access paths (type + status, type + department, type + barcode,
+type + cycleCode, type + schoolId, type + patronId + status, type + dueDate).
+The registry is a singleton initialized once at app startup and provides
+type-safe access to all domain databases. Works fully offline with no
+internet dependency.
 ```
 
 #### Step 4: 📤 Commit and Push Feature Branch
@@ -1015,16 +781,16 @@ BUILD=$(cat .build_counter)
 git tag "[$BUILD]"
 git push origin "[$BUILD]"
 
-# 3. Increment and commit the counter back to testing-main
+# 3. Increment and commit the counter back to develop
 echo $(( BUILD + 1 )) > .build_counter
 git add .build_counter
 git commit -m "chore: increment build counter to $(( BUILD + 1 ))"
-git push origin testing-main
+git push origin develop
 ```
 
 > **Race condition note:** If two PRs are being tagged concurrently, both may read the same counter value. In practice, serialise this step manually (one tag operation at a time) or rely on the CI automation in `docs/release.md` which handles this atomically.
 
-#### Step 6: 🔀 Create Pull Request to `testing-main`
+#### Step 6: 🔀 Create Pull Request to `develop`
 
 Use the GitHub MCP `create_pull_request` tool:
 
@@ -1034,7 +800,7 @@ Tool: mcp_io_github_git_create_pull_request
   repo: alpha-rabbit-lms
   title: "LMS-[XXX]: <ticket title>"
   head: LMS-[XXX]/[title-or-description]
-  base: testing-main
+  base: develop
   body: |
     ## Ticket
     **LMS-[XXX]**: <ticket title>
@@ -1060,9 +826,9 @@ Tool: mcp_io_github_git_create_pull_request
 
 ---
 
-#### Step 7: 📦 Create Sprint Annotated Tag
+#### Step 7: 📦 Create Sprint Annotated Tag (on `testing-main`)
 
-When every ticket in a sprint is merged into `testing-main`, create a single annotated tag covering the entire sprint. The annotated tag is the durable, human-readable record of everything delivered in the sprint; its body feeds release notes and audit records. The semantic version increments the MINOR component at sprint completion.
+When every ticket in a sprint is merged into `develop` and the sprint is fully implemented with no issues, create a single PR from `develop` to `testing-main`. When that PR is merged, the CI `minor-release` job runs on `testing-main` and creates a single annotated tag covering the entire sprint. The annotated tag is the durable, human-readable record of everything delivered in the sprint; its body feeds release notes and audit records. The semantic version increments the MINOR component at sprint completion. The `testing-main` branch exists specifically for this purpose — it is the integration target for sprint completion and the branch where release tags are created.
 
 **Annotated tag body format:**
 
@@ -1110,17 +876,13 @@ Write the tag body to a temporary file to handle multi-line content reliably; re
 ```text
 Build #[261]
 Changes:
-- Ghana Card IDs submitted at any form boundary are validated against the GHA-000000000-0 format, then hashed and salted exclusively in the Electron main process before reaching the database — plaintext values never appear in storage, logs, or the renderer.
-- All UI surfaces render the masked format GHA-123***89-0; the masking function is shared with the vendor identity form.
+- PouchDB offline storage with IndexedDB adapter is operational. The database registry initializes all domain stores (books, patrons, loans, extensionLoans, departments, auditLog, config) with the IndexedDB adapter and creates required indexes for critical access paths. The system works fully offline with no internet dependency.
+- National ID hashing and masking is verified. The hashing service runs exclusively in the Electron main process; plaintext IDs never reach the renderer. Masked display follows the active country profile format.
 
 Build #[262]
 Changes:
-- The backup scheduler fires daily at 8 PM, produces an incremental snapshot capped at 5% of database size, and resumes automatically from the last checkpoint after a power interruption.
-- A WhatsApp export path compresses the output below 10 MB; a retention job prunes backups older than 30 days on schedule.
-
-Build #[263]
-Changes:
-- Active transaction drafts are persisted to a local snapshot every 30 seconds and stamped with a checksum; on restart after an outage the app locates the last clean snapshot, verifies its integrity, and displays the exact timestamp of the recovered state to the user.
+- Incremental backup scheduler fires daily at 8 PM, produces snapshots capped at 5% of database size, and resumes automatically from the last checkpoint after power interruption. Backup files are compressed and uploaded to configured cloud storage when connectivity is available.
+- 30-second auto-save persists transaction drafts with checksum validation. On restart after outage, the system recovers the last valid state and displays the exact timestamp of the recovered state to the user.
 
 Contributors:
 @noobix (Kelvin Kabute)
@@ -1128,34 +890,21 @@ Contributors:
 ---
 
 Appendix: Full PR descriptions
-[Full PR description for Build #[261] — LMS-101]
-[Full PR description for Build #[262] — LMS-102]
-[Full PR description for Build #[263] — LMS-103]
+[Full PR description for Build #[261] — LMS-CORE-01]
+[Full PR description for Build #[262] — LMS-CORE-02]
+[Full PR description for Build #[263] — LMS-CORE-03]
+[Full PR description for Build #[264] — LMS-CORE-04]
 ```
 
----
-
-### 🗺️ Sprint Branch Mapping (from compression.md)
-
-| Sprint   | Tickets                                                      | Branch Names                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| -------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Sprint 1 | LMS-101, LMS-102, LMS-103                                    | `LMS-101/implement-sha256-hashing-ghana-card-id`<br>`LMS-102/build-incremental-backup-whatsapp-compression`<br>`LMS-103/implement-30-second-auto-save-power-outage`                                                                                                                                                                                                                                                                                                                                                                      |
-| Sprint 2 | LMS-201, LMS-202, LMS-301, LMS-302                           | `LMS-201/ghana-data-protection-act-compliance`<br>`LMS-202/integrate-ges-curriculum-tags`<br>`LMS-301/vendor-management-ghana-card-validation`<br>`LMS-302/build-budget-tracking-ges-alignment`                                                                                                                                                                                                                                                                                                                                          |
-| Sprint 3 | LMS-401, LMS-402, LMS-403, LMS-404                           | `LMS-401/condition-scoring-sliders`<br>`LMS-402/mold-risk-assessment-seasonal-calendar`<br>`LMS-403/generate-pdf417-barcodes-gla-format`<br>`LMS-404/route-books-extension-services-durability`                                                                                                                                                                                                                                                                                                                                          |
-| Sprint 4 | LMS-501, LMS-502, LMS-503, LMS-504                           | `LMS-501/batch-aware-packing-slips`<br>`LMS-502/rural-delivery-tamale-bolgatanga`<br>`LMS-503/rainy-season-alerts-packing-slips`<br>`LMS-504/deliver-books-extension-depot-rotation`                                                                                                                                                                                                                                                                                                                                                     |
-| Sprint 5 | LMS-601, LMS-602, LMS-603                                    | `LMS-601/ges-batch-promotion-workflow`<br>`LMS-602/degradation-threshold-enforcement`<br>`LMS-603/teleporter-detection-oral-tradition`                                                                                                                                                                                                                                                                                                                                                                                                   |
-| Sprint 6 | LMS-701, LMS-702, LMS-703, LMS-851, LMS-852, LMS-860         | `LMS-701/staff-profile-ghana-card-hashing`<br>`LMS-702/role-switcher-manager-version`<br>`LMS-703/extension-staff-route-certification`<br>`LMS-851/fulfill-bulk-allocation-extension`<br>`LMS-852/rotation-tracking-return-workflow`<br>`LMS-860/cross-department-book-status-tracking`                                                                                                                                                                                                                                                  |
-| Sprint 7 | LMS-105, LMS-801, LMS-802, LMS-803, LMS-812, LMS-813         | `LMS-105/department-security-objects`<br>`LMS-801/create-bulk-book-requests-rotation-cycles`<br>`LMS-802/rotation-cycle-management-ges-calendar`<br>`LMS-803/school-delivery-tracking-mobile-van`<br>`LMS-812/extension-lending-cross-department-sync`<br>`LMS-813/extension-schedule-corridor-safety`                                                                                                                                                                                                                                   |
-| Sprint 8 | LMS-804, LMS-805, LMS-810, LMS-811, LMS-NA-001 to LMS-NA-007 | `LMS-804/qr-learner-checkout-return-android`<br>`LMS-805/dagbani-sms-templates-northern-region`<br>`LMS-810/android-offline-transaction-app`<br>`LMS-811/qr-learner-identification-smart-tag`<br>`LMS-NA-001/power-outage-resilience-validation`<br>`LMS-NA-002/battery-drain-profiling`<br>`LMS-NA-003/translate-critical-screens-twi-dagbani`<br>`LMS-NA-004/language-toggle-settings`<br>`LMS-NA-005/anonymized-patron-heartbeat`<br>`LMS-NA-006/qa-tooling-patron-simulation`<br>`LMS-NA-007/validate-extension-bulk-allocation-e2e` |
-
-### ⚡ Quick Reference: MCP Tool Sequence
+### Quick Reference: MCP Tool Sequence
 
 ```text
-1. mcp_io_github_git_create_branch              → Create feature branch from testing-main
-2. mcp_io_github_git_update_pull_request_branch → Sync feature branch with testing-main
-3. mcp_io_github_git_get_file_contents           → Read existing files before editing
-4. mcp_io_github_git_push_files                  → Commit and push all changes
-5. git tag [YY###] <commit-hash>                 → Lightweight build number tag per commit (Step 5)
-6. mcp_io_github_git_create_pull_request         → Open PR to testing-main
-7. git tag -a v<M.m.0> -F sprint-tag-body.txt   → Annotated sprint tag on sprint completion (Step 7)
+1. mcp_io_github_git_create_branch         → Create feature branch from develop
+2. mcp_io_github_git_update_pull_request_branch → Sync feature branch with develop
+3. mcp_io_github_git_get_file_contents      → Read existing files before editing
+4. mcp_io_github_git_push_files             → Commit and push all changes
+5. mcp_io_github_git_create_pull_request    → Open PR to develop
+6. After all sprint tickets merged to develop → manual testing on develop
+7. mcp_io_github_git_create_pull_request    → Open PR from develop to testing-main
+8. After PR merge to testing-main → CI minor-release job creates sprint annotated tag (vMAJOR.MINOR.0)
 ```
