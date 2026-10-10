@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-06
+Last-updated: 2026-10-10
 ---
 
 # Development Guardrails
@@ -388,7 +388,7 @@ Changes:
 Build #[262]
 Changes:
 - The backup scheduler fires daily at 8 PM, produces an incremental snapshot capped at 5% of database size, and resumes automatically from the last checkpoint after a power interruption.
-- A WhatsApp export path compresses the output below 10 MB; a retention job prunes backups older than 30 days on schedule.
+- A cloud storage export path compresses the output for upload; a retention job prunes backups older than 30 days on schedule.
 
 Build #[263]
 Changes:

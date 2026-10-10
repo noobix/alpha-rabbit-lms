@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-10
+---
+
 # 📚 Library Management System: Unified Tech Stack Specification
 
 _Two-tier architecture (Manager + Enterprise) with Ghana deployment readiness_
@@ -10,7 +15,7 @@ _Two-tier architecture (Manager + Enterprise) with Ghana deployment readiness_
 | ----------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | **Offline-First Core**  | Manager works 100% offline; Enterprise syncs when available | Critical for unstable power/internet in rural libraries                              |
 | **Single Codebase**     | Shared React frontend; database layer abstracted            | 80% code reuse between versions; faster Ghana-wide rollout                           |
-| **Incremental Backups** | File-diff based (Manager) + replication (Enterprise)        | Works on slow connections (<50kbps); backup files small enough for WhatsApp transfer |
+| **Incremental Backups** | File-diff based (Manager) + replication (Enterprise)        | Works on slow connections (<50kbps); backup files small enough for cloud storage upload |
 | **Zero Native Modules** | Pure JavaScript dependencies only                           | No rebuild headaches across Windows/macOS/Linux deployments                          |
 | **Ghana-Ready UI**      | Tailwind + Phosphor optimized for low-literacy staff        | Icons > text; color-blind safe; works on 1366x768 screens                            |
 
@@ -94,7 +99,7 @@ class BackupManager {
 ### Ghana-Specific Manager Features
 
 - **Offline-Only Mode**: All operations work during power outages
-- **Backup Transfer**: "Send backup via WhatsApp" button (compresses to <10MB)
+- **Backup Transfer**: Automated upload to cloud storage (Google Drive, Backblaze B2, Cloudflare R2) with credential management
 - **Low-Spec Optimized**: Works on Intel Celeron, 4GB RAM devices
 - **Local Storage Path**: Defaults to `C:/GhanaLibraryData/` (Windows) for easy IT access
 
@@ -199,7 +204,7 @@ class BackupManager {
 | ---------------------------- | ---------------------------------------------------------------- |
 | **No Internet**              | Manager version only; backups via USB drive                      |
 | **Unstable Internet**        | Enterprise clients work offline; sync when connection stable     |
-| **Slow Internet (<100kbps)** | Compressed sync; backup files small enough for WhatsApp transfer |
+| **Slow Internet (<100kbps)** | Compressed sync; backup files small enough for cloud storage upload |
 | **Power Outages**            | UPS recommended; PouchDB auto-saves every 30s                    |
 
 ### Localization Ready

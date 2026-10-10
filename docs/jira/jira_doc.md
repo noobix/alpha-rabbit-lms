@@ -1,9 +1,9 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-05
+Last-updated: 2026-10-10
 ---
 
-# ��� Library Management System: Jira Ticket Specification (Extension Services Department Update)
+# 📚 Library Management System: Jira Ticket Specification (Extension Services Department Update)
 
 _User-centric tickets separated into Features (user value) vs System Tasks (infrastructure) for achievable 2-week sprints_
 
@@ -11,7 +11,7 @@ _Critical correction: Extension Services is a full external department (not libr
 
 ---
 
-## ���️ LABELING CONVENTION
+## 🏷️ LABELING CONVENTION
 
 | Label                 | Purpose                                                             | Example                                 |
 | --------------------- | ------------------------------------------------------------------- | --------------------------------------- |
@@ -32,7 +32,7 @@ _Critical correction: Extension Services is a full external department (not libr
 
 ---
 
-## ��� EPIC: CORE INFRASTRUCTURE (`LMS-CORE`)
+## 🌐 EPIC: CORE INFRASTRUCTURE (`LMS-CORE`)
 
 _Foundation for offline-first operation, security, and Ghana compliance_
 
@@ -42,7 +42,7 @@ _Foundation for offline-first operation, security, and Ghana compliance_
 | --------------- | ------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **LMS-CORE-01** | Set up PouchDB with SQLite adapter for offline storage                          | System Task | `system-task` `manager` `offline-first`                          | High     | **Given** a Windows 10 device with 4GB RAM<br>**When** the application launches for the first time<br>**Then** a SQLite database file `library_data.db` is created in `C:/GhanaLibraryData/`<br>**And** the database contains indexed collections for books, patrons, staff, and extension records                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | **LMS-CORE-02** | Implement SHA-256 hashing for Ghana Card ID storage                             | System Task | `system-task` `ghana-compliance` `security`                      | High     | **Given** a staff member enters Ghana Card ID `GHA-123456789-0`<br>**When** the record is saved<br>**Then** the database stores only the hashed value `hashed:a3f8d2...`<br>**And** the UI displays a masked version `GHA-123***89-0`<br>**And** plaintext ID is never written to logs or backups                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| **LMS-CORE-03** | Build incremental backup scheduler with WhatsApp compression                    | System Task | `system-task` `manager` `offline-first`                          | High     | **Given** the library closes at 8:00 PM daily<br>**When** the backup scheduler triggers<br>**Then** an incremental backup file is created containing only changes since last backup<br>**And** the file size is ≤5% of main database (e.g., 3MB for 60MB DB)<br>**And** a "Send via WhatsApp" button compresses the file to <10MB for transfer                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **LMS-CORE-03** | Build incremental backup scheduler with cloud storage integration               | System Task | `system-task` `manager` `offline-first`                          | High     | **Given** the library closes at 8:00 PM daily<br>**When** the backup scheduler triggers<br>**Then** an incremental backup file is created containing only changes since last backup<br>**And** the file size is ≤5% of main database (e.g., 3MB for 60MB DB)<br>**And** the backup is compressed using the compression package for cloud storage upload                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | **LMS-CORE-04** | Implement 30-second auto-save for power outage resilience                       | System Task | `system-task` `offline-first` `ghana-compliance`                 | High     | **Given** a librarian is cataloging a book<br>**When** power fails unexpectedly<br>**Then** upon restart, the system recovers the last valid state from ≤30 seconds before outage<br>**And** displays "Recovered your work from [timestamp]"<br>**And** zero data loss occurs for transactions older than 30 seconds                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | **LMS-CORE-05** | Set up CouchDB server deployment for Raspberry Pi 4                             | System Task | `system-task` `enterprise` `infrastructure`                      | Medium   | **Given** a Raspberry Pi 4 with 4GB RAM and 128GB SD card<br>**When** the deployment script `setup-rpi-server.sh` is executed<br>**Then** CouchDB 3.3 starts on port 5984 with admin credentials<br>**And** data persists across reboots in `/home/pi/couchdb/data`<br>**And** the server consumes ≤15% CPU during idle state                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | **LMS-CORE-06** | Implement department security objects for 6 departments                         | System Task | `system-task` `enterprise` `department-boundary`                 | High     | **Given** the system has 6 departments (Acquisitions, Processing, Distribution, Library Operations, Extension Services, System Admin)<br>**When** security objects are configured<br>**Then** Extension Services staff CANNOT access library section data<br>**And** Lending section staff see ONLY "Bulk Requests" tab for Extension requests<br>**And** cross-department data access is blocked by security objects                                                                                                                                                                                                                                                                                                                                                                        |
@@ -51,7 +51,21 @@ _Foundation for offline-first operation, security, and Ghana compliance_
 
 ---
 
-## ��� EPIC: ACQUISITIONS MODULE (`LMS-ACQ`)
+## 📦 EPIC: BACKUP SYSTEM (`LMS-BACK`)
+
+_Fully automated backup pipeline: compression, cloud upload, credential management, and scheduling._
+
+### System Tasks (Infrastructure)
+
+| Ticket ID       | Title                                     | Type        | Labels                                            | Priority | Acceptance Criteria                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------- | ----------------------------------------- | ----------- | ------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **LMS-BACK-01** | Implement compression package integration | System Task | `system-task` `manager` `offline-first`           | High     | **Given** a backup file is created by the scheduler<br>**When** the compression pipeline runs<br>**Then** the file is compressed using the archiver npm package<br>**And** the compression supports zip, tar, and tar.gz formats<br>**And** the compressed file size is ≤5% of the original database size<br>**And** compression uses streaming to handle large files without memory exhaustion<br>**And** the compression is pure JavaScript with no native module dependencies<br>**And** the compressed file includes a checksum for integrity verification<br>**And** the system works fully offline with no internet dependency                                                                                                                |
+| **LMS-BACK-02** | Implement cloud storage abstraction layer | System Task | `system-task` `enterprise` `cloud-storage`        | High     | **Given** a compressed backup file is ready for upload<br>**When** the cloud storage interface is invoked<br>**Then** the system supports multiple cloud storage providers<br>**And** the default providers are Google Drive (15GB free), Backblaze B2 (10GB free), and Cloudflare R2 (10GB free)<br>**And** the abstraction layer uses S3-compatible API for B2 and R2<br>**And** Google Drive uses its native API<br>**And** credentials are stored securely in the system keychain<br>**And** upload resumes automatically after connectivity interruption<br>**And** the system verifies upload integrity via checksum comparison<br>**And** failed uploads are queued for retry with exponential backoff                                       |
+| **LMS-BACK-03** | Implement backup automation interface     | System Task | `system-task` `manager` `enterprise` `automation` | High     | **Given** the backup system is configured<br>**When** the automation interface is active<br>**Then** the system provides a unified backup settings panel<br>**And** the panel allows configuration of backup schedule (daily/weekly/custom)<br>**And** the panel allows selection of cloud storage provider and credentials<br>**And** the panel allows configuration of compression format and retention policy<br>**And** the panel shows backup history with status (success/failure/pending)<br>**And** the panel allows manual backup trigger and download<br>**And** the system automates the full pipeline: backup → compress → upload → verify<br>**And** the interface works offline with queue-based upload when connectivity is restored |
+
+---
+
+## 📦 EPIC: ACQUISITIONS MODULE (`LMS-ACQ`)
 
 _Order books from Ghanaian vendors aligned with GES curriculum_
 
@@ -72,7 +86,7 @@ _Order books from Ghanaian vendors aligned with GES curriculum_
 
 ---
 
-## ��� EPIC: PROCESSING MODULE (`LMS-PROC`)
+## 🔍 EPIC: PROCESSING MODULE (`LMS-PROC`)
 
 _Inspect, classify, and prepare books for distribution with Ghana climate adaptations and Extension Services routing_
 
@@ -95,7 +109,7 @@ _Inspect, classify, and prepare books for distribution with Ghana climate adapta
 
 ---
 
-## ��� EPIC: DISTRIBUTION MODULE (`LMS-DIST`)
+## 📦 EPIC: DISTRIBUTION MODULE (`LMS-DIST`)
 
 _Route books to correct sections and Extension Services depot with batch-aware delivery for Ghana schools_
 
@@ -112,13 +126,13 @@ _Route books to correct sections and Extension Services depot with batch-aware d
 
 | Ticket ID       | Title                                                       | Type        | Labels                                             | Priority | Acceptance Criteria                                                                                                                                                                                                                                                                                                                                                                                          |
 | --------------- | ----------------------------------------------------------- | ----------- | -------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **LMS-DIST-10** | Implement offline PDF generation for packing slips          | System Task | `system-task` `offline-first` `manager`            | High     | **Given** internet is unavailable<br>**When** I click "Generate Packing Slip"<br>**Then** a PDF file saves to `C:/GhanaLibraryData/packing-slips/`<br>**And** the PDF contains:<br>• School name and address<br>• Batch groupings with book counts<br>• PDF417 barcode in Ghana Library Authority format<br>• QR code for section scanning<br>**And** file size is ≤500KB for WhatsApp transfer              |
+| **LMS-DIST-10** | Implement offline PDF generation for packing slips          | System Task | `system-task` `offline-first` `manager`            | High     | **Given** internet is unavailable<br>**When** I click "Generate Packing Slip"<br>**Then** a PDF file saves to `C:/GhanaLibraryData/packing-slips/`<br>**And** the PDF contains:<br>• School name and address<br>• Batch groupings with book counts<br>• PDF417 barcode in Ghana Library Authority format<br>• QR code for section scanning<br>**And** file size is ≤500KB for easy sharing                   |
 | **LMS-DIST-11** | Build Tamale-Bolgatanga corridor detection service          | System Task | `system-task` `ghana-compliance` `offline-first`   | Medium   | **Given** a destination school ID `BOLGATANGA-UE-001`<br>**When** routing logic executes<br>**Then** the system identifies this as Tamale-Bolgatanga corridor school<br>**And** automatically enables rural delivery mode requirements<br>**And** adds corridor-specific notes to packing slip:<br>"Road conditions may affect delivery – confirm route with district office"                                |
 | **LMS-DIST-12** | Implement Extension Services depot routing with Dagbani SMS | System Task | `system-task` `extension-services` `offline-first` | High     | **Given** destination type is "Extension Services Depot"<br>**When** routing logic executes<br>**Then** the system routes to depot location (NOT directly to schools)<br>**And** populates depot-specific packing slip fields (rotation cycle, depot contact)<br>**And** queues Dagbani SMS notification to depot contact<br>**And** community leader signature workflow activates for rural depot locations |
 
 ---
 
-## ��� EPIC: EXTENSION SERVICES DEPARTMENT (`LMS-EXT`)
+## 📦 EPIC: EXTENSION SERVICES DEPARTMENT (`LMS-EXT`)
 
 _Top-level department (peer to Acquisitions/Processing/Distribution/Library Operations) managing mobile library services for underserved schools via rotating book sets_
 
@@ -145,7 +159,7 @@ _Top-level department (peer to Acquisitions/Processing/Distribution/Library Oper
 
 ---
 
-## ��� EPIC: LENDING SECTION (`LMS-LEND`)
+## 👧 EPIC: LENDING SECTION (`LMS-LEND`)
 
 _Library section responsible for bulk allocation fulfillment to Extension Services department_
 
@@ -167,7 +181,7 @@ _Library section responsible for bulk allocation fulfillment to Extension Servic
 
 ---
 
-## ��� EPIC: CHILDREN'S LIBRARY SECTION (`LMS-CHILD`)
+## 👧 EPIC: CHILDREN'S LIBRARY SECTION (`LMS-CHILD`)
 
 _Grade-specific batch management with degradation enforcement for young learners_
 
@@ -188,7 +202,7 @@ _Grade-specific batch management with degradation enforcement for young learners
 
 ---
 
-## ���‍��� EPIC: STAFF GOVERNANCE (`LMS-STAFF`)
+## 👨‍💼 EPIC: STAFF GOVERNANCE (`LMS-STAFF`)
 
 _Department hierarchy with Ghana Card ID verification for Manager version – updated for Extension Services as peer department_
 
@@ -208,7 +222,7 @@ _Department hierarchy with Ghana Card ID verification for Manager version – up
 
 ---
 
-## ��� EPIC: GHANA COMPLIANCE (`LMS-GH`)
+## 🌍 EPIC: GHANA COMPLIANCE (`LMS-GH`)
 
 _Ghana-specific workflows required by law and cultural practice – updated with Dagbani language support_
 
@@ -229,7 +243,7 @@ _Ghana-specific workflows required by law and cultural practice – updated with
 
 ---
 
-## ��� SPRINT PLANNING RECOMMENDATIONS
+## 📊 SPRINT PLANNING RECOMMENDATIONS
 
 ### Sprint 1 (Weeks 1-2): Core Infrastructure + Basic Acquisitions
 
@@ -242,19 +256,19 @@ _Ghana-specific workflows required by law and cultural practice – updated with
 | LMS-ACQ-02      | Feature                                                                                         | 5 pts  | LMS-ACQ-10   |
 | **Sprint Goal** | _Deliver offline-capable acquisitions module that validates Ghana Card IDs and curriculum tags_ |        |              |
 
-### Sprint 2 (Weeks 3-4): Processing + Climate Adaptations + Extension Routing
+### Sprint 2 (Weeks 3-4): Database Foundation + Backup System
 
-| Ticket ID       | Type                                                                                                                 | Effort | Dependencies |
-| --------------- | -------------------------------------------------------------------------------------------------------------------- | ------ | ------------ |
-| LMS-CORE-04     | System Task                                                                                                          | 5 pts  | LMS-CORE-01  |
-| LMS-PROC-10     | System Task                                                                                                          | 5 pts  | LMS-CORE-01  |
-| LMS-PROC-11     | System Task                                                                                                          | 3 pts  | LMS-CORE-01  |
-| LMS-PROC-12     | System Task                                                                                                          | 3 pts  | LMS-PROC-10  |
-| LMS-PROC-01     | Feature                                                                                                              | 5 pts  | LMS-PROC-10  |
-| LMS-PROC-02     | Feature                                                                                                              | 3 pts  | LMS-PROC-11  |
-| LMS-PROC-03     | Feature                                                                                                              | 3 pts  | LMS-PROC-01  |
-| LMS-PROC-04     | Feature                                                                                                              | 5 pts  | LMS-PROC-12  |
-| **Sprint Goal** | _Deliver processing workflow with climate-aware condition scoring, batch assignment, and Extension Services routing_ |        |              |
+| Ticket ID       | Type                                                                                                           | Effort | Dependencies |
+| --------------- | -------------------------------------------------------------------------------------------------------------- | ------ | ------------ |
+| LMS-CORE-07     | System Task                                                                                                    | 5 pts  | LMS-CORE-01  |
+| LMS-CORE-08     | System Task                                                                                                    | 4 pts  | LMS-CORE-07  |
+| LMS-CORE-09     | System Task                                                                                                    | 8 pts  | LMS-CORE-07  |
+| LMS-CORE-10     | System Task                                                                                                    | 5 pts  | LMS-CORE-09  |
+| LMS-CORE-11     | System Task                                                                                                    | 3 pts  | LMS-CORE-07  |
+| LMS-BACK-01     | System Task                                                                                                    | 5 pts  | LMS-CORE-01  |
+| LMS-BACK-02     | System Task                                                                                                    | 8 pts  | LMS-BACK-01  |
+| LMS-BACK-03     | System Task                                                                                                    | 5 pts  | LMS-BACK-02  |
+| **Sprint Goal** | _Deliver database foundation with shared contract, validation, sync, conflict resolution, and backup pipeline_ |        |              |
 
 ### Sprint 3 (Weeks 5-6): Distribution + Rural Delivery + Extension Depot
 
@@ -383,15 +397,15 @@ _Duplicate detection, collision handling, monitoring, error handling, performanc
 
 ## ✅ QUALITY GATES PER SPRINT
 
-| Sprint       | Gate Criteria                                                                                                                                                                                                     | Validation Method                                                                  |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| **Sprint 1** | • Offline acquisitions workflow functional<br>• Ghana Card ID hashing verified by DPC liaison                                                                                                                     | SQLite inspection + hashing audit                                                  |
-| **Sprint 2** | • Condition scoring works offline<br>• Mold risk assessment matches manual review (≥90%)<br>• Extension Services routing populates conditional fields correctly                                                   | 50-book processing test with librarian panel + Extension routing verification      |
-| **Sprint 3** | • Packing slips generate offline <10s<br>• Rural mode disables GPS without errors<br>• Extension Services depot packing slips include rotation metadata                                                           | Tamale library field test (simulated offline) + depot routing test                 |
-| **Sprint 4** | • Batch promotion accurate (100% learner assignment)<br>• Degradation engine ≥90% accuracy vs manual review                                                                                                       | 50-learner promotion test + 100-book degradation audit                             |
-| **Sprint 5** | • Staff roles switch without data loss (including Extension Services)<br>• Lending section bulk allocation fulfills requests correctly<br>• Twi/Dagbani SMS delivers ≥95% success rate                            | Role-switching stress test + bulk allocation workflow test + 100 SMS delivery test |
-| **Sprint 6** | • Extension Services department boundary enforced (CANNOT access library sections)<br>• Bulk allocation workflow: request → fulfillment → delivery → return<br>• Cross-department sync prevents double-allocation | Department boundary security audit + end-to-end bulk allocation test               |
-| **Sprint 7** | • Android app processes 100 transactions offline without data loss<br>• QR smart tag scanning works in low-light conditions<br>• Full offline resilience (24h outage)<br>• DPC submission package complete        | Android field test at Bolgatanga school + simulated outage + compliance review     |
+| Sprint       | Gate Criteria                                                                                                                                                                                                                                                                                                                  | Validation Method                                                                                            |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| **Sprint 1** | • Offline acquisitions workflow functional<br>• Ghana Card ID hashing verified by DPC liaison                                                                                                                                                                                                                                  | SQLite inspection + hashing audit                                                                            |
+| **Sprint 2** | • All domain databases follow BaseDocument contract<br>• Zod validation rejects invalid documents before write<br>• Sync resumes without data loss after extended offline<br>• Backup pipeline fully automated: backup → compress → upload → verify<br>• Cloud upload works with Google Drive, Backblaze B2, and Cloudflare R2 | Database contract audit + sync resilience test + backup pipeline end-to-end test + cloud upload verification |
+| **Sprint 3** | • Packing slips generate offline <10s<br>• Rural mode disables GPS without errors<br>• Extension Services depot packing slips include rotation metadata                                                                                                                                                                        | Tamale library field test (simulated offline) + depot routing test                                           |
+| **Sprint 4** | • Batch promotion accurate (100% learner assignment)<br>• Degradation engine ≥90% accuracy vs manual review                                                                                                                                                                                                                    | 50-learner promotion test + 100-book degradation audit                                                       |
+| **Sprint 5** | • Staff roles switch without data loss (including Extension Services)<br>• Lending section bulk allocation fulfills requests correctly<br>• Twi/Dagbani SMS delivers ≥95% success rate                                                                                                                                         | Role-switching stress test + bulk allocation workflow test + 100 SMS delivery test                           |
+| **Sprint 6** | • Extension Services department boundary enforced (CANNOT access library sections)<br>• Bulk allocation workflow: request → fulfillment → delivery → return<br>• Cross-department sync prevents double-allocation                                                                                                              | Department boundary security audit + end-to-end bulk allocation test                                         |
+| **Sprint 7** | • Android app processes 100 transactions offline without data loss<br>• QR smart tag scanning works in low-light conditions<br>• Full offline resilience (24h outage)<br>• DPC submission package complete                                                                                                                     | Android field test at Bolgatanga school + simulated outage + compliance review                               |
 
 ---
 

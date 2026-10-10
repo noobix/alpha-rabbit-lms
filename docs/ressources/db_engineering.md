@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-04
+Last-updated: 2026-10-10
 ---
 
 # 📚 PouchDB + CouchDB Technical Implementation Guide
@@ -1419,7 +1419,7 @@ export function useBooks(filter?: {
 }
 ```
 
-### Backup Service (WhatsApp-Compatible)
+### Backup Service (Cloud Storage-Compatible)
 
 ```typescript
 // src/lib/backup/backup-service.ts
@@ -1489,17 +1489,17 @@ export class BackupService {
   }
 
   /**
-   * Compress backup for WhatsApp transfer (<10MB target)
+   * Compress backup for cloud storage upload
    */
-  async compressForWhatsApp(backupFile: string): Promise<string> {
-    const whatsappFile = backupFile.replace(".json.gz", ".whatsapp.gz");
+  async compressForCloudStorage(backupFile: string): Promise<string> {
+    const cloudFile = backupFile.replace(".json.gz", ".cloud.gz");
     // Additional compression pass if needed
     await pipeline(
       fs.createReadStream(backupFile),
       createGzip({ level: 9 }), // Max compression
-      fs.createWriteStream(whatsappFile),
+      fs.createWriteStream(cloudFile),
     );
-    return whatsappFile;
+    return cloudFile;
   }
 
   private async cleanupOldBackups(retentionDays: number): Promise<void> {

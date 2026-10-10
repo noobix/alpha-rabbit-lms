@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-10
+---
+
 # 📚 Library Management System: Week 5 Implementation Documentation
 
 _Field Validation Preparation, Enterprise Pilot Setup, Compliance Finalization & User Acceptance Testing – Ghana-Ready Offline-First Desktop Application_
@@ -107,7 +112,7 @@ _Field Validation Preparation, Enterprise Pilot Setup, Compliance Finalization &
 [ ] Confirm all data persists after restart with no internet
 [ ] **Backup Validation**
 [ ] Trigger manual backup via Settings → Backup Now
-[ ] Verify backup file <10MB (WhatsApp transfer ready)
+[ ] Verify backup file <10MB (cloud storage upload ready)
 [ ] Restore from backup to clean installation
 [ ] Confirm 100% data integrity post-restore
 [ ] **Ghana Compliance Check**
@@ -262,7 +267,7 @@ flowchart TD
 | **8-Hour Offline**      | Tamale library simulates 8-hour outage; processes 50 books | 100% data syncs when connection restored; no corruption    | Matches typical rural Ghana internet outages            |
 | **Batch Integrity**     | Process books with `GRADE-4A` and `GRADE-4B` batches       | Batches remain separate after sync; no cross-contamination | Critical for GES academic progression policy            |
 | **Condition Scores**    | Rate spine/cover/pages/edges on 5 books offline            | Scores preserved exactly (no rounding errors)              | Spine condition critical in humid climate               |
-| **SMS Queue**           | Queue 10 SMS messages during offline period                | All messages send within 5 minutes of reconnect            | WhatsApp compression verified (<10MB total)             |
+| **SMS Queue**           | Queue 10 SMS messages during offline period                | All messages send within 5 minutes of reconnect            | cloud storage compression verified (<10MB total)             |
 | **Conflict Resolution** | Simultaneous edits to same book at Tamale + Accra          | Timestamp-based resolution; no data loss                   | Handles common scenario during district-wide promotions |
 
 ---

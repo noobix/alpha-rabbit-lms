@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-04
+Last-updated: 2026-10-10
 ---
 
 # Alpha Rabbit LMS - Development Prompt
@@ -207,7 +207,8 @@ alpha_rabbit-LMS/
 - Batch lifecycle aligned to academic year, school term, or community delivery cycle through a saved `country_profile` and optional custom overrides.
 - Local language support and culturally relevant badge semantics.
 - Rural operation mode (reduced GPS dependency, offline emphasis).
-- SMS or WhatsApp queue behavior for offline-to-online delivery.
+- SMS queue behavior for offline-to-online delivery.
+- Backup system: automated compression (archiver npm package), cloud storage upload (Google Drive, Backblaze B2, Cloudflare R2), and unified backup interface for scheduling and credential management.
 - Regional support for mobile van service, school outreach, community reading hubs, and branch-based library operations.
 - Academic rules such as term length, promotion windows, expiry dates, and learner progression must be derived from the selected country profile or a custom institutional profile rather than hard-coded to one nation.
 

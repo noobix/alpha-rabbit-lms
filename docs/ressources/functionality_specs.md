@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-05
+Last-updated: 2026-10-10
 ---
 
 # Library Management System: Workflow & Departmental Functionality Specification
@@ -24,12 +24,12 @@ flowchart TD
     D --> H[Lending Section]
     D --> I[Extension Services]
     D --> J[Digital Library]
-    subgraph “External Departments”
+    subgraph "External Departments"
         A
         B
         C
     end
-    subgraph “Library Sections”
+    subgraph "Library Sections"
         E
         F
         G
