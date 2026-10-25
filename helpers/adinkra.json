@@ -1,0 +1,822 @@
+{
+  "source": "https://www.adinkrasymbols.org/",
+  "total_symbols": 101,
+  "image_url_pattern": "https://www.adinkrasymbols.org/adinkra-small/{slug}-small.png",
+  "symbols": [
+    {
+      "number": 1,
+      "name": "Gye Nyame",
+      "literal_meaning": "Except God",
+      "summary": "Expresses the omnipotence and supremacy of God; the most popular Adinkra in Ghana, featured on the 200-cedi note and several university crests.",
+      "slug": "gye-nyame",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/gye-nyame-small.png"
+    },
+    {
+      "number": 2,
+      "name": "Sankofa (Bird)",
+      "literal_meaning": "Go back and get it",
+      "summary": "Wisdom of learning from the past to build the future; shown as a mythical bird moving forward while looking back with an egg in its beak. Most popular Adinkra in the African diaspora.",
+      "slug": "sankofa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/sankofa-small.png"
+    },
+    {
+      "number": 3,
+      "name": "Sankofa (Heart)",
+      "literal_meaning": "Go back and get it",
+      "summary": "Alternative stylized-heart form of Sankofa; the spirals represent returning to one's roots to draw lessons for the present and future.",
+      "slug": "sankofa-heart",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/sankofa-heart-small.png"
+    },
+    {
+      "number": 4,
+      "name": "Adinkrahene",
+      "literal_meaning": "King of the Adinkra symbols",
+      "summary": "Symbol of authority, leadership and charisma; its concentric circles are said to have inspired the design of all other Adinkra.",
+      "slug": "adinkrahene",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/adinkrahene-small.png"
+    },
+    {
+      "number": 5,
+      "name": "Dwennimmen",
+      "literal_meaning": "Ram's horns",
+      "summary": "Strength of mind, body and soul combined with humility, wisdom and learning; featured in the University of Ghana logo.",
+      "slug": "dwennimmen",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/dwennimmen-small.png"
+    },
+    {
+      "number": 6,
+      "name": "Funtumfunefu Denkyemfunefu",
+      "literal_meaning": "Conjoined crocodiles",
+      "summary": "Unity in diversity and a common destiny; from the proverb of two crocodiles who share one stomach yet still fight over food.",
+      "slug": "funtumfunefu-denkyemfunefu",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/funtumfunefu-denkyemfunefu-small.png"
+    },
+    {
+      "number": 7,
+      "name": "Nkyinkyim",
+      "literal_meaning": "Twisting",
+      "summary": "Represents the tortuous nature of life's journey and the toughness, versatility, dynamism and dedication needed to thrive in it.",
+      "slug": "nkyinkyim",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nkyinkyim-small.png"
+    },
+    {
+      "number": 8,
+      "name": "Odo Nnyew Fie Kwan",
+      "alternate_names": ["Odo Nyera Fie Kwan"],
+      "literal_meaning": "Love does not lose its way home",
+      "summary": "Those who are led by love always end up in the right place.",
+      "slug": "odo-nnyew-fie-kwan",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/odo-nnyew-fie-kwan-small.png"
+    },
+    {
+      "number": 9,
+      "name": "Denkyem",
+      "literal_meaning": "Crocodile",
+      "summary": "Symbol of adaptability and cleverness.",
+      "slug": "denkyem",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/denkyem-small.png"
+    },
+    {
+      "number": 10,
+      "name": "Nea Onnim",
+      "literal_meaning": "He who does not know",
+      "summary": "Knowledge and life-long learning; from the proverb that when the ignorant one learns, he comes to know.",
+      "slug": "nea-onnim",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nea-onnim-small.png"
+    },
+    {
+      "number": 11,
+      "name": "Nsoromma",
+      "literal_meaning": "Star; child of the heavens",
+      "summary": "Faith and belief in patronage by, and dependency on, a supreme being.",
+      "slug": "nsoromma",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nsoromma-small.png"
+    },
+    {
+      "number": 12,
+      "name": "Aban",
+      "literal_meaning": "Fortress or castle",
+      "summary": "Strength, seat of power, authority and magnificence.",
+      "slug": "aban",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/aban-small.png"
+    },
+    {
+      "number": 13,
+      "name": "Abe Dua",
+      "literal_meaning": "Palm tree",
+      "summary": "Wealth, resourcefulness and self-sufficiency.",
+      "slug": "abe-dua",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/abe-dua-small.png"
+    },
+    {
+      "number": 14,
+      "name": "Abode Santann",
+      "literal_meaning": "Totality of the universe",
+      "summary": "The vast expanse of natural and social creation by God; combines the eye, sun rays, double crescent moon and stool to depict divine and human creativity.",
+      "slug": "abode-santann",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/abode-santann-small.png"
+    },
+    {
+      "number": 15,
+      "name": "Abusua Pa",
+      "literal_meaning": "Good family",
+      "summary": "Family unity, kinship ties and support; 'it is in a good family that love and unity exist.'",
+      "slug": "abusua-pa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/abusua-pa-small.png"
+    },
+    {
+      "number": 16,
+      "name": "Adwo",
+      "literal_meaning": "Calmness",
+      "summary": "Peace, tranquility and quiet.",
+      "slug": "adwo",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/adwo-small.png"
+    },
+    {
+      "number": 17,
+      "name": "Agyin Dawuru",
+      "literal_meaning": "Agyin's gong",
+      "summary": "Faithfulness, alertness and dutifulness; commemorates Agyin, the loyal gong-beater of the Asantehene.",
+      "slug": "agyindawuru",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/agyindawuru-small.png"
+    },
+    {
+      "number": 18,
+      "name": "Akoben",
+      "literal_meaning": "War horn",
+      "summary": "A call to action, readiness and voluntarism.",
+      "slug": "akoben",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/akoben-small.png"
+    },
+    {
+      "number": 19,
+      "name": "Akofena",
+      "literal_meaning": "Sword of war / state ceremonial sword",
+      "summary": "State authority, legality and legitimized rule; recognition of gallantry. Appears on Ghana's coat of arms.",
+      "slug": "akofena",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/akofena-small.png"
+    },
+    {
+      "number": 20,
+      "name": "Akoko Nan",
+      "literal_meaning": "The foot of a hen",
+      "summary": "Discipline coupled with care and nurturing; proverb: the hen's foot steps on the chick but does not kill it.",
+      "slug": "akoko-nan",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/akoko-nan-small.png"
+    },
+    {
+      "number": 21,
+      "name": "Akoma Ntoaso",
+      "literal_meaning": "Joining of hearts",
+      "summary": "Agreement, togetherness, unity and charter; an amplification of the Akoma (heart) concept.",
+      "slug": "akoma-ntoaso",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/akoma-ntoaso-small.png"
+    },
+    {
+      "number": 22,
+      "name": "Akoma",
+      "literal_meaning": "Heart",
+      "summary": "Love, goodwill, patience, faithfulness, fondness, endurance and consistency.",
+      "slug": "akoma",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/akoma-small.png"
+    },
+    {
+      "number": 23,
+      "name": "Ananse Ntentan",
+      "alternate_names": ["Ananse Ntontan"],
+      "literal_meaning": "Spider's web",
+      "summary": "Wisdom, craftiness, creativity and the complexities of life; the web of Ananse, the clever spider of African folklore.",
+      "slug": "ananse-ntentan",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/ananse-ntentan-small.png"
+    },
+    {
+      "number": 24,
+      "name": "Ani Bere A Enso Gya",
+      "literal_meaning": "Red eyes do not spark flames",
+      "summary": "Patience, self-containment, self-discipline and self-control no matter how serious one becomes.",
+      "slug": "ani-bere-a-enso-gya",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/ani-bere-a-enso-gya-small.png"
+    },
+    {
+      "number": 25,
+      "name": "Anyi Me Aye A",
+      "literal_meaning": "If you will not praise me",
+      "summary": "Warns against ingratitude and boorishness: 'if you will not praise me, do not spoil my name.'",
+      "slug": "anyi-me-aye-a",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/anyi-me-aye-a-small.png"
+    },
+    {
+      "number": 26,
+      "name": "Aponkyerene Wu A",
+      "literal_meaning": "When a frog dies",
+      "summary": "Significance and value; 'it is when a frog dies that we see its true length' — we undervalue things until we lose them.",
+      "slug": "aponkyerene-wu-a",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/aponkyerene-wu-a-small.png"
+    },
+    {
+      "number": 27,
+      "name": "Asaawa",
+      "literal_meaning": "Sweet berry / miracle berry",
+      "summary": "Sweetness, pleasure and hedonism; proverb: sweetness does not stay in the mouth forever.",
+      "slug": "asaawa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/asaawa-small.png"
+    },
+    {
+      "number": 28,
+      "name": "Asase Ye Duru",
+      "literal_meaning": "The earth has weight",
+      "summary": "Providence and the divinity of Mother Earth.",
+      "slug": "asase-ye-duru",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/asase-ye-duru-small.png"
+    },
+    {
+      "number": 29,
+      "name": "Asetena Pa",
+      "literal_meaning": "Good living",
+      "summary": "Conspicuous spending, indulgence, wealth and upper social class; 'good living makes one forget his humble beginnings.'",
+      "slug": "asetena-pa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/asetena-pa-small.png"
+    },
+    {
+      "number": 30,
+      "name": "Aya",
+      "literal_meaning": "Fern",
+      "summary": "Endurance, independence, defiance against difficulties, hardiness, perseverance and resourcefulness.",
+      "slug": "aya",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/aya-small.png"
+    },
+    {
+      "number": 31,
+      "name": "Bese Saka",
+      "literal_meaning": "Bunch of cola nuts",
+      "summary": "Affluence, power, abundance and plenty; also togetherness and unity.",
+      "slug": "bese-saka",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/bese-saka-small.png"
+    },
+    {
+      "number": 32,
+      "name": "Bi Nka Bi",
+      "literal_meaning": "Let no one bite the other",
+      "summary": "Justice, fair play, freedom, peace, forgiveness, unity, harmony and the avoidance of conflict.",
+      "slug": "bi-nka-bi",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/bi-nka-bi-small.png"
+    },
+    {
+      "number": 33,
+      "name": "Boa Me Na Me Mmoa Wo",
+      "literal_meaning": "Help me and let me help you",
+      "summary": "Cooperation and interdependence; like the left hand washing the right and vice versa.",
+      "slug": "boa-me-na-me-mmoa-wo",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/boa-me-na-me-mmoa-wo-small.png"
+    },
+    {
+      "number": 34,
+      "name": "Boafo Ye Na",
+      "literal_meaning": "Helpers are rare",
+      "summary": "Support, patronage, cooperation and teamwork; highlights the rarity of a willing helper.",
+      "slug": "boafo-ye-na",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/boafo-ye-na-small.png"
+    },
+    {
+      "number": 35,
+      "name": "Dame Dame",
+      "literal_meaning": "Checkered (draughts board)",
+      "summary": "Craftiness, intelligence and strategy.",
+      "slug": "dame-dame",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/dame-dame-small.png"
+    },
+    {
+      "number": 36,
+      "name": "Dono Ntoaso",
+      "literal_meaning": "The double dono (joined talking drums)",
+      "summary": "United action, alertness, goodwill, praise, rejoicing and adroitness.",
+      "slug": "dono-ntoaso",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/dono-ntoaso-small.png"
+    },
+    {
+      "number": 37,
+      "name": "Dono",
+      "literal_meaning": "The tension talking drum",
+      "summary": "Appellation, praise, goodwill and rhythm.",
+      "slug": "dono",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/dono-small.png"
+    },
+    {
+      "number": 38,
+      "name": "Duafe",
+      "literal_meaning": "Wooden comb",
+      "summary": "Feminine consideration and good feminine qualities: patience, prudence, fondness, love and care.",
+      "slug": "duafe",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/duafe-small.png"
+    },
+    {
+      "number": 39,
+      "name": "Dwantire",
+      "literal_meaning": "Ram's head",
+      "summary": "Innocence and guiltlessness; the guiltless fears no accusation, hence the ram is always in white.",
+      "slug": "dwantire",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/dwantire-small.png"
+    },
+    {
+      "number": 40,
+      "name": "Eban",
+      "literal_meaning": "Fence",
+      "summary": "Safety, security and love.",
+      "slug": "eban",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/eban-small.png"
+    },
+    {
+      "number": 41,
+      "name": "Epa",
+      "literal_meaning": "Handcuffs",
+      "summary": "Law and justice.",
+      "slug": "epa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/epa-small.png"
+    },
+    {
+      "number": 42,
+      "name": "Ese ne Tekrema",
+      "literal_meaning": "Teeth and tongue",
+      "summary": "Improvement, advancement, growth and the need for friendliness and interdependence.",
+      "slug": "ese-ne-tekrema",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/ese-ne-tekrema-small.png"
+    },
+    {
+      "number": 43,
+      "name": "Esono Anantam",
+      "literal_meaning": "Elephant's footprint",
+      "summary": "Leadership, protection, power and security; 'when you follow the elephant, the dew does not wet you.'",
+      "slug": "esono-anantam",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/esono-anantam-small.png"
+    },
+    {
+      "number": 44,
+      "name": "Fafanto",
+      "literal_meaning": "Butterfly",
+      "summary": "Tenderness, gentleness, honesty and fragility.",
+      "slug": "fafanto",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/fafanto-small.png"
+    },
+    {
+      "number": 45,
+      "name": "Fawohodie",
+      "literal_meaning": "Freedom / independence",
+      "summary": "Emancipation, self-determination and self-government; proverb: freedom walks with suffering, i.e. it comes with responsibilities.",
+      "slug": "fawohodie",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/fawohodie-small.png"
+    },
+    {
+      "number": 46,
+      "name": "Fihankra",
+      "literal_meaning": "Enclosed compound house",
+      "summary": "Brotherhood, safety, security, completeness and solidarity.",
+      "slug": "fihankra",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/fihankra-small.png"
+    },
+    {
+      "number": 47,
+      "name": "Fofo",
+      "literal_meaning": "Flowering plant (bidens pilosa)",
+      "summary": "A warning against jealousy and covetousness.",
+      "slug": "fofo",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/fofo-small.png"
+    },
+    {
+      "number": 48,
+      "name": "Gyawu Atiko",
+      "literal_meaning": "The back of Gyawu's head",
+      "summary": "Valor and bravery; used interchangeably with Kwatakye Atiko.",
+      "slug": "gyawu-atiko",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/gyawu-atiko-small.png"
+    },
+    {
+      "number": 49,
+      "name": "Hwehwemudua",
+      "literal_meaning": "Measuring rod / rod of investigation",
+      "summary": "Excellence, superior quality, perfection, knowledge and critical examination.",
+      "slug": "hwehwemudua",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/hwehwemudua-small.png"
+    },
+    {
+      "number": 50,
+      "name": "Hye Wo Nhye",
+      "alternate_names": ["Hye Anhye"],
+      "literal_meaning": "Burn, you won't burn (unburnable)",
+      "summary": "Toughness, imperishability and permanence.",
+      "slug": "hye-wo-nhye",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/hye-wo-nhye-small.png"
+    },
+    {
+      "number": 51,
+      "name": "Kete Pa",
+      "literal_meaning": "Good bed",
+      "summary": "Good and successful marriage and good care; a woman in a good marriage is placed on a good bed.",
+      "slug": "kete-pa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/kete-pa-small.png"
+    },
+    {
+      "number": 52,
+      "name": "Kokuromotie",
+      "literal_meaning": "Thumb",
+      "summary": "Cooperation, participation, teamwork, indispensability and harmony; 'we don't bypass the thumb to tie a knot.'",
+      "slug": "kokuromotie",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/kokuromotie-small.png"
+    },
+    {
+      "number": 53,
+      "name": "Kramo Bone Amma Yeanhu Kramo Pa",
+      "literal_meaning": "The bad Muslim makes it hard to recognize the good one",
+      "summary": "A warning against deception and hypocrisy.",
+      "slug": "kramo-bone-amma-yeanhu-kramo-pa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/kramo-bone-amma-yeanhu-kramo-pa-small.png"
+    },
+    {
+      "number": 54,
+      "name": "Krapa",
+      "alternate_names": ["Musuyidee"],
+      "literal_meaning": "Good soul / thing that removes filth or evil",
+      "summary": "Spiritual balance, good fortune, luck, sanctity, spiritual strength and uprightness of spirit.",
+      "slug": "krapa-musuyidee",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/krapa-musuyidee-small.png"
+    },
+    {
+      "number": 55,
+      "name": "Kuronti ne Akwamu",
+      "literal_meaning": "Kuronti and Akwamu (Akan state divisions)",
+      "summary": "Democracy, sharing of ideas and taking counsel.",
+      "slug": "kuronti-ne-akwamu",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/kuronti-ne-akwamu-small.png"
+    },
+    {
+      "number": 56,
+      "name": "Kwatakye Atiko",
+      "literal_meaning": "The back of Kwatakye's head",
+      "summary": "Valor and bravery; the hairstyle of Kwatakye, a war captain of old Asante. Also called Gyawu Atiko.",
+      "slug": "kwatakye-atiko",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/kwatakye-atiko-small.png"
+    },
+    {
+      "number": 57,
+      "name": "Kyemfere",
+      "literal_meaning": "Potsherd",
+      "summary": "Knowledge, experience, service, keepsake, antiquity, rarity and heirloom; proverb: the potsherd claims age, but what of the potter?",
+      "slug": "kyemfere",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/kyemfere-small.png"
+    },
+    {
+      "number": 58,
+      "name": "Mako",
+      "literal_meaning": "Peppers",
+      "summary": "Inequality and uneven development; peppers on the same plant do not ripen at the same time.",
+      "slug": "mako",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/mako-small.png"
+    },
+    {
+      "number": 59,
+      "name": "Mate Masie",
+      "literal_meaning": "I have heard and kept it",
+      "summary": "Wisdom, knowledge and prudence; 'the hole of wisdom is I have heard and kept it.'",
+      "slug": "mate-masie",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/mate-masie-small.png"
+    },
+    {
+      "number": 60,
+      "name": "Mekyea Wo",
+      "literal_meaning": "I greet you",
+      "summary": "Greetings, recognition and respect; to greet is to acknowledge a fellow human being.",
+      "slug": "mekyea-wo",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/mekyea-wo-small.png"
+    },
+    {
+      "number": 61,
+      "name": "Menso Wo Kenten",
+      "literal_meaning": "I am not carrying your basket",
+      "summary": "Industry, self-reliance and economic self-determination.",
+      "slug": "menso-wo-kenten",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/menso-wo-kenten-small.png"
+    },
+    {
+      "number": 62,
+      "name": "Mframadan",
+      "literal_meaning": "Well-ventilated house",
+      "summary": "Resilience and readiness to face the vicissitudes of life.",
+      "slug": "mframadan",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/mframadan-small.png"
+    },
+    {
+      "number": 63,
+      "name": "Mmeramubere",
+      "literal_meaning": "Female cross",
+      "summary": "Warmth, sunshine and vitality.",
+      "slug": "mmeramubere",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/mmeramubere-small.png"
+    },
+    {
+      "number": 64,
+      "name": "Mmeramutene",
+      "literal_meaning": "Male cross",
+      "summary": "Sunlight, warmth, endurance and uprightness.",
+      "slug": "mmeramutene",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/mmeramutene-small.png"
+    },
+    {
+      "number": 65,
+      "name": "Mmere Dane",
+      "literal_meaning": "Times change",
+      "summary": "The temporariness of good times; change and transition.",
+      "slug": "mmere-dane",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/mmere-dane-small.png"
+    },
+    {
+      "number": 66,
+      "name": "Mpatapo",
+      "literal_meaning": "Pacification knot",
+      "summary": "Pacification, forgiveness and reconciliation.",
+      "slug": "mpatapo",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/mpatapo-small.png"
+    },
+    {
+      "number": 67,
+      "name": "Mpuannum",
+      "literal_meaning": "Five tufts (of hair)",
+      "summary": "Loyalty and priestly office.",
+      "slug": "mpuannum",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/mpuannum-small.png"
+    },
+    {
+      "number": 68,
+      "name": "Nea Ope Se Obedi Hene",
+      "literal_meaning": "He who wants to be a king",
+      "summary": "Leadership qualities and service; 'he who wants to be king in the future begins by learning how to serve.'",
+      "slug": "nea-ope-se-obedi-hene",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nea-ope-se-obedi-hene-small.png"
+    },
+    {
+      "number": 69,
+      "name": "Nea Oretwa Sa",
+      "literal_meaning": "The path maker",
+      "summary": "Trailblazing leadership and its blind spots; the paver does not see the crooked path behind him, so a leader must heed advice.",
+      "slug": "nea-oretwa-sa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nea-oretwa-sa-small.png"
+    },
+    {
+      "number": 70,
+      "name": "Nkonsonkonson",
+      "literal_meaning": "Chain (links)",
+      "summary": "Unity and community; the bonds that hold people together.",
+      "slug": "nkonsonkonson",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nkonsonkonson-small.png"
+    },
+    {
+      "number": 71,
+      "name": "Nkotimsefo Mpua",
+      "literal_meaning": "Hairstyle of court attendants",
+      "summary": "Loyalty and readiness to serve.",
+      "slug": "nkotimsefo-mpua",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nkotimsefo-mpua-small.png"
+    },
+    {
+      "number": 72,
+      "name": "Nkrabea",
+      "literal_meaning": "Destiny",
+      "summary": "Destiny, determinism and the unequal distribution of talents; 'God's destiny cannot be circumvented.'",
+      "slug": "nkrabea",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nkrabea-small.png"
+    },
+    {
+      "number": 73,
+      "name": "Nkyemu",
+      "alternate_names": ["Nkyimu"],
+      "literal_meaning": "Crossed divisions on Adinkra cloth",
+      "summary": "The grid stamped on cloth before symbols are printed; adroitness, precision and quality craftsmanship.",
+      "slug": "nkyemu",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nkyemu-small.png"
+    },
+    {
+      "number": 74,
+      "name": "Nnamfo Pa Baanu",
+      "literal_meaning": "Two good friends",
+      "summary": "Friendship, fellowship and comradeship; 'thinking is done in pairs.'",
+      "slug": "nnamfo-pa-baanu",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nnamfo-pa-baanu-small.png"
+    },
+    {
+      "number": 75,
+      "name": "Nsaa",
+      "literal_meaning": "A fine woven cloth",
+      "summary": "Excellence, genuineness and authenticity, after a cloth renowned for its quality.",
+      "slug": "nsaa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nsaa-small.png"
+    },
+    {
+      "number": 76,
+      "name": "Nserewa",
+      "literal_meaning": "Cowries",
+      "summary": "Affluence and wealth, and sacredness in priestly use; cowries were pre-colonial money and gave the cedi its name.",
+      "slug": "nserewa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nserewa-small.png"
+    },
+    {
+      "number": 77,
+      "name": "Nteasee",
+      "literal_meaning": "Understanding",
+      "summary": "Understanding and cooperation.",
+      "slug": "nteasee",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nteasee-small.png"
+    },
+    {
+      "number": 78,
+      "name": "Nyame Baatanpa",
+      "alternate_names": ["Awurade Baatanfo"],
+      "literal_meaning": "God the good parent",
+      "summary": "The caring and nurturing of God over all His creation.",
+      "slug": "nyame-baatanpa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nyame-baatanpa-small.png"
+    },
+    {
+      "number": 79,
+      "name": "Nyame Biribi Wo Soro",
+      "literal_meaning": "God, there is something in the heavens",
+      "summary": "Hope and inspiration; 'let that good thing up there come to me.'",
+      "slug": "nyame-biribi-wo-soro",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nyame-biribi-wo-soro-small.png"
+    },
+    {
+      "number": 80,
+      "name": "Nyame Dua",
+      "literal_meaning": "God's tree (sacred stump)",
+      "summary": "God's presence and protection; the sacred stump kept in Akan homes for rituals.",
+      "slug": "nyame-dua",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nyame-dua-small.png"
+    },
+    {
+      "number": 81,
+      "name": "Nyame Nti",
+      "literal_meaning": "Because of God / by God's grace",
+      "summary": "Faith and trust in God; 'by God's grace I will not feed on leaves like an animal.'",
+      "slug": "nyame-nti",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nyame-nti-small.png"
+    },
+    {
+      "number": 82,
+      "name": "Nyame Nwu Na Mawu",
+      "literal_meaning": "God won't die for me to die",
+      "summary": "Expresses the immortality of the human soul and faith in God's sustaining power.",
+      "slug": "nyame-nwu-na-mawu",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nyame-nwu-na-mawu-small.png"
+    },
+    {
+      "number": 83,
+      "name": "Nyansapo",
+      "literal_meaning": "Wisdom knot",
+      "summary": "Wisdom, ingenuity, intelligence and patience; 'a wisdom knot is untied only by the wise.' Used in the KNUST logo and motto.",
+      "slug": "nyansapo",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/nyansapo-small.png"
+    },
+    {
+      "number": 84,
+      "name": "Obohemaa",
+      "literal_meaning": "Queen of stones (diamond)",
+      "summary": "Preciousness, gem and treasure; warns against spending money on worthless stones.",
+      "slug": "obohemaa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/obohemaa-small.png"
+    },
+    {
+      "number": 85,
+      "name": "Ohene Aniwa",
+      "literal_meaning": "The king's eyes",
+      "summary": "Vigilance, far-sightedness, intelligence, protection and authority; 'the king's eyes surround him.'",
+      "slug": "ohene-aniwa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/ohene-aniwa-small.png"
+    },
+    {
+      "number": 86,
+      "name": "Okodee Mmowere",
+      "literal_meaning": "The talons of an eagle",
+      "summary": "Strength, bravery and power, drawn from the character of the eagle.",
+      "slug": "okodee-mmowere",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/okodee-mmowere-small.png"
+    },
+    {
+      "number": 87,
+      "name": "Okuafo Pa",
+      "literal_meaning": "Good farmer",
+      "summary": "Diligence, hard work and entrepreneurship.",
+      "slug": "okuafo-pa",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/okuafo-pa-small.png"
+    },
+    {
+      "number": 88,
+      "name": "Osram ne Nsoromma",
+      "literal_meaning": "Moon and star",
+      "summary": "Faithfulness, fondness, harmony, benevolence, love, loyalty and femininity.",
+      "slug": "osram-ne-nsoromma",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/osram-ne-nsoromma-small.png"
+    },
+    {
+      "number": 89,
+      "name": "Owo Foro Adobe",
+      "literal_meaning": "A snake climbs a raffia palm",
+      "summary": "Ingenuity, excellence and the performance of feats; achieving the unusual or impossible.",
+      "slug": "owo-foro-adobe",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/owo-foro-adobe-small.png"
+    },
+    {
+      "number": 90,
+      "name": "Owuo Atwedee",
+      "literal_meaning": "Ladder of death",
+      "summary": "The certainty and universality of death; all must climb this ladder.",
+      "slug": "owuo-atwedee",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/owuo-atwedee-small.png"
+    },
+    {
+      "number": 91,
+      "name": "Pempamsie",
+      "literal_meaning": "Sew in readiness",
+      "summary": "Foresight, readiness, steadfastness, hardiness, valor and fearlessness.",
+      "slug": "pempamsie",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/pempamsie-small.png"
+    },
+    {
+      "number": 92,
+      "name": "Sepow",
+      "literal_meaning": "Executioner's knife",
+      "summary": "Justice; the knife used to execute those condemned by law.",
+      "slug": "sepow",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/sepow-small.png"
+    },
+    {
+      "number": 93,
+      "name": "Sesa Wo Suban",
+      "literal_meaning": "Change your character",
+      "summary": "A warning against arrogance, bad manners and dishonorable behavior; calls for self-reformation.",
+      "slug": "sesa-wo-suban",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/sesa-wo-suban-small.png"
+    },
+    {
+      "number": 94,
+      "name": "Som Onyankopon",
+      "literal_meaning": "Worship God",
+      "summary": "Devotion and worship of the Supreme Being.",
+      "slug": "som-onyankopon",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/som-onyankopon-small.png"
+    },
+    {
+      "number": 95,
+      "name": "Sunsum",
+      "alternate_names": ["Ntoro"],
+      "literal_meaning": "Soul / spirit",
+      "summary": "Spiritual purity and cleanliness of soul; believed to be the part of God transmitted to a person through the father, distinct from the mother's blood.",
+      "slug": "sunsum",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/sunsum-small.png"
+    },
+    {
+      "number": 96,
+      "name": "Tabono",
+      "literal_meaning": "Paddle or oar",
+      "summary": "Strength, confidence and persistence, drawn from the qualities needed to paddle a boat.",
+      "slug": "tabono",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/tabono-small.png"
+    },
+    {
+      "number": 97,
+      "name": "Tamfo Bebre",
+      "literal_meaning": "The enemy will stew in his own juice",
+      "summary": "Ill-will, jealousy and envy; the enemy suffers from his own schemes.",
+      "slug": "tamfo-bebre",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/tamfo-bebre-small.png"
+    },
+    {
+      "number": 98,
+      "name": "UAC Nkanea",
+      "literal_meaning": "UAC lights",
+      "summary": "Technological advancement and modernity, named after the lights of the United Africa Company.",
+      "slug": "uac-nkanea",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/uac-nkanea-small.png"
+    },
+    {
+      "number": 99,
+      "name": "Wawa Aba",
+      "literal_meaning": "Seed of the wawa tree",
+      "summary": "Hardiness, toughness and perseverance.",
+      "slug": "wawa-aba",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/wawa-aba-small.png"
+    },
+    {
+      "number": 100,
+      "name": "Wo Nsa Da Mu A",
+      "literal_meaning": "When your hands are inside (the dish)",
+      "summary": "Participatory government, democracy and pluralism; 'when your hands are in the dish, people don't eat everything and leave you nothing.'",
+      "slug": "wo-nsa-da-mu-a",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/wo-nsa-da-mu-a-small.png"
+    },
+    {
+      "number": 101,
+      "name": "Woforo Dua Pa A",
+      "literal_meaning": "When you climb a good tree",
+      "summary": "Support for good causes; those who climb a good tree are helped by others.",
+      "slug": "woforo-dua-pa-a",
+      "image_url": "https://www.adinkrasymbols.org/adinkra-small/woforo-dua-pa-a-small.png"
+    }
+  ]
+}
