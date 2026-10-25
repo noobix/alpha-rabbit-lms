@@ -1,3 +1,8 @@
+---
+Author: Kelvin Kabute
+Last-updated: 2026-10-25
+---
+
 # 📚 Library Management System: Week 4 Implementation Specification
 
 _Library Sections Integration, Patron Intelligence Engine, Staff Governance & Enterprise Prep – Ghana-Ready Offline-First Desktop Application_
@@ -721,7 +726,7 @@ export interface Badge {
   name: string;
   description: string;
   icon: string; // Path to Adinkra SVG (e.g., 'assets/badges/sankofa.svg')
-  adinkraSymbol: 'sankofa' | 'fawohodie' | 'eban' | 'akoma' | 'nsoromma' | 'mpatapo';
+  adinkraSymbol: 'sankofa' | 'fawohodie' | 'eban' | 'akoma' | 'nsoromma' | 'mpatapo' | 'nea-onnim' | 'fafanto' | 'ananse-ntentan' | 'nkyinkyim' | 'hwehwemudua' | 'asaawa' | 'epa';
   ghanaCulturalNote: string;
   awardedDate: string;
 }
@@ -1318,7 +1323,7 @@ export class EnterpriseSyncService {
 | **Reference Section**  | ✅     | Ghana Constitution section; non-circulating enforcement; photocopy compliance with Ghana Copyright Act |
 | **Degradation Engine** | ✅     | Climate-aware weighting (spine 40%); oral tradition context for teleporter detection                   |
 | **Reader Categories**  | ✅     | 12 algorithmic categories with Adinkra symbols; cultural custodian for Ghanaian literature             |
-| **Badge System**       | ✅     | SVG assets for 6 Adinkra symbols (Sankofa, Fawohodie, etc.); Twi descriptions                          |
+| **Badge System**       | ✅     | SVG assets for 12 Adinkra symbols (Sankofa, Fawohodie, Nea Onnim, Fafanto, Ananse Ntentan, Nkyinkyim, Hwehwemudua, Asaawa, etc.); Twi descriptions |
 | **Staff Governance**   | ✅     | Ghana Card ID hashing; MoE/Police service number fields; department hierarchy matching GLA             |
 | **Enterprise Prep**    | ✅     | CouchDB security objects; department filters; migration path validated                                 |
 | **SMS Integration**    | ✅     | Offline queue; Twi templates; WhatsApp compression (<10MB)                                             |
@@ -1333,7 +1338,7 @@ export class EnterpriseSyncService {
 | **GES Academic Calendar**      | Batch expiry fixed to August 31; auto-promotion August 15      | Aligns with Ghana Education Service national schedule          |
 | **Oral Tradition Context**     | Teleporter detection accounts for reading aloud to siblings    | Respects Ghanaian household practices; prevents false flags    |
 | **Rainy Season Mold Guidance** | Climate-aware degradation weights + silica gel recommendations | Addresses #1 cause of book loss in tropical climate            |
-| **Adinkra Badge System**       | 6 culturally-grounded symbols with Twi descriptions            | Celebrates Ghanaian heritage; motivates reading without stigma |
+| **Adinkra Badge System**       | 12 culturally-grounded symbols with Twi descriptions           | Celebrates Ghanaian heritage; motivates reading without stigma |
 | **Repeat Batch Handling**      | GRADE-4B identification + 20% extra book allocation            | Supports GES policy for learners needing remedial support      |
 | **Offline SMS Queue**          | Messages store locally; send when connection restored          | Works in rural areas with intermittent connectivity            |
 | **Ghana Card ID Hashing**      | SHA-256 + salt in main process; never plaintext storage        | Complies with Data Protection Act 2012 (Act 843)               |

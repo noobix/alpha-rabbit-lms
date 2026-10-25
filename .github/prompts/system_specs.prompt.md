@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-10
+Last-updated: 2026-10-25
 ---
 
 # Library Management System: Manager vs Enterprise – Setup Comparison
@@ -426,7 +426,7 @@ RETENTION_DAYS=30
 
 # Security
 ADMIN_EMAIL=admin@library.edu.gh
-SSL_ENABLED=false
+SSL_ENABLED=true
 ```
 
 #### 4. Deploy Server

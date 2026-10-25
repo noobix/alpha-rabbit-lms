@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-05
+Last-updated: 2026-10-25
 ---
 
 # 📚 Library Management System: Enhanced Functionality Specification
@@ -102,13 +102,17 @@ _Example uses a generic patron from any supported country. The `countryProfileId
   "badges": [
     {
       "badgeId": "book-worm",
+      "name": "Book Worm",
+      "adinkraSymbol": "nea-onnim",
       "awardedDate": "2024-06-15",
       "criteriaMet": "Read 10 books in June 2024"
     },
     {
-      "badgeId": "gentle-reader",
+      "badgeId": "gentle-guardian",
+      "name": "Gentle Guardian",
+      "adinkraSymbol": "fawohodie",
       "awardedDate": "2024-03-10",
-      "criteriaMet": "Returned 15 books with zero degradation"
+      "criteriaMet": "Zero degradation across 15 books returned"
     }
   ]
 }
@@ -242,7 +246,7 @@ flowchart TD
 
 ### Badge Configuration Document (`badge-config`)
 
-_Badges are configurable per country profile. The following examples show both universal and culturally-adapted badges._
+_Badges are configurable per country profile. All badges use Adinkra symbols as icons._
 
 ```json
 {
@@ -253,7 +257,8 @@ _Badges are configurable per country profile. The following examples show both u
       "id": "book-worm",
       "name": "Book Worm",
       "description": "Read 10 books in one calendar month",
-      "icon": "assets/badges/book-worm.svg",
+      "icon": "assets/badges/nea-onnim.svg",
+      "adinkraSymbol": "nea-onnim",
       "criteria": {
         "booksRead": 10,
         "timeframe": "month",
@@ -264,8 +269,9 @@ _Badges are configurable per country profile. The following examples show both u
     {
       "id": "gentle-reader",
       "name": "Gentle Reader",
-      "description": "Returned 15 books with zero degradation",
-      "icon": "assets/badges/gentle-reader.svg",
+      "description": "Returned 15 books with <1% degradation rate",
+      "icon": "assets/badges/fafanto.svg",
+      "adinkraSymbol": "fafanto",
       "criteria": {
         "minBooks": 15,
         "maxDegradationRate": 0.01
@@ -273,30 +279,106 @@ _Badges are configurable per country profile. The following examples show both u
       "culturalNote": "Honors care for community resources"
     },
     {
+      "id": "cultural-custodian",
+      "name": "Cultural Custodian",
+      "description": "Read 8 or more Ghanaian or cultural heritage books",
+      "icon": "assets/badges/sankofa.svg",
+      "adinkraSymbol": "sankofa",
+      "criteria": {
+        "minBooks": 8,
+        "genres": ["folktales", "local-history", "local-literature", "ghanaian-authors"]
+      },
+      "culturalNote": "Wisdom of learning from the past to build the future"
+    },
+    {
       "id": "local-stories",
       "name": "Local Stories",
       "description": "Read 5 books from local folklore or cultural heritage",
-      "icon": "assets/badges/local-stories.svg",
+      "icon": "assets/badges/ananse-ntentan.svg",
+      "adinkraSymbol": "ananse-ntentan",
       "criteria": {
         "genres": ["folktales", "local-history", "local-literature"],
         "minBooks": 5
       },
-      "culturalNote": "Celebrates local storytelling heritage (adaptable per country: Anansi for Ghana, Hare for East Africa, etc.)"
+      "culturalNote": "Celebrates local storytelling heritage (Anansi for Ghana, Hare for East Africa)"
     },
     {
       "id": "rising-star",
       "name": "Rising Star",
       "description": "Improved reading level by 2 grades in one year",
-      "icon": "assets/badges/rising-star.svg",
+      "icon": "assets/badges/nsoromma.svg",
+      "adinkraSymbol": "nsoromma",
       "criteria": {
         "minGradeImprovement": 2,
         "assessmentPeriod": "year"
-      }
+      },
+      "culturalNote": "Faith and belief in a child's potential"
+    },
+    {
+      "id": "gentle-guardian",
+      "name": "Gentle Guardian",
+      "description": "Zero degradation across 15 or more books returned",
+      "icon": "assets/badges/fawohodie.svg",
+      "adinkraSymbol": "fawohodie",
+      "criteria": {
+        "minBooks": 15,
+        "maxDegradationRate": 0
+      },
+      "culturalNote": "Freedom walks with responsibility — caring for shared resources"
+    },
+    {
+      "id": "teleporter",
+      "name": "Teleporter",
+      "description": "Read 30 or more books in a calendar month",
+      "icon": "assets/badges/nkyinkyim.svg",
+      "adinkraSymbol": "nkyinkyim",
+      "criteria": {
+        "booksRead": 30,
+        "timeframe": "month"
+      },
+      "culturalNote": "Dynamism and dedication on the tortuous journey of rapid reading"
+    },
+    {
+      "id": "devourer",
+      "name": "Devourer",
+      "description": "Read 50 or more books in a calendar year",
+      "icon": "assets/badges/hwehwemudua.svg",
+      "adinkraSymbol": "hwehwemudua",
+      "criteria": {
+        "booksRead": 50,
+        "timeframe": "year"
+      },
+      "culturalNote": "Excellence, superior quality, and the measuring rod of achievement"
+    },
+    {
+      "id": "young-explorer",
+      "name": "Young Explorer",
+      "description": "New reader — first 10 books completed",
+      "icon": "assets/badges/asaawa.svg",
+      "adinkraSymbol": "asaawa",
+      "criteria": {
+        "isNewReader": true,
+        "booksRead": 10,
+        "timeframe": "all-time"
+      },
+      "culturalNote": "Sweet berry — the youthful pleasure and enthusiasm for books"
+    },
+    {
+      "id": "destroyer",
+      "name": "Destroyer",
+      "description": "High degradation rate — 50%+ of books returned damaged",
+      "icon": "assets/badges/epa.svg",
+      "adinkraSymbol": "epa",
+      "criteria": {
+        "minBooks": 5,
+        "degradationRate": 0.5
+      },
+      "culturalNote": "Law and justice — a reminder that books are shared community resources"
     }
   ],
   "awardSchedule": "daily",
   "displayRules": {
-    "maxBadgesPerPatron": 8,
+    "maxBadgesPerPatron": 10,
     "prioritizeRecent": true
   }
 }

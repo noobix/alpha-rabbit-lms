@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # Author: Kelvin Kabute
+# Last-updated: 2026-10-25
+
+# Author: Kelvin Kabute
 # Last-updated: 2026-10-04
 
 # Author: Kelvin Kabute
@@ -96,6 +99,7 @@ SKIP_FILENAMES = {
     "notice.md",
     "authors",
     "authors.md",
+    ".gitignore",
 }
 
 

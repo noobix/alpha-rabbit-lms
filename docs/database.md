@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-05
+Last-updated: 2026-10-25
 ---
 
 # Alpha Rabbit LMS Database Schema Guide
@@ -292,11 +292,27 @@ Every document should include:
 ## 5.12 BadgeConfig (`badge_config`)
 
 - `badges[]`:
-  - `id`, `name`, `description`, `icon`
+  - `id`, `name`, `description`, `icon` (path to Adinkra SVG)
+  - `adinkraSymbol`: enum of 12 standardized symbols
   - `criteria` object
-  - optional `ghanaCulturalNote`
+  - `ghanaCulturalNote`
 - `awardSchedule` (daily)
 - `displayRules`
+
+### Standardized Badge List
+
+| Badge ID | Name | Adinkra Symbol | Criteria |
+|----------|------|----------------|----------|
+| `book-worm` | Book Worm | nea-onnim | 10+ books/month |
+| `gentle-reader` | Gentle Reader | fafanto | 15+ books, <1% degradation |
+| `cultural-custodian` | Cultural Custodian | sankofa | 8+ cultural heritage books |
+| `local-stories` | Local Stories | ananse-ntentan | 5+ folklore/local-lit books |
+| `rising-star` | Rising Star | nsoromma | +2 grade levels/year |
+| `gentle-guardian` | Gentle Guardian | fawohodie | 15+ books, zero degradation |
+| `teleporter` | Teleporter | nkyinkyim | 30+ books/month |
+| `devourer` | Devourer | hwehwemudua | 50+ books/year |
+| `young-explorer` | Young Explorer | asaawa | First 10 books (new reader) |
+| `destroyer` | Destroyer | epa | High degradation rate (≥50% of books returned damaged) |
 
 ## 5.13 School (`school`)
 

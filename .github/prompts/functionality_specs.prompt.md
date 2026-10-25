@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-10
+Last-updated: 2026-10-25
 ---
 
 # Library Management System: Workflow & Departmental Functionality Specification
@@ -83,17 +83,24 @@ flowchart TD
 
 | Role                       | Acquisitions | Processing   | Distribution | Library Sections         | Manager Version | Enterprise Version             |
 | -------------------------- | ------------ | ------------ | ------------ | ------------------------ | --------------- | ------------------------------ |
-| **System Admin**           | View only    | View only    | View only    | Full access              | Single user     | District-level oversight       |
+| **System Admin**           | Full access  | Full access  | Full access  | Full access              | Single user     | District-level oversight       |
+| **Overseer**               | Read only    | Read only    | Read only    | Read only                | N/A             | Cross-branch KPI retrieval     |
 | **Acquisitions Librarian** | ✅ Full      | View only    | View only    | View only                | Combined role   | Dedicated department           |
 | **Cataloging Specialist**  | View only    | ✅ Full      | View only    | View only                | Combined role   | Specialized per material type  |
 | **Distribution Manager**   | View only    | View only    | ✅ Full      | View only                | Combined role   | Dedicated department           |
 | **Section Head**           | View only    | View only    | Receive only | ✅ Full for section      | Combined role   | Department head with analytics |
 | **Library Assistant**      | ❌ No access | ❌ No access | ❌ No access | ✅ Checkout/checkin only | Single role     | Section-specific access        |
+| **Intern**                 | Read only    | Read only    | Read only    | Read only                | Temporary       | Department-assigned read       |
 
 > 💡 **Critical Design Principle**:
 >
 > - **Manager Version**: All roles exist within single installation; user switches roles via profile dropdown
 > - **Enterprise Version**: Role enforced at database level via CouchDB security objects; users cannot access other departments' data
+>
+> 🔑 **New Role Definitions**:
+>
+> - **Overseer**: Head of all branch librarians. Logs into the system when visiting a branch and retrieves a time range of data across all departments (collection health, acquisitions, etc.) for KPI insight. Read-only access across all branches; data is pulled for external analysis application.
+> - **Intern**: Temporary staff account assigned to a specific department. Read permissions only within assigned department. Can be moved to other departments as needed; clearance follows the assignment.
 
 ---
 

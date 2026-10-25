@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-10
+Last-updated: 2026-10-25
 ---
 
 # 📚 PouchDB + CouchDB Technical Implementation Guide
@@ -199,8 +199,12 @@ class DatabaseManager {
   }
 
   private getAuthCredentials(): { username: string; password: string } {
-    // Retrieve from secure Electron store (not shown)
-    return { username: "", password: "" };
+    // Retrieve from Electron safeStorage (OS keychain)
+    const { safeStorage } = require("electron");
+    const credentials = safeStorage.decryptString(
+      globalThis.__COUCHDB_CREDENTIALS__,
+    );
+    return JSON.parse(credentials);
   }
 }
 

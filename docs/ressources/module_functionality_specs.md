@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-04
+Last-updated: 2026-10-25
 ---
 
 # 📚 Library Management System: Module Functionality Specification (Extension Services Department Update)
@@ -39,7 +39,7 @@ _Critical correction: Extension Services is a full external department (not libr
 
 ---
 
-## � CRITICAL ARCHITECTURAL CORRECTION
+## 🔴 CRITICAL ARCHITECTURAL CORRECTION
 
 > **"Physically, Extension Services is a full department external to the library. They ONLY interact with the Lending section when schools request subject areas – bulk lending is made FROM the Lending section TO Extension Services department for rotation cycles."**  
 > _– Ghana Library Authority Field Validation Report, Feb 2026_
@@ -49,7 +49,7 @@ _Critical correction: Extension Services is a full external department (not libr
 
 ---
 
-## �📦 DEPARTMENT MODULES: External Workflow
+## 📦 DEPARTMENT MODULES: External Workflow
 
 ### 1. ACQUISITIONS MODULE
 
@@ -206,7 +206,7 @@ Books remain owned by **Lending Section** but are temporarily loaned to Extensio
 | **Batch Management** | • View all batches (`GRADE-1A` to `GRADE-6B`)<br>• Promote entire batch (June/September)<br>• Move individual learners between batches | • Academic year expiry (Aug 31)<br>• GES curriculum alignment per grade<br>• Parent SMS on promotion                    | Full batch management offline                    |
 | **Book Issuance**    | • Degradation threshold enforcement<br>• "Teleporter" warning for pristine returns<br>• Child-friendly interface (large icons)         | • Spine condition critical for young hands<br>• Picture book special handling rules<br>• Storytime schedule integration | Works offline; degradation checks use local data |
 | **Reading Programs** | • Summer Reading Challenge setup<br>• Attendance tracking via QR scan<br>• Appraisal notes field                                       | • GES Literacy Boost alignment<br>• Folktales focus during cultural months<br>• Parent involvement tracking             | Attendance logs saved locally; syncs later       |
-| **Badge Display**    | • Patron dashboard shows earned badges<br>• SVG icons with Adinkra symbols<br>• Cultural notes on hover                                | • Sankofa symbol for Cultural Custodian<br>• Fawohodie for Gentle Guardian<br>• Twi descriptions available              | Badge assets cached for offline display          |
+| **Badge Display**    | • Patron dashboard shows earned badges<br>• SVG icons with Adinkra symbols<br>• Cultural notes on hover                                | • Sankofa for Cultural Custodian<br>• Fawohodie for Gentle Guardian<br>• Nea Onnim for Book Worm<br>• Fafanto for Gentle Reader<br>• Ananse Ntentan for Local Stories<br>• Nsoromma for Rising Star<br>• Nkyinkyim for Teleporter<br>• Hwehwemudua for Devourer<br>• Asaawa for Young Explorer<br>• Epa for Destroyer<br>• Twi descriptions available | Badge assets cached for offline display          |
 
 #### Children's Section Acceptance Criteria
 

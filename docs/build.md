@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-10
+Last-updated: 2026-10-25
 ---
 
 # 🏗️ Alpha Rabbit LMS Build Document
@@ -29,6 +29,7 @@ Last-updated: 2026-10-10
 | `docs/ressources/module_functionality_specs.md` | User-centric module acceptance | User stories, offline behavior, Extension workflows |
 | `docs/ressources/functionality_specs_expanded.md` | Patron intelligence, governance extensions | Degradation engine, badges, patron signals |
 | `docs/ressources/db_engineering.md` | Database architecture and patterns | PouchDB setup, sync, conflict resolution, repository pattern |
+| `docs/ressources/development_stack.md` | Stack standard & dependency governance | Approved packages, version policy, backup/compaction standards, rejected alternatives |
 | `docs/research_dmp/aquisisions_module.md` | Deep implementation notes for acquisitions | Forms, metadata shape, offline patterns |
 | `docs/research_dmp/processing_module.md` | Deep implementation notes for processing | Condition model, mold risk, barcode behavior |
 | `docs/research_dmp/distribution_module.md` | Deep implementation notes for distribution | Packing slips, rural mode, delivery confirmation |

@@ -1,6 +1,6 @@
 ---
 Author: Kelvin Kabute
-Last-updated: 2026-10-10
+Last-updated: 2026-10-25
 ---
 
 # 📚 Library Management System: Unified Tech Stack Specification
@@ -133,18 +133,31 @@ class BackupManager {
 | Component         | Technology                 | Why It Fits Ghana Enterprise                                                                                                                                                                                                                                               |
 | ----------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Database**      | **Apache CouchDB 3.3+**    | ✅ **ENTERPRISE DATABASE WINNER**<br>• Document NoSQL (matches Manager's PouchDB)<br>• Built-in replication = automatic incremental backups<br>• REST API = no backend code needed<br>• Role-based security per department<br>• Works on Ubuntu Server (low-cost hardware) |
-| **Backup System** | `couchdb-backup` + `rsync` | ✅ Incremental backups to external drive<br>✅ Daily diffs <50MB even for 10k+ records<br>✅ Ghana Ministry of Education compliance ready                                                                                                                                  |
+| **Backup System** | `croner` + `nano` + `rsync` | ✅ Automated nightly backups to backup DB → `tar.gz` → offsite via `rsync`<br>✅ SHA-256 checksum verification + test-restore to staging<br>✅ 30-day retention with auto-deletion<br>✅ Nightly compaction to prevent SD-card wear |
 | **Auth**          | CouchDB `_users` database  | ✅ Department-based roles (Science HOD, Admin, etc.)<br>✅ Password policies enforced                                                                                                                                                                                      |
 | **Deployment**    | Docker Compose             | ✅ One-command setup: `docker-compose up -d`<br>✅ Works on Raspberry Pi 4 (for rural schools)                                                                                                                                                                             |
 
 ### Sync Strategy (Manager → Enterprise Migration Path)
 
-| Scenario                            | Solution                                                                  |
-| ----------------------------------- | ------------------------------------------------------------------------- |
-| **New Library Starts with Manager** | Use "Promote to Enterprise" wizard: Syncs local PouchDB to CouchDB server |
-| **Enterprise Client Offline**       | Works against local PouchDB; auto-syncs when online                       |
-| **Conflict Resolution**             | Timestamp-based (last write wins) + manual override UI                    |
-| **Bandwidth Saver**                 | Compresses sync data; pauses during low connectivity                      |
+| Scenario | Solution |
+| --- | --- |
+| **New Library Starts with Manager** | Use "Promote to Enterprise" wizard: exports local PouchDB → imports to CouchDB server, sets up security objects, then enables live sync |
+| **Enterprise Client Offline** | Works against local PouchDB (IndexedDB); auto-syncs when online |
+| **Conflict Resolution** | Timestamp-based (last write wins) within same department; cross-department conflicts route to manual review UI |
+| **Bandwidth Saver** | Compresses sync data; pauses during low connectivity; `batch_size: 50` tuned for slow Ghana connections |
+| **Server Discovery** | mDNS/Bonjour auto-discovery on local network; manual URL fallback if multicast blocked |
+| **Sync Security** | TLS/SSL encrypted (HTTPS) for all CouchDB communication; credentials stored in Electron `safeStorage` (OS keychain) |
+
+### CouchDB Backup & Restore
+
+| Operation | Method | Tooling |
+| --- | --- | --- |
+| **Automated backup** | `croner` job on server triggers nightly `_replicate` → backup DB → `nano` dump → `tar.gz` | `croner` + `nano` + `node-tar` + `node:zlib` |
+| **Offsite copy** | `rsync --inplace` to external drive or secondary Pi | System `rsync` |
+| **Compaction** | Nightly `_compact` endpoint call during backup window | CouchDB HTTP API |
+| **Integrity verification** | SHA-256 checksum manifest per backup; automated test-restore to staging DB | `node:crypto` |
+| **Point-in-time restore** | `nano` restore from latest verified `tar.gz` → clients re-sync from restored server | `nano` + PouchDB sync |
+| **Retention** | 30-day retention with auto-deletion of older backups | `croner` cleanup job |
 
 ### Departmental Access Control (CouchDB Security)
 
